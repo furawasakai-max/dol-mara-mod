@@ -1,6 +1,6 @@
 # Mara runtime test plan
 
-The user has confirmed that the v0.1.0 alpha works in-game. The v0.1.1 stat-feedback update has compiled successfully but still needs a visual check in the game.
+The user has confirmed that the v0.1.0 base mod works in-game. The v0.1.1 and v0.1.2 display updates have compiled and their incremental patches apply cleanly. The revised reward layout still needs in-game visual confirmation.
 
 ## New save
 
@@ -10,13 +10,18 @@ The user has confirmed that the v0.1.0 alpha works in-game. The v0.1.1 stat-feed
 - [ ] Visit Shopping Centre during 09:00-13:59 and open Mara's Pet Shop.
 - [ ] Visit outside those hours and confirm the shop is unavailable.
 - [ ] Test each shop task, passage return, time flow, relationship rewards, and money reward.
-- [ ] Confirm shop tasks display the correct Love, Trust, and Dominance gain notices.
-- [ ] Confirm cash rewards display as positive amounts and match the wallet change.
+- [ ] Confirm each reward appears beneath the narrative on its own separated line.
+- [ ] Confirm each stat uses one plus sign, not repeated plus signs for +2 or +3.
+- [ ] Confirm money is spaced from the stat feedback and includes a positive sign.
+- [ ] Confirm conditional Trust feedback appears exactly when Trust increases.
 - [ ] Test Browse, private collection threshold, romance threshold, and Handler proposal threshold.
 - [ ] Visit Danube Street and confirm the Mara house event enters the work event pool.
 - [ ] Test each house task and its money/stat rewards.
-- [ ] Confirm house tasks display the correct Love and conditional Trust notices.
 - [ ] Enable Blind Stats and confirm relationship notices are hidden while stats still update.
+
+## Negative stat display pattern
+
+No current Mara work task reduces relationships. When a future choice does reduce a stat, use the corresponding native negative macro, such as `llove Mara`, `ltrust`, or `ldom Mara`. Confirm that the minus indicator appears in the expected red styling.
 
 ## Existing save migration
 
