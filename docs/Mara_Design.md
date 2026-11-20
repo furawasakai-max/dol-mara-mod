@@ -46,9 +46,11 @@ Mara uses the named-NPC relationship fields:
 
 ## Implemented feedback
 
-The v0.1.1 incremental update adds inline feedback to Mara interactions using the game's built-in stat display macros. Love, Trust, and Dominance changes are shown next to the relevant work or scene reward. Money rewards use the vanilla `moneyGain` output with an explicit positive sign. The native relationship feedback respects the game's Blind Stats setting.
+The v0.1.1 update uses DoL's built-in stat display macros for Mara's Love, Trust, and Dominance. The v0.1.2 layout places feedback on a separate reward line below the narrative. Each stat uses one plus or minus sign regardless of the number of points changed, while the actual game values remain unchanged. Cash displays as a separate positive amount. The native relationship feedback respects Blind Stats.
 
-Planned progression:
+Positive feedback uses `glove Mara`, `gtrust`, and `gdom Mara`. Future negative relationship outcomes should use the corresponding native negative macros, for example `llove Mara`, `ltrust`, and `ldom Mara`.
+
+## Planned progression
 
 - Shop and house work primarily increase Love.
 - After Love reaches 50, selected personal events can also increase Trust.
