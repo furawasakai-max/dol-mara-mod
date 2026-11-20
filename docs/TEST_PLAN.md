@@ -5,15 +5,16 @@ The user confirmed that the v0.1.0 base mod works in-game. The v0.1.1 and v0.1.2
 ## New save and first meetings
 
 - [ ] Start a new game and confirm Mara appears in the named-NPC system.
-- [ ] Open Shopping Centre during 09:00-13:59 and meet Mara at the pet shop.
-- [ ] Confirm the first shop dialogue naturally invites the player to help.
-- [ ] Knock on Danube Street houses until Mara's first house encounter appears.
-- [ ] Confirm the first house dialogue naturally invites the player to help.
-- [ ] Confirm both introductions lead to their existing work choices and preserve rewards.
+- [ ] Meet Mara at the pet shop during 09:00-13:59.
+- [ ] Confirm the shop introduction invites the player to help and mentions that Mara lives on Danube Street.
+- [ ] Confirm both the Mara's Pet Shop and Mara's home destinations become available after the introduction.
+- [ ] Test the alternative route: meet Mara first through the Danube Street house event.
+- [ ] Confirm the house introduction welcomes the player and mentions that they are welcome at her shop.
+- [ ] Confirm both the Mara's home and Mara's Pet Shop destinations become available after this introduction.
 
 ## Persistent shop access
 
-- [ ] After meeting Mara at the shop, leave and return to Shopping Centre outside 09:00-14:00.
+- [ ] After meeting Mara at either location, leave and return to Shopping Centre outside 09:00-14:00.
 - [ ] Confirm the Mara's Pet Shop link remains visible.
 - [ ] Enter the pet shop outside normal hours and confirm Mara welcomes the player back.
 - [ ] Open Help Mara with the shop and confirm all three work options remain available.
@@ -21,7 +22,7 @@ The user confirmed that the v0.1.0 base mod works in-game. The v0.1.1 and v0.1.2
 
 ## Persistent house access
 
-- [ ] After meeting Mara at her house, return to Danube Street.
+- [ ] After meeting Mara at either location, return to Danube Street.
 - [ ] Confirm a permanent Mara's home link appears in Places of interest.
 - [ ] Open it during day and at night and confirm Mara is available.
 - [ ] Confirm her return dialogue welcomes the player and offers housework.
@@ -38,8 +39,8 @@ The user confirmed that the v0.1.0 base mod works in-game. The v0.1.1 and v0.1.2
 
 ## Existing save
 
-- [ ] Back up a save that has already met Mara at both the shop and the house.
-- [ ] Load it in v0.1.3 and confirm both visit locations remain available.
+- [ ] Back up a save that has met Mara at either the shop or the house.
+- [ ] Load it in v0.1.3 and confirm both visit locations are available.
 - [ ] Confirm Love, Trust, Dominance, work counters, and event flags are preserved after saving and reloading.
 
 ## Known scope gaps
