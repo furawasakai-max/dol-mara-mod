@@ -1,51 +1,44 @@
 # Mara runtime test plan
 
-The user confirmed that the v0.1.0 base mod works in-game. The v0.1.1 and v0.1.2 stat-feedback updates compiled. The v0.1.3 persistent-availability update also compiles and its full patch applies to a clean 0.5.13.8 source tree. The new dialogue and access flow still need in-game confirmation.
+The user confirmed that the v0.1.0 base mod works in-game. The v0.1.1 and v0.1.2 stat feedback updates and v0.1.3 persistent locations compiled. v0.1.4 adds a daily shop/home schedule using Mara's established 09:00-14:00 shop hours. Compilation and patch application have been verified; scheduled presence still needs in-game confirmation.
 
-## New save and first meetings
+## Shop hours: 09:00-13:59
 
-- [ ] Start a new game and confirm Mara appears in the named-NPC system.
-- [ ] Meet Mara at the pet shop during 09:00-13:59.
-- [ ] Confirm the shop introduction invites the player to help and mentions that Mara lives on Danube Street.
-- [ ] Confirm both the Mara's Pet Shop and Mara's home destinations become available after the introduction.
-- [ ] Test the alternative route: meet Mara first through the Danube Street house event.
-- [ ] Confirm the house introduction welcomes the player and mentions that they are welcome at her shop.
-- [ ] Confirm both the Mara's home and Mara's Pet Shop destinations become available after this introduction.
+- [ ] Open Shopping Centre and enter Mara's Pet Shop.
+- [ ] Confirm Mara is present and interactive.
+- [ ] Confirm all shop work options are available.
+- [ ] Visit Mara's home on Danube Street.
+- [ ] Confirm the exact message: "No one is home. Mara is at the shop."
+- [ ] Confirm no housework or personal interaction options are shown while she is away.
+- [ ] Confirm the random first-house introduction does not appear while she is working at the shop.
 
-## Persistent shop access
+## Home hours: 14:00-08:59
 
-- [ ] After meeting Mara at either location, leave and return to Shopping Centre outside 09:00-14:00.
-- [ ] Confirm the Mara's Pet Shop link remains visible.
-- [ ] Enter the pet shop outside normal hours and confirm Mara welcomes the player back.
-- [ ] Open Help Mara with the shop and confirm all three work options remain available.
-- [ ] Complete each task and verify time, money, Love, conditional Trust, and Dominance behave as before.
+- [ ] Visit Mara's home on Danube Street.
+- [ ] Confirm Mara is present and offers housework.
+- [ ] Visit Mara's Pet Shop.
+- [ ] Confirm the exact message: "Mara isn't at the shop right now. She's at home on Danube Street."
+- [ ] Confirm the link to visit Mara at home works.
+- [ ] Confirm shop interactions and work options are not shown while she is home.
 
-## Persistent house access
+## First meeting paths
 
-- [ ] After meeting Mara at either location, return to Danube Street.
-- [ ] Confirm a permanent Mara's home link appears in Places of interest.
-- [ ] Open it during day and at night and confirm Mara is available.
-- [ ] Confirm her return dialogue welcomes the player and offers housework.
-- [ ] Select Help Mara with the house and verify all existing work options and rewards remain unchanged.
-- [ ] Choose Just stop by to say hello and confirm return to Danube Street.
+- [ ] Meet Mara first at the shop during shop hours.
+- [ ] Confirm both location links become available after the introduction.
+- [ ] Alternatively, meet Mara first at her house outside shop hours.
+- [ ] Confirm both location links become available after the introduction.
+- [ ] Confirm the initial house encounter is not available while Mara is at the shop.
 
-## Stat feedback
+## Schedule boundaries
 
-- [ ] Confirm rewards appear beneath the narrative with clear spacing.
-- [ ] Confirm each stat uses one sign, not repeated plus signs for +2 or +3.
-- [ ] Confirm money is separated from stat feedback and displays as a positive amount.
-- [ ] Confirm conditional Trust feedback appears only when Trust increases.
-- [ ] Enable Blind Stats and confirm relationship notices are hidden while stats still update.
+- [ ] Test 08:59: Mara is at home.
+- [ ] Test 09:00: Mara is at the shop.
+- [ ] Test 13:59: Mara is at the shop.
+- [ ] Test 14:00: Mara is at home.
 
-## Existing save
+## Regression
 
-- [ ] Back up a save that has met Mara at either the shop or the house.
-- [ ] Load it in v0.1.3 and confirm both visit locations are available.
-- [ ] Confirm Love, Trust, Dominance, work counters, and event flags are preserved after saving and reloading.
-
-## Known scope gaps
-
-- The shop is a passage linked from Shopping Centre, not an independent map node.
-- The alpha has fixed work choices, not a full random shift/event system.
-- The private collection is an introductory scene, not a complete equipment mechanic.
-- No custom art is included.
+- [ ] Confirm shop and house work rewards are unchanged.
+- [ ] Confirm reward-line spacing and stat indicators remain unchanged.
+- [ ] Save and reload, confirming the two meeting flags persist.
+- [ ] Confirm that completing a task that crosses a schedule boundary does not lose its reward.
