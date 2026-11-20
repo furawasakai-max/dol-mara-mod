@@ -1,0 +1,115 @@
+--- a/game/overworld-town/loc-danube-homes/work.twee
++++ b/game/overworld-town/loc-danube-homes/work.twee
+@@ -100,7 +100,7 @@
+ 			<br>
+ 			<</addinlineevent>>
+ 	<</if>>
+-	<<if !$mara.metHouse>>
++	<<if !$mara.metHouse and (Time.hour lt 9 or Time.hour gte 14)>>
+ 		<<addinlineevent "Mara Danube Pre-Intro" 1>>
+ 			A well-dressed woman opens the door. Her dark hair is neatly arranged, and her sharp eyes study you with calm curiosity. "Good afternoon. Are you looking for work? I own a pet shop on High Street. I sometimes need an extra pair of hands here at home, too."
+ 			<br><br>
+@@ -2932,36 +2932,55 @@
+ 
+ :: Mara Danube Pre-Intro
+ <<set $outside to 0>><<set $location to "town">><<effects>><<set $bus to "danube">>
+-<<set $mara.metHouse to true>>
+-<<if $mara.metShop>>
+-	Mara recognizes you and smiles. "Well, hello again. I'm glad you stopped by. I've got a few things to finish up around the house, and an extra pair of hands would be welcome. Would you mind helping me out?"
+-<<else>>
+-	Mara smiles as she opens the door. "Hello, I'm Mara. I own the pet shop at the shopping centre. I'm just getting a few things sorted here at home, and I could use an extra pair of hands. Would you mind helping me out? You're always welcome to stop by the shop, too."
+-<</if>>
+-<br><br>
+-<<link [[Offer to help Mara|Mara Danube Work Intro]]>><</link>>
+-<br>
+-<<link [[Leave|Danube Street]]>><</link>>
++<<if Time.hour gte 9 and Time.hour lt 14>>
++	No one is home. Mara is at the shop.
++	<br><br>
++	<<link [[Return to Danube Street|Danube Street]]>><<pass 2>><</link>>
++<<else>>
++	<<set $mara.metHouse to true>>
++	<<if $mara.metShop>>
++		Mara recognizes you and smiles. "Well, hello again. I'm glad you stopped by. I've got a few things to finish up around the house, and an extra pair of hands would be welcome. Would you mind helping me out?"
++	<<else>>
++		Mara smiles as she opens the door. "Hello, I'm Mara. I own the pet shop at the shopping centre. I'm just getting a few things sorted here at home, and I could use an extra pair of hands. Would you mind helping me out? You're always welcome to stop by the shop, too."
++	<</if>>
++	<br><br>
++	<<link [[Offer to help Mara|Mara Danube Work Intro]]>><</link>>
++	<br>
++	<<link [[Leave|Danube Street]]>><</link>>
++<</if>>
+ 
+ :: Mara Danube House Visit
+-<<set $outside to 0>><<set $location to "town">><<effects>><<set $bus to "danube">><<set $mara.metHouse to true>>
+-Mara opens the door, and her expression brightens when she recognizes you. "It's good to see you again. I was just about to get a few things done around the house. Would you like to give me a hand?"
+-<br><br>
+-<<link [[Help Mara with the housework|Mara Danube Work Intro]]>><</link>>
+-<br>
+-<<link [[Just stop by to say hello|Danube Street]]>><</link>>
++<<set $outside to 0>><<set $location to "town">><<effects>><<set $bus to "danube">>
++<<if Time.hour gte 9 and Time.hour lt 14>>
++	No one is home. Mara is at the shop.
++	<br><br>
++	<<link [[Return to Danube Street|Danube Street]]>><<pass 2>><</link>>
++<<else>>
++	<<set $mara.metHouse to true>>
++	Mara opens the door, and her expression brightens when she recognizes you. "It's good to see you again. I was just about to get a few things done around the house. Would you like to give me a hand?"
++	<br><br>
++	<<link [[Help Mara with the housework|Mara Danube Work Intro]]>><</link>>
++	<br>
++	<<link [[Just stop by to say hello|Danube Street]]>><</link>>
++<</if>>
+ 
+ :: Mara Danube Work Intro
+ <<set $outside to 0>><<set $location to "town">><<effects>><<set $bus to "danube">>
+-Mara smiles. "Thank you. I've got a few things that could use doing. Choose whichever you'd like, and I'll pay you for your time."
+-<br><br>
+-<<link [[Organize pet supplies (30 minutes)|Mara Danube Organize]]>><<pass 30>><</link>>
+-<br>
+-<<link [[Clean animal equipment (45 minutes)|Mara Danube Clean]]>><<pass 45>><</link>>
+-<br>
+-<<link [[Prepare food supplies (30 minutes)|Mara Danube Food]]>><<pass 30>><</link>>
+-<br>
+-<<link [[Decline for now|Danube Street]]>><</link>>
++<<if Time.hour gte 9 and Time.hour lt 14>>
++	No one is home. Mara is at the shop.
++	<br><br>
++	<<link [[Return to Danube Street|Danube Street]]>><<pass 2>><</link>>
++<<else>>
++	Mara smiles. "Thank you. I've got a few things that could use doing. Choose whichever you'd like, and I'll pay you for your time."
++	<br><br>
++	<<link [[Organize pet supplies (30 minutes)|Mara Danube Organize]]>><<pass 30>><</link>>
++	<br>
++	<<link [[Clean animal equipment (45 minutes)|Mara Danube Clean]]>><<pass 45>><</link>>
++	<br>
++	<<link [[Prepare food supplies (30 minutes)|Mara Danube Food]]>><<pass 30>><</link>>
++	<br>
++	<<link [[Decline for now|Danube Street]]>><</link>>
++<</if>>
+ 
+ :: Mara Danube Organize
+ <<set $mara.houseHelp += 1>><<npcincr Mara love 2>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 1>><</if>>
+--- a/game/overworld-town/loc-shop/main.twee
++++ b/game/overworld-town/loc-shop/main.twee
+@@ -1169,8 +1169,18 @@
+ 
+ :: Mara Pet Shop
+ <<set $outside to 0>><<set $location to "shopping_centre">><<effects>>
+-<<if !$mara.metShop and !$mara.metHouse and (Time.hour lt 9 or Time.hour gte 14)>>
+-The shop is closed. Mara's usual opening hours are 9 AM to 2 PM. Once you've met her, you can still stop by outside those hours.
++<<if Time.hour lt 9 or Time.hour gte 14>>
++	<<if $mara.metShop or $mara.metHouse>>
++		Mara isn't at the shop right now. She's at home on Danube Street.
++		<br><br>
++		<<link [[Visit Mara at home|Mara Danube House Visit]]>><<pass 2>><</link>>
++		<br>
++		<<link [[Leave the shop|Shopping Centre]]>><</link>>
++	<<else>>
++		The shop is closed. Mara's usual opening hours are 9 AM to 2 PM.
++		<br><br>
++		<<link [[Leave the shop|Shopping Centre]]>><</link>>
++	<</if>>
+ <<else>>
+ You enter Mara's Pet Shop. Shelves hold pet food, grooming supplies, toys, carriers, and collars. Mara stands behind the counter, dressed neatly in formal clothes.
+ <br><br>
