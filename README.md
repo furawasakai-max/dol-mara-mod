@@ -4,24 +4,23 @@ A Yareth-style source modification that adds Mara as a named NPC and Love Intere
 
 ## Project status
 
-**v0.1.0 alpha:** The user confirmed that the base mod works in-game.
-
-**v0.1.1:** Added native relationship and money gain feedback.
-
-**v0.1.2:** Reformatted reward feedback with a separate reward line, one sign per stat, and clearer spacing.
-
-**v0.1.3:** Meeting Mara at either her shop or her Danube Street home unlocks repeat visits to both locations. The shop remains available outside its usual hours, and a permanent Mara's home destination appears on Danube Street. Both locations now use welcoming dialogue that invites the player to help.
+- **v0.1.0:** Base Mara NPC, shop, house work, relationships, and initial scenes. User confirmed it works in-game.
+- **v0.1.1:** Native stat feedback.
+- **v0.1.2:** Readable reward-line layout.
+- **v0.1.3:** Persistent visits to both Mara locations after the first meeting.
+- **v0.1.4:** Daily location schedule. Mara is at the shop from 09:00 to 13:59 and at home during other hours. The other location displays an absence notice rather than allowing interaction.
 
 ## Current features
 
 - Mara registered in the named-NPC and Love Interest systems.
 - New-save initialization and existing-save migration hook.
 - Love, Trust, and Dominance relationship support and Cheat Menu controls.
-- First meeting through the Danube House Knock event pool or at the pet shop during usual hours.
-- Meeting Mara at either location unlocks repeat access to both her shop and home.
-- Shop and work tasks remain available at any hour after the first meeting.
-- Welcoming first-meeting and return dialogue at both locations.
-- House and shop work tasks with vanilla money rewards and native stat feedback.
+- First meeting through the Danube house event or the pet shop.
+- Both shop and home remain discoverable after meeting Mara.
+- Mara is only interactable at her current scheduled location.
+- At the house during shop hours, the message reads: "No one is home. Mara is at the shop."
+- At the shop outside shop hours, the player is directed to her home on Danube Street.
+- Shop and house work tasks with vanilla money rewards and native stat feedback.
 - Initial romance, private collection, and Handler/Pet proposal scenes.
 
 ## Repository layout
@@ -29,7 +28,8 @@ A Yareth-style source modification that adds Mara as a named NPC and Love Intere
 - Base source patch v0.1.0: patches/Mara_v0.1.0.patch
 - Stat feedback patch v0.1.1: patches/Mara_v0.1.1-StatFeedback.patch
 - Reward layout patch v0.1.2: patches/Mara_v0.1.2-StatLayout.patch
-- Persistent availability patch v0.1.3: patches/Mara_v0.1.3-AlwaysAvailable.patch (apply after v0.1.2).
+- Persistent visit patch v0.1.3: patches/Mara_v0.1.3-AlwaysAvailable.patch
+- Location schedule patch v0.1.4: patches/Mara_v0.1.4-ShopSchedule.patch
 - Patch instructions: patches/README.md
 - Mara design document: docs/Mara_Design.md
 - Runtime test plan: docs/TEST_PLAN.md
@@ -39,16 +39,17 @@ The patches modify vanilla source files directly. This is **not** a ModLoader pa
 
 ## Build
 
-For a clean vanilla 0.5.13.8 source tree, use the cumulative Mara_v0.1.3-Full.patch included in the downloadable v0.1.3 source ZIP. Alternatively, apply the four incremental patches in order as described in patches/README.md. Compile with the source tree's Tweego-based compile.sh.
+Start with a clean vanilla 0.5.13.8 source tree. Apply patches v0.1.0, v0.1.1, v0.1.2, v0.1.3, and v0.1.4 in that order using patches/README.md. Compile with the source tree's Tweego-based compile.sh.
 
 Do not apply these patches to another DoL version without reviewing source differences.
 
 ## Known limitations
 
 - Mara's shop is a passage linked from Shopping Centre, not an independent map node.
+- Her current daily schedule uses the established 09:00-14:00 shop hours every day.
 - Work activities are fixed task choices, not a full random shift/event system.
 - No custom art is included.
-- The new v0.1.3 cross-location return flow compiles and patch-verifies, but should still be tested in-game with a save that has met Mara at either location.
+- v0.1.4 compiles and both patch paths verify, but the scheduled presence/absence messages need in-game confirmation.
 
 ## License and upstream assets
 
