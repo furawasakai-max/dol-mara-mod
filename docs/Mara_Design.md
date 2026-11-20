@@ -44,6 +44,10 @@ Mara uses the named-NPC relationship fields:
 - `C.npc.Mara.trust`
 - `C.npc.Mara.dom`
 
+## Implemented feedback
+
+The v0.1.1 incremental update adds inline feedback to Mara interactions using the game's built-in stat display macros. Love, Trust, and Dominance changes are shown next to the relevant work or scene reward. Money rewards use the vanilla `moneyGain` output with an explicit positive sign. The native relationship feedback respects the game's Blind Stats setting.
+
 Planned progression:
 
 - Shop and house work primarily increase Love.
