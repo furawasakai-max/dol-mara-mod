@@ -2,9 +2,10 @@
 
 ## v0.1.3 - Persistent visits and welcoming dialogue
 
-- Keeps the Mara's Pet Shop link available in Shopping Centre after the player has met Mara there, regardless of time.
+- Meeting Mara at either her pet shop or her Danube Street home now unlocks repeat visits to both locations.
+- Keeps the Mara's Pet Shop link available in Shopping Centre after the first meeting, regardless of time.
 - Removes the shop-hours restriction from Mara's shop passage and work menu after the first meeting.
-- Adds a permanent Mara's home destination to Danube Street after the player has met Mara at her house.
+- Adds a permanent Mara's home destination to Danube Street after the first meeting.
 - Adds a dedicated repeat-visit passage for the house.
 - Rewrites the first-meeting and return dialogue at both places to welcome the player and invite them to help.
 - Preserves existing task options, time costs, money rewards, and relationship gains.
