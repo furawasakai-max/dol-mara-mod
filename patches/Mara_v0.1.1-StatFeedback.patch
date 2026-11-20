@@ -1,0 +1,70 @@
+--- a/game/04-Variables/variables-maraUpdate.twee
++++ b/game/04-Variables/variables-maraUpdate.twee
+@@ -37,7 +37,7 @@
+ <<link [[Continue|Mara Pet Shop]]>><</link>>
+
+ :: Mara Private Collection
+-<<set $mara.privateCollectionSeen to true>><<npcincr Mara love 2>><<npcincr Mara dom 2>>
++<<set $mara.privateCollectionSeen to true>><<npcincr Mara love 2>><<gglove Mara>><<npcincr Mara dom 2>><<ggdom Mara>>
+ Mara opens a cabinet in her private workshop. Inside are carefully maintained collars, cuffs, leads, and other specialist role-play accessories. "I opened the shop because I care about animals and training. But I also have a private interest in the symbolism of collars, rules, and consensual power exchange. I don't share this side of my life with just anyone."
+ <br><br>
+ <<link [[Ask her to explain more|Mara Pet Shop]]>><</link>>
+--- a/game/overworld-town/loc-danube-homes/work.twee
++++ b/game/overworld-town/loc-danube-homes/work.twee
+@@ -2952,19 +2952,19 @@
+ <<link [[Decline for now|Danube Street]]>><</link>>
+
+ :: Mara Danube Organize
+-<<set $mara.houseHelp += 1>><<npcincr Mara love 2>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 1>><</if>><<moneyGain 800>>
++<<set $mara.houseHelp += 1>><<npcincr Mara love 2>><<gglove Mara>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 1>><<gtrust>><</if>>+<<moneyGain 800>>
+ You organize the supplies into neat groups. Mara checks your work and nods approvingly. "Good. You have an eye for order."
+ <br><br>
+ <<link [[Continue|Danube Street]]>><</link>>
+
+ :: Mara Danube Clean
+-<<set $mara.houseHelp += 1>><<npcincr Mara love 2>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 2>><</if>><<moneyGain 1200>>
++<<set $mara.houseHelp += 1>><<npcincr Mara love 2>><<gglove Mara>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 2>><<ggtrust>><</if>>+<<moneyGain 1200>>
+ You clean the animal equipment carefully. Mara thanks you for being thorough.
+ <br><br>
+ <<link [[Continue|Danube Street]]>><</link>>
+
+ :: Mara Danube Food
+-<<set $mara.houseHelp += 1>><<npcincr Mara love 2>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 1>><</if>><<moneyGain 1000>>
++<<set $mara.houseHelp += 1>><<npcincr Mara love 2>><<gglove Mara>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 1>><<gtrust>><</if>>+<<moneyGain 1000>>
+ You prepare and organize the food supplies. Mara seems pleased with your work.
+ <br><br>
+ <<link [[Continue|Danube Street]]>><</link>>
+--- a/game/overworld-town/loc-shop/main.twee
++++ b/game/overworld-town/loc-shop/main.twee
+@@ -1202,7 +1202,7 @@
+
+ :: Mara Shop Intro
+ Mara gives you a thoughtful look. "That's kind of you. I can always use help keeping the place organized. If you come by during opening hours, ask me what needs doing."
+-<<set $mara.metShop to true>><<npcincr Mara love 1>>
++<<set $mara.metShop to true>><<npcincr Mara love 1>><<glove Mara>>
+ <br><br>
+ <<link [[Continue|Mara Pet Shop]]>><</link>>
+
+@@ -1221,19 +1221,19 @@
+ <<link [[Back|Mara Pet Shop]]>><</link>>
+
+ :: Mara Shop Restock
+-<<set $mara.shopHelp += 1>><<npcincr Mara love 2>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 1>><</if>><<npcincr Mara dom 1>><<moneyGain 800>>
++<<set $mara.shopHelp += 1>><<npcincr Mara love 2>><<gglove Mara>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 1>><<gtrust>><</if>><<npcincr Mara dom 1>><<gdom Mara>>+<<moneyGain 800>>
+ You restock the shelves while Mara checks the inventory. She gives a small approving nod.
+ <br><br>
+ <<link [[Next|Mara Pet Shop]]>><</link>>
+
+ :: Mara Shop Customers
+-<<set $mara.shopHelp += 1>><<npcincr Mara love 3>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 2>><</if>><<npcincr Mara dom 1>><<moneyGain 1200>>
++<<set $mara.shopHelp += 1>><<npcincr Mara love 3>><<ggglove Mara>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 2>><<ggtrust>><</if>><<npcincr Mara dom 1>><<gdom Mara>>+<<moneyGain 1200>>
+ You help a customer choose suitable supplies. Mara watches your interaction and compliments your patience.
+ <br><br>
+ <<link [[Next|Mara Pet Shop]]>><</link>>
+
+ :: Mara Shop Grooming
+-<<set $mara.shopHelp += 1>><<npcincr Mara love 3>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 2>><</if>><<npcincr Mara dom 2>><<moneyGain 1500>>
++<<set $mara.shopHelp += 1>><<npcincr Mara love 3>><<ggglove Mara>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 2>><<ggtrust>><</if>><<npcincr Mara dom 2>><<ggdom Mara>>+<<moneyGain 1500>>
+ Mara shows you how she prepares grooming supplies and explains the importance of consistency and calm handling.
+ <br><br>
+ <<link [[Next|Mara Pet Shop]]>><</link>>
