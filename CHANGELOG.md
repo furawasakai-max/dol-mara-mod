@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.2 - Reward stat layout
+
+- Moved stat and cash feedback below the narrative, onto a separate reward line.
+- Replaced repeated plus indicators for +2/+3 with a single positive indicator for each changed stat.
+- Added whitespace between the stat feedback and money amount.
+- Kept all underlying Love, Trust, Dominance, and money values unchanged.
+- Documented the native negative feedback macros for future choices.
+
+Validation:
+- Tweego compilation succeeded.
+- The v0.1.2 incremental patch applies on top of v0.1.1 without rejects.
+- The resulting three updated source files match the local v0.1.2 working tree byte-for-byte.
+- In-game visual confirmation of the revised layout remains outstanding.
+
 ## v0.1.1 - Native stat feedback
 
 - Added visible Love feedback to Mara's shop introduction.
@@ -9,12 +23,6 @@
 - Prefixed Mara's cash rewards with a visible plus sign.
 - Reused DoL's native stat feedback macros, so relationship notices respect Blind Stats.
 - Added this as an incremental patch over v0.1.0 in the repository.
-
-Validation:
-- Tweego compilation succeeded.
-- The full v0.1.1 patch applies to a clean vanilla 0.5.13.8 source tree.
-- The incremental stat-feedback patch applies to a v0.1.0-patched source tree and reproduces the updated files byte-for-byte.
-- In-game visual confirmation of the new notices remains to be done.
 
 ## v0.1.0 - Mara alpha
 
