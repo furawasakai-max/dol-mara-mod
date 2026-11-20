@@ -10,17 +10,17 @@ A Yareth-style source modification that adds Mara as a named NPC and Love Intere
 
 **v0.1.2:** Reformatted reward feedback with a separate reward line, one sign per stat, and clearer spacing.
 
-**v0.1.3:** After meeting Mara at either location, the player can return to her at any time. The shop link remains available after the first meeting, including outside regular hours. After meeting her at the house, a permanent Mara's home destination appears on Danube Street. Both locations now use welcoming dialogue that invites the player to help.
+**v0.1.3:** Meeting Mara at either her shop or her Danube Street home unlocks repeat visits to both locations. The shop remains available outside its usual hours, and a permanent Mara's home destination appears on Danube Street. Both locations now use welcoming dialogue that invites the player to help.
 
 ## Current features
 
 - Mara registered in the named-NPC and Love Interest systems.
 - New-save initialization and existing-save migration hook.
 - Love, Trust, and Dominance relationship support and Cheat Menu controls.
-- First meeting through the Danube House Knock event pool.
-- Permanent Mara's home destination on Danube Street after the house introduction.
-- First shop visit remains limited to usual opening hours (09:00-14:00); after meeting Mara, the shop and work tasks remain available at any hour.
-- Welcoming return dialogue at both the house and shop.
+- First meeting through the Danube House Knock event pool or at the pet shop during usual hours.
+- Meeting Mara at either location unlocks repeat access to both her shop and home.
+- Shop and work tasks remain available at any hour after the first meeting.
+- Welcoming first-meeting and return dialogue at both locations.
 - House and shop work tasks with vanilla money rewards and native stat feedback.
 - Initial romance, private collection, and Handler/Pet proposal scenes.
 
@@ -48,7 +48,7 @@ Do not apply these patches to another DoL version without reviewing source diffe
 - Mara's shop is a passage linked from Shopping Centre, not an independent map node.
 - Work activities are fixed task choices, not a full random shift/event system.
 - No custom art is included.
-- The new v0.1.3 return-visit flow compiles and patch-verifies, but should still be tested in-game with a save that has met Mara at both locations.
+- The new v0.1.3 cross-location return flow compiles and patch-verifies, but should still be tested in-game with a save that has met Mara at either location.
 
 ## License and upstream assets
 
