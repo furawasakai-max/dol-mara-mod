@@ -4,9 +4,11 @@ A Yareth-style source modification that adds Mara as a named NPC and Love Intere
 
 ## Project status
 
-**Alpha source patch.** Tweego compilation succeeded. Browser runtime testing has not yet been completed. Back up saves and test using copies.
+**v0.1.0 alpha:** The user has confirmed that the mod works in-game.
 
-## Current alpha features
+**v0.1.1 stat feedback update:** Uses DoL's native inline stat-change macros for visible Love, Trust, and Dominance gains, plus a leading plus sign before cash rewards. Tweego compilation succeeded. The updated feedback should still be checked in-game, including with Blind Stats enabled.
+
+## Current features
 
 - Mara registered in the named-NPC and Love Interest systems.
 - New-save initialization and existing-save migration hook.
@@ -15,22 +17,25 @@ A Yareth-style source modification that adds Mara as a named NPC and Love Intere
 - Danube house introduction event.
 - Pet shop passage linked from Shopping Centre (09:00-14:00).
 - House and shop tasks with vanilla money rewards.
+- Visible relationship and money gain feedback on Mara's shop and house work.
 - Initial romance, private collection, and Handler/Pet proposal scenes.
 
 ## Repository layout
 
-- [Source patch](patches/Mara_v0.1.0.patch): unified diff against vanilla 0.5.13.8.
+- [Base source patch v0.1.0](patches/Mara_v0.1.0.patch): unified diff against vanilla 0.5.13.8.
+- [Stat feedback patch v0.1.1](patches/Mara_v0.1.1-StatFeedback.patch): apply after v0.1.0.
 - [Patch instructions](patches/README.md): application and compatibility instructions.
 - [Mara design document](docs/Mara_Design.md): original character, progression, and planned implementation notes.
-- [Runtime test plan](docs/TEST_PLAN.md): new-save and existing-save test checklist.
+- [Runtime test plan](docs/TEST_PLAN.md): new-save, existing-save, and stat feedback checks.
+- [Changelog](CHANGELOG.md): release notes.
 
-The patch modifies vanilla source files directly. It is **not** a ModLoader package. It does not include the vanilla game source or the compiled game HTML.
+The patch modifies vanilla source files directly. It is **not** a ModLoader package. It does not include the vanilla game source or compiled game HTML.
 
 ## Build
 
-Start with a clean vanilla DoL 0.5.13.8 source tree. Apply the patch using the instructions in [patches/README.md](patches/README.md), then compile with the source tree's Tweego-based `compile.sh` script.
+Start with a clean vanilla DoL 0.5.13.8 source tree. Apply v0.1.0 first, then apply v0.1.1 using the instructions in [patches/README.md](patches/README.md). Compile with the source tree's Tweego-based `compile.sh` script.
 
-Do not apply it to another game version without reviewing the source differences.
+Do not apply these patches to another DoL version without reviewing the source differences.
 
 ## Known limitations
 
@@ -39,9 +44,9 @@ Do not apply it to another game version without reviewing the source differences
 - House and shop first-meeting flags are separate.
 - No custom art is included.
 - The private collection is an introductory scene, not a complete equipment mechanic.
-- Browser runtime testing is still required for new saves, migrated saves, event selection, Cheat Menu controls, and reward handling.
+- The v0.1.1 visual changes have compile validation but still need an in-game display check, including the Blind Stats setting.
 - Some features in the original design document remain planned rather than implemented in this alpha.
 
 ## License and upstream assets
 
-This repository contains a source patch intended to be applied to a separately obtained copy of DoL 0.5.13.8. It does not redistribute the vanilla game source or compiled game HTML. Respect the game's upstream license and asset permissions when distributing derivatives.
+This repository contains source patches intended to be applied to a separately obtained copy of DoL 0.5.13.8. It does not redistribute the vanilla game source or compiled game HTML. Respect the game's upstream license and asset permissions when distributing derivatives.
