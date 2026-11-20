@@ -2,41 +2,35 @@
 
 Target: vanilla Degrees of Lewdity 0.5.13.8.
 
-1. Obtain and extract a clean, unmodified 0.5.13.8 source tree.
-2. Apply the base patch:
+## Recommended clean install
 
-   ```sh
-   patch --dry-run -p1 -i /path/to/Mara_v0.1.0.patch
-   patch -p1 -i /path/to/Mara_v0.1.0.patch
-   ```
+The downloadable v0.1.3 source ZIP contains a cumulative Mara_v0.1.3-Full.patch that applies to clean vanilla 0.5.13.8 source.
 
-3. Apply the v0.1.1 native stat feedback patch:
+From the source root:
 
-   ```sh
-   patch --dry-run -p1 -i /path/to/Mara_v0.1.1-StatFeedback.patch
-   patch -p1 -i /path/to/Mara_v0.1.1-StatFeedback.patch
-   ```
+    patch --dry-run -p1 -i /path/to/Mara_v0.1.3-Full.patch
+    patch -p1 -i /path/to/Mara_v0.1.3-Full.patch
+    FORCE_VERSION=0.5.13.8-Mara-Alpha-0.1.3 bash compile.sh
 
-4. Apply the v0.1.2 reward layout patch:
+## Incremental upgrade
 
-   ```sh
-   patch --dry-run -p1 -i /path/to/Mara_v0.1.2-StatLayout.patch
-   patch -p1 -i /path/to/Mara_v0.1.2-StatLayout.patch
-   ```
+For a source tree already patched through v0.1.2, apply:
 
-5. Compile using the source tree's Tweego-based `compile.sh`.
+    patch --dry-run -p1 -i /path/to/Mara_v0.1.3-AlwaysAvailable.patch
+    patch -p1 -i /path/to/Mara_v0.1.3-AlwaysAvailable.patch
 
-Both update patches are incremental. v0.1.1 expects v0.1.0 to be applied first. v0.1.2 expects v0.1.1 to be applied. Do not apply either update patch directly to an unmodified vanilla source tree.
+The incremental patch must be applied after v0.1.0, v0.1.1, and v0.1.2. Do not apply it to clean vanilla source.
 
-## Display behaviour
+## What v0.1.3 changes
 
-The v0.1.2 patch places the reward summary beneath the event text, with blank-line spacing before and after it. Each stat displays one sign, regardless of whether its actual change is one, two, or three points.
+- After meeting Mara at the pet shop, her Shopping Centre link remains available at any hour.
+- After meeting Mara at the shop, the pet-shop passage and work menu no longer close outside the original 09:00-14:00 introduction hours.
+- After meeting Mara at her Danube home, a permanent Mara's home destination appears on Danube Street, so returning to her does not depend on a random house-knock event.
+- First-meeting and return dialogue at both locations welcomes the player and naturally invites them to help, rather than asking whether they are looking for work.
+- Existing work choices, money rewards, and relationship gain values are unchanged.
 
-- Love: positive `glove Mara`; negative `llove Mara` / `lllove Mara` / `llllove Mara`.
-- Trust: positive `gtrust`; negative `ltrust` / `lltrust` / `llltrust`.
-- Dominance: positive `gdom Mara`; negative `ldom Mara` / `lldom Mara` / `llldom Mara`.
-- Money: vanilla `moneyGain` with a visible plus sign and spacing.
+## Stat feedback
 
-These native relationship notices respect the game's Blind Stats setting. The v0.1.2 update changes presentation only; it does not change the amount of Love, Trust, Dominance, or money awarded.
+The v0.1.1 and v0.1.2 updates use vanilla DoL's native stat feedback macros. They respect the game's Blind Stats setting. Reward summaries appear below the narrative and use one sign per changed stat, with money separated by spacing.
 
-Keep an untouched copy of the base source and back up saves before testing. Recheck the stat displays with Blind Stats both off and on.
+Back up saves before testing. For v0.1.3, test using a save that has already met Mara at both the shop and the house.
