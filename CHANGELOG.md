@@ -1,34 +1,40 @@
 # Changelog
 
-## v0.1.3 - Persistent visits and welcoming dialogue
+## v0.1.4 - Daily shop / home schedule
 
-- Meeting Mara at either her pet shop or her Danube Street home now unlocks repeat visits to both locations.
-- Keeps the Mara's Pet Shop link available in Shopping Centre after the first meeting, regardless of time.
-- Removes the shop-hours restriction from Mara's shop passage and work menu after the first meeting.
-- Adds a permanent Mara's home destination to Danube Street after the first meeting.
-- Adds a dedicated repeat-visit passage for the house.
-- Rewrites the first-meeting and return dialogue at both places to welcome the player and invite them to help.
-- Preserves existing task options, time costs, money rewards, and relationship gains.
+- Mara works at the pet shop from 09:00 until 14:00.
+- During shop hours, visiting her Danube Street home displays: "No one is home. Mara is at the shop."
+- Outside shop hours, Mara is at home and can be visited there.
+- During home hours, the shop displays a notice that Mara is at home on Danube Street.
+- The random first house introduction only appears while Mara is at home.
+- Both locations remain available after the player has met Mara, but interaction follows her current location.
+- Existing work choices, rewards, and relationship gains are unchanged.
 
 Validation:
-- Cumulative v0.1.3 patch applies to clean vanilla 0.5.13.8 source.
-- Cumulative v0.1.3 source compiled with Tweego.
-- Incremental v0.1.3 patch applies over the v0.1.2 source tree and reproduces the three changed source files byte-for-byte.
-- In-game testing of the newly added repeat visits remains outstanding.
+- Tweego compilation succeeded.
+- Incremental v0.1.4 patch applies on top of v0.1.3 and recreates the changed source files exactly.
+- Cumulative v0.1.4 patch applies to clean vanilla 0.5.13.8 and recreates the updated Mara source files exactly.
+- In-game schedule behaviour still needs confirmation.
+
+## v0.1.3 - Persistent visits and welcoming dialogue
+
+- Meeting Mara at either her pet shop or her Danube Street home unlocks repeat visits to both locations.
+- Keeps the Mara's Pet Shop link available after the first meeting.
+- Adds a permanent Mara's home destination to Danube Street after the first meeting.
+- Rewrites first-meeting and return dialogue to welcome the player and invite them to help.
+- Preserves existing work choices, time costs, money rewards, and relationship gains.
 
 ## v0.1.2 - Reward stat layout
 
-- Moved stat and cash feedback below the narrative, onto a separate reward line.
-- Replaced repeated plus indicators for +2/+3 with a single positive indicator for each changed stat.
-- Added whitespace between the stat feedback and money amount.
-- Kept all underlying Love, Trust, Dominance, and money values unchanged.
+- Moved stat and cash feedback below the narrative onto a separate reward line.
+- Replaced repeated plus indicators for +2/+3 with one positive indicator for each changed stat.
+- Added whitespace between relationship feedback and money.
+- Kept all underlying values unchanged.
 
 ## v0.1.1 - Native stat feedback
 
-- Added visible Love feedback to Mara's shop introduction.
-- Added Love, conditional Trust, and Dominance feedback to shop work rewards.
-- Added Love and conditional Trust feedback to Danube house-work rewards.
-- Reused DoL's native stat feedback macros, preserving Blind Stats behaviour.
+- Added visible Love, conditional Trust, and Dominance feedback to Mara's shop and house interactions.
+- Reused vanilla stat display macros, preserving Blind Stats behaviour.
 
 ## v0.1.0 - Mara alpha
 
