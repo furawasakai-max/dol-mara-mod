@@ -4,51 +4,51 @@ A Yareth-style source modification that adds Mara as a named NPC and Love Intere
 
 ## Project status
 
-**v0.1.0 alpha:** The user has confirmed that the base mod works in-game.
+**v0.1.0 alpha:** The user confirmed that the base mod works in-game.
 
 **v0.1.1:** Added native relationship and money gain feedback.
 
-**v0.1.2:** Reformatted reward feedback so it appears on its own line, with one plus/minus sign per stat and clear spacing around the cash reward. Tweego compilation and incremental patch application succeeded. The revised visual layout still needs in-game confirmation.
+**v0.1.2:** Reformatted reward feedback with a separate reward line, one sign per stat, and clearer spacing.
+
+**v0.1.3:** After meeting Mara at either location, the player can return to her at any time. The shop link remains available after the first meeting, including outside regular hours. After meeting her at the house, a permanent Mara's home destination appears on Danube Street. Both locations now use welcoming dialogue that invites the player to help.
 
 ## Current features
 
 - Mara registered in the named-NPC and Love Interest systems.
 - New-save initialization and existing-save migration hook.
-- Love, Trust, and Dominance relationship support.
-- Cheat Menu controls for Mara's relationship stats.
-- Danube house introduction event.
-- Pet shop passage linked from Shopping Centre (09:00-14:00).
-- House and shop tasks with vanilla money rewards.
-- Relationship and cash feedback on Mara's shop and house work.
+- Love, Trust, and Dominance relationship support and Cheat Menu controls.
+- First meeting through the Danube House Knock event pool.
+- Permanent Mara's home destination on Danube Street after the house introduction.
+- First shop visit remains limited to usual opening hours (09:00-14:00); after meeting Mara, the shop and work tasks remain available at any hour.
+- Welcoming return dialogue at both the house and shop.
+- House and shop work tasks with vanilla money rewards and native stat feedback.
 - Initial romance, private collection, and Handler/Pet proposal scenes.
 
 ## Repository layout
 
-- [Base source patch v0.1.0](patches/Mara_v0.1.0.patch): unified diff against vanilla 0.5.13.8.
-- [Stat feedback patch v0.1.1](patches/Mara_v0.1.1-StatFeedback.patch): apply after v0.1.0.
-- [Reward layout patch v0.1.2](patches/Mara_v0.1.2-StatLayout.patch): apply after v0.1.1.
-- [Patch instructions](patches/README.md): application and compatibility instructions.
-- [Mara design document](docs/Mara_Design.md): original character, progression, and implementation notes.
-- [Runtime test plan](docs/TEST_PLAN.md): new-save, existing-save, and stat feedback checks.
-- [Changelog](CHANGELOG.md): release notes.
+- Base source patch v0.1.0: patches/Mara_v0.1.0.patch
+- Stat feedback patch v0.1.1: patches/Mara_v0.1.1-StatFeedback.patch
+- Reward layout patch v0.1.2: patches/Mara_v0.1.2-StatLayout.patch
+- Persistent availability patch v0.1.3: patches/Mara_v0.1.3-AlwaysAvailable.patch (apply after v0.1.2).
+- Patch instructions: patches/README.md
+- Mara design document: docs/Mara_Design.md
+- Runtime test plan: docs/TEST_PLAN.md
+- Changelog: CHANGELOG.md
 
-The patch modifies vanilla source files directly. It is **not** a ModLoader package. It does not include the vanilla game source or compiled game HTML.
+The patches modify vanilla source files directly. This is **not** a ModLoader package. The repository does not include the vanilla game source or compiled game HTML.
 
 ## Build
 
-Start with a clean vanilla DoL 0.5.13.8 source tree. Apply v0.1.0, then v0.1.1, then v0.1.2 in that order using the instructions in [patches/README.md](patches/README.md). Compile with the source tree's Tweego-based `compile.sh` script.
+For a clean vanilla 0.5.13.8 source tree, use the cumulative Mara_v0.1.3-Full.patch included in the downloadable v0.1.3 source ZIP. Alternatively, apply the four incremental patches in order as described in patches/README.md. Compile with the source tree's Tweego-based compile.sh.
 
-Do not apply these patches to another DoL version without reviewing the source differences.
+Do not apply these patches to another DoL version without reviewing source differences.
 
 ## Known limitations
 
-- Pet shop is a passage link, not a separately registered map node.
-- Work activities are simple choice passages, not a fully balanced shift/event system.
-- House and shop first-meeting flags are separate.
+- Mara's shop is a passage linked from Shopping Centre, not an independent map node.
+- Work activities are fixed task choices, not a full random shift/event system.
 - No custom art is included.
-- The private collection is an introductory scene, not a complete equipment mechanic.
-- The v0.1.2 reward layout has compile and patch-application validation but still needs an in-game visual check.
-- Some features in the original design document remain planned rather than implemented in this alpha.
+- The new v0.1.3 return-visit flow compiles and patch-verifies, but should still be tested in-game with a save that has met Mara at both locations.
 
 ## License and upstream assets
 
