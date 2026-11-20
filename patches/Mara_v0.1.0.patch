@@ -281,18 +281,18 @@
 +	<br><br>
 +	<<link [[Offer to help with the shop|Mara Shop Work]]>><</link>>
 +	<br>
-+</<if>>
++<</if>>
 +<<link [[Browse pet supplies|Mara Shop Browse]]>><</link>>
 +<<if C.npc.Mara.trust gte 50 and !$mara.privateCollectionSeen>>
 +	<br><<link [[Ask Mara about her private collection|Mara Private Collection]]>><</link>>
-+</<if>>
++<</if>>
 +<<if C.npc.Mara.love gte 100 and C.npc.Mara.trust gte 50 and !$mara.romanceUnlocked>>
 +	<br><<link [[Talk about your relationship|Mara Romance Confession]]>><</link>>
-+</<if>>
++<</if>>
 +<<if $mara.romanceUnlocked and C.npc.Mara.trust gt 70 and C.npc.Mara.dom gte 100 and !$mara.handlerProposalSeen>>
 +	<br><<link [[Mara has a personal question|Mara Handler Proposal]]>><</link>>
-+</<if>>
-+</<if>>
++<</if>>
++<</if>>
 +<br>
 +<<link [[Leave the shop|Shopping Centre]]>><</link>>
 +
