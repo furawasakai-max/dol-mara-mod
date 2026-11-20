@@ -23,14 +23,14 @@ The incremental patch must be applied after v0.1.0, v0.1.1, and v0.1.2. Do not a
 
 ## What v0.1.3 changes
 
-- After meeting Mara at the pet shop, her Shopping Centre link remains available at any hour.
-- After meeting Mara at the shop, the pet-shop passage and work menu no longer close outside the original 09:00-14:00 introduction hours.
-- After meeting Mara at her Danube home, a permanent Mara's home destination appears on Danube Street, so returning to her does not depend on a random house-knock event.
-- First-meeting and return dialogue at both locations welcomes the player and naturally invites them to help, rather than asking whether they are looking for work.
-- Existing work choices, money rewards, and relationship gain values are unchanged.
+- Meeting Mara at either her pet shop or her Danube Street home unlocks return visits to both locations.
+- After meeting her, the Shopping Centre link, pet-shop passage, and shop work choices remain available at any hour.
+- After meeting her, a permanent Mara's home destination appears on Danube Street, so returning to her does not depend on a random house-knock event.
+- Dialogue at both first meetings and repeat visits welcomes the player and naturally invites them to help, rather than asking whether they are looking for work.
+- Existing work choices, money rewards, time costs, and relationship gain values are unchanged.
 
 ## Stat feedback
 
 The v0.1.1 and v0.1.2 updates use vanilla DoL's native stat feedback macros. They respect the game's Blind Stats setting. Reward summaries appear below the narrative and use one sign per changed stat, with money separated by spacing.
 
-Back up saves before testing. For v0.1.3, test using a save that has already met Mara at both the shop and the house.
+Back up saves before testing. For v0.1.3, test using a save that has met Mara at either the shop or the house, then confirm both destinations are available.
