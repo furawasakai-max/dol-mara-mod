@@ -4,7 +4,9 @@ Target: vanilla Degrees of Lewdity 0.5.13.8.
 
 ## Clean installation
 
-From the root of a clean 0.5.13.8 source tree:
+The cumulative `Mara_v0.1.6-Full.patch` is included in the downloadable `Mara_YarethStyle_SourcePatch_0.1.6.zip`.
+
+From the root of a clean 0.5.13.8 source tree, after extracting the source ZIP:
 
     patch --dry-run -p1 -i /path/to/Mara_v0.1.6-Full.patch
     patch -p1 -i /path/to/Mara_v0.1.6-Full.patch
@@ -12,7 +14,7 @@ From the root of a clean 0.5.13.8 source tree:
 
 ## Upgrade from v0.1.5
 
-For a source tree that already has the v0.1.5 full patch applied:
+For a source tree that already has the v0.1.5 full patch applied, download [Mara_v0.1.6-NPCIntegration.patch](Mara_v0.1.6-NPCIntegration.patch) from this folder and apply:
 
     patch --dry-run -p1 -i /path/to/Mara_v0.1.6-NPCIntegration.patch
     patch -p1 -i /path/to/Mara_v0.1.6-NPCIntegration.patch
