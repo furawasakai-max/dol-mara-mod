@@ -1,0 +1,335 @@
+--- a/game/03-JavaScript/ingame.js
++++ b/game/03-JavaScript/ingame.js
+@@ -1742,6 +1742,8 @@
+ 			return V.farm_stage >= 7 && V.alex_countdown === undefined;
+ 		case "Gwylan":
+ 			return V.gwylanSeen?.includes("partners") || V.gwylanSeen?.includes("romance");
++		case "Mara":
++			return V.mara?.romanceUnlocked === true && C.npc.Mara.state !== "dismissed";
+ 		default:
+ 			return false;
+ 	}
+--- a/game/03-JavaScript/named-npc.js
++++ b/game/03-JavaScript/named-npc.js
+@@ -33,11 +33,40 @@
+ 			case "Gwylan":
+ 				gwylanStatusCheck();
+ 				break;
+-		}
++			case "Mara":
++				maraStatusCheck(nnpc);
++				break;
++		}
++	} else if (nnpc.nam === "Mara") {
++		/* Mara's location schedule is meaningful before her relationship is initialised. */
++		T.mara_location = maraSchedule();
+ 	}
+ 	return nnpc;
+ }
+ window.statusCheck = statusCheck;
++
++/**
++ * Mara works at the pet shop from 09:00 until 13:59 and is at home at all other times.
++ * Keep the schedule in one place so her shop, home, and encounter passages cannot drift apart.
++ * @returns {"shop" | "home"}
++ */
++function maraSchedule() {
++	return Time.hour >= 9 && Time.hour < 14 ? "shop" : "home";
++}
++window.maraSchedule = maraSchedule;
++
++/** Updates Mara's current location and relationship milestones for passages and UI. */
++function maraStatusCheck(mara = C.npc.Mara) {
++	const status = [];
++	if (V.mara?.metShop || V.mara?.metHouse) status.push("met");
++	if (mara.love >= 50) status.push("love");
++	if (mara.trust >= 50) status.push("trust");
++	if (V.mara?.romanceUnlocked) status.push("romance");
++	if (V.mara?.handlerRelationship) status.push("handler");
++	T.mara_location = maraSchedule();
++	return (T.maraStatus = status);
++}
++window.maraStatusCheck = maraStatusCheck;
+ 
+ function sydneyStatusCheck() {
+ 	const sydney = C.npc.Sydney;
+--- a/game/04-Variables/npcNamed.twee
++++ b/game/04-Variables/npcNamed.twee
+@@ -213,6 +213,13 @@
+ 				<</if>>
+ 				<<if $NPCName[_i].hairColour is 0 or $NPCName[_i].hairColour is undefined or _args[0] is "default">>
+ 					<<set $NPCName[_i].hairColour to "ginger">>
++				<</if>>
++			<<case "Mara">>
++				<<if $NPCName[_i].hairColour is 0 or $NPCName[_i].hairColour is undefined or _args[0] is "default">>
++					<<set $NPCName[_i].hairColour to "black">>
++				<</if>>
++				<<if $NPCName[_i].eyeColour is 0 or $NPCName[_i].eyeColour is undefined>>
++					<<set $NPCName[_i].eyeColour to ["purple","dark blue","light blue","amber","hazel","green","red","pink","grey", "light grey", "lime green"].pluck()>>
+ 				<</if>>
+ 			<<case "Black Wolf">>
+ 				<<if $NPCName[_i].eyeColour is 0 or $NPCName[_i].eyeColour is undefined>>
+--- a/game/04-Variables/variables-maraUpdate.twee
++++ b/game/04-Variables/variables-maraUpdate.twee
+@@ -1,9 +1,9 @@
+ :: Mara Init [widget]
+ <<widget "maraInit">>
++	<<if $objectVersion is undefined>><<set $objectVersion to {}>><</if>>
+ 	<<if $mara is undefined>>
+-		<<set $mara to { version: 1, metShop: false, metHouse: false, shopHelp: 0, houseHelp: 0, privateCollectionSeen: false, handlerProposalSeen: false, handlerRelationship: false, romanceUnlocked: false }>>
++		<<set $mara to { metShop: false, metHouse: false, shopHelp: 0, houseHelp: 0, privateCollectionSeen: false, handlerProposalSeen: false, handlerRelationship: false, romanceUnlocked: false }>>
+ 	<<else>>
+-		<<if $mara.version is undefined>><<set $mara.version to 1>><</if>>
+ 		<<if $mara.metShop is undefined>><<set $mara.metShop to false>><</if>>
+ 		<<if $mara.metHouse is undefined>><<set $mara.metHouse to false>><</if>>
+ 		<<if $mara.shopHelp is undefined>><<set $mara.shopHelp to 0>><</if>>
+@@ -13,6 +13,13 @@
+ 		<<if $mara.handlerRelationship is undefined>><<set $mara.handlerRelationship to false>><</if>>
+ 		<<if $mara.romanceUnlocked is undefined>><<set $mara.romanceUnlocked to false>><</if>>
+ 	<</if>>
++	/* Initialise Mara as a named NPC once the player has met her. Preserve relationship and appearance data from earlier alpha saves. */
++	<<if ($mara.metShop or $mara.metHouse) and C.npc.Mara.init isnot 1>>
++		<<set _maraPrevious to clone(C.npc.Mara)>>
++		<<initnpc "Mara">>
++		<<run ["love", "lust", "trust", "dom", "rage", "trauma", "purity", "corruption", "state", "name_known", "title", "description", "type", "claws", "pronoun", "pronouns", "gender", "penis", "vagina", "penissize", "penisdesc", "bottomsize", "ballssize", "breastsize", "breastdesc", "breastsdesc", "hairColour", "eyeColour", "skincolour", "virginity", "chastity", "clothes", "outfits", "strapons"].forEach(key => { if (_maraPrevious[key] !== undefined) C.npc.Mara[key] = clone(_maraPrevious[key]); })>>
++	<</if>>
++	<<set $objectVersion.mara to 2>>
+ <</widget>>
+ 
+ :: Mara Relationship Events
+@@ -26,12 +33,13 @@
+ :: Mara Romance Confession
+ Mara sets aside her work and speaks more quietly. "You've become important to me. I would like us to be more than friends, if you feel the same."
+ <br><br>
+-<<link [[Accept her feelings|Mara Romance Accepted]]>><<set $mara.romanceUnlocked to true>><<run setup.loveInterestNpc.includes("Mara") || setup.loveInterestNpc.push("Mara")>><</link>>
++<<link [[Accept her feelings|Mara Romance Accepted]]>><</link>>
+ <br>
+ <<link [[Ask for more time|Mara Pet Shop]]>><</link>>
+ 
+ :: Mara Romance Accepted
+ <<set $mara.romanceUnlocked to true>>
++<<if !isLoveInterest("Mara")>><<loveInterestAdd "Mara">><</if>>
+ Mara smiles, visibly relieved. "Then let's see where this takes us."
+ <br><br>
+ <<link [[Continue|Mara Pet Shop]]>><</link>>
+--- a/game/base-system/attitudes.twee
++++ b/game/base-system/attitudes.twee
+@@ -909,6 +909,7 @@
+ 				<<else>>
+ 					Not forever, but for right now. Right now is all that matters.
+ 				<</if>>
++			<<case "Mara">>You and Mara have chosen to build a relationship based on trust and mutual understanding.
+ 		<</switch>>
+ 		<br>
+ 		You can change your love interest<<if $awarelevel gte 2>>s<</if>> in the "Attitudes" menu.
+@@ -974,6 +975,8 @@
+ 			<<case "Gwylan">>
+ 				<<set $gwylanSeen to []>>
+ 				<<set $gwylanSeen.pushUnique("partners")>>
++			<<case "Mara">>
++				<<set $mara.romanceUnlocked to true>>
+ 		<</switch>>
+ 
+ 		/* Finally add the LI as selectable */
+--- a/game/base-system/named-npcs.twee
++++ b/game/base-system/named-npcs.twee
+@@ -578,6 +578,7 @@
+ 				)>>
+ 			<<case Alex>><<set $NPCName[_i].outfits.pushUnique("wildsFlannel", "AlexJorts", "AlexSkirt", "coldCoat")>>
+ 			<<case Avery>><<set $NPCName[_i].outfits.pushUnique("business", "maleFormal1", "femaleFormal1", "pyjamas")>>
++			<<case Mara>><<set $NPCName[_i].outfits.pushUnique("femaleFormal1", "femaleTown1", "femaleWarm1", "pyjamas")>>
+ 			<<case Eden>><<set $NPCName[_i].outfits.pushUnique("Eden")>>
+ 			<<case Morgan>><<set $NPCName[_i].outfits.pushUnique("Morgan")>>
+ 			<<case Briar>><<set $NPCName[_i].outfits.pushUnique("maleBriar", "femaleBriar")>>
+--- a/game/base-system/overlays/journal.twee
++++ b/game/base-system/overlays/journal.twee
+@@ -359,6 +359,26 @@
+ 						<li> You've done the photoshoot at Leighton's office today. </li>
+ 					<</if>>
+ 				<</if>>
++			<</if>>
++		</ul>
++	<</if>>
++
++	<<if $mara?.metShop || $mara?.metHouse>>
++		<hr>
++		<h1 class="header gold bold">Mara</h1>
++		<ul class="journal">
++			<li>Mara owns a pet shop in the shopping centre. She works there from 9 AM until 2 PM and is usually at her home on Danube Street outside those hours.</li>
++			<<if $mara.shopHelp gt 0 || $mara.houseHelp gt 0>>
++				<li>You've helped Mara with <<= $mara.shopHelp + $mara.houseHelp >> <<pluralise ($mara.shopHelp + $mara.houseHelp) "task">>.</li>
++			<</if>>
++			<<if $mara.privateCollectionSeen>>
++				<li>Mara has trusted you enough to share her private interest in collars, rules, and consensual power exchange.</li>
++			<</if>>
++			<<if $mara.romanceUnlocked>>
++				<li>You and Mara have agreed to pursue a romantic relationship.</li>
++			<</if>>
++			<<if $mara.handlerRelationship>>
++				<li>You and Mara have agreed to a consensual Handler and pet relationship.</li>
+ 			<</if>>
+ 		</ul>
+ 	<</if>>
+--- a/game/base-system/overlays/social.twee
++++ b/game/base-system/overlays/social.twee
+@@ -51,6 +51,12 @@
+ 						lust : { maxValue : 100 },
+ 						dom : { maxValue : 100 }
+ 					},
++					"Mara" : {
++						important : V.mara?.metShop || V.mara?.metHouse,
++						love : { maxValue : 100 },
++						trust : { name : "Trust", maxValue : 300, activeIcon : "img/ui/sym-confidence.png", color : "teal" },
++						dom : { maxValue : 100 }
++					},
+ 					"Gwylan" : {
+ 						important: V.gwylanSeen?.includes("yearning"),
+ 						love : { maxValue : (getSpecialSets(sets => sets.shop.includes("forest")).length * 2),
+@@ -92,6 +98,7 @@
+ 				/* This list dictates the order that the important NPCs will show up in on the social menu screen */
+ 				T.importantNpcOrder = ["Robin", "Whitney", "Eden", "Kylar", "Sydney", "Avery", "Great Hawk", "Black Wolf", "Alex"];
+ 				if (V.gwylanSeen?.includes("yearning")) T.importantNpcOrder.pushUnique("Gwylan");
++				if (V.mara?.metShop || V.mara?.metHouse) T.importantNpcOrder.pushUnique("Mara");
+ 				T.specialNPCs = ["Ivory Wraith"];
+ 
+ 				/* this list is sorted */
+--- a/game/base-system/widgets.twee
++++ b/game/base-system/widgets.twee
+@@ -3281,6 +3281,8 @@
+ 
+ 			/* Returns true/false based on whether the requirements to display a stat are met, automatically true if no requirement specified */
+ 			T.checkRequirements = function (stat) {
++				/* Trust is a displayed relationship stat for Mara only; other NPC trust values remain internal. */
++				if (stat === "trust" && T.npcData.nam !== "Mara") return false;
+ 				let statOverrides = T.npcOverrides[stat];
+ 
+ 				if(statOverrides)
+@@ -3289,7 +3291,7 @@
+ 					return true;
+ 			};
+ 
+-			T.importantNpcStats = ["love", "lust", "dom", "trauma", "rage", "purity", "corruption", "harmony", "ferocity"];
++			T.importantNpcStats = ["love", "lust", "dom", "trust", "trauma", "rage", "purity", "corruption", "harmony", "ferocity"];
+ 			T.otherNpcStats = ["love", "lust"];
+ 
+ 			let statDefaults = {
+@@ -3313,6 +3315,12 @@
+ 					value : T.npcData.dom,
+ 					activeIcon : "img/ui/sym-dominance.png",
+ 					color: 'purple'
++				},
++				"trust" : {
++					name : "Trust",
++					value : T.npcData.trust,
++					activeIcon : "img/ui/sym-confidence.png",
++					color: 'teal'
+ 				},
+ 				"trauma" : {
+ 					name : "Trauma",
+--- a/game/overworld-town/loc-danube-homes/work.twee
++++ b/game/overworld-town/loc-danube-homes/work.twee
+@@ -100,11 +100,12 @@
+ 			<br>
+ 			<</addinlineevent>>
+ 	<</if>>
+-	<<if !$mara.metHouse and (Time.hour lt 9 or Time.hour gte 14)>>
++	<<maraInit>><<run statusCheck("Mara")>>
++	<<if !$mara.metHouse and T.mara_location is "home">>
+ 		<<addinlineevent "Mara Danube Pre-Intro" 1>>
+-			A well-dressed woman opens the door. Her dark hair is neatly arranged, and her sharp eyes study you with calm curiosity. "Good afternoon. Are you looking for work? I own a pet shop on High Street. I sometimes need an extra pair of hands here at home, too."
++			A woman with neatly arranged dark hair opens the door. She glances at the few things waiting to be done around the house, then gives you a polite smile. "Hello. I'm Mara. I run the pet shop at the shopping centre. I'm just getting a few things sorted here at home, and an extra pair of hands would be welcome. Would you mind helping me?"
+ 			<br><br>
+-			<<socialiseicon "ask">><<link [[Ask what work she has|Mara Danube Work Intro]]>><</link>>
++			<<socialiseicon "ask">><<link [[Offer to help Mara|Mara Danube Pre-Intro]]>><</link>>
+ 			<br>
+ 			<<getouticon>><<link [[Politely decline and leave|Danube Street]]>><<endevent>><</link>>
+ 		<</addinlineevent>>
+@@ -2932,12 +2933,13 @@
+ 
+ :: Mara Danube Pre-Intro
+ <<set $outside to 0>><<set $location to "town">><<effects>><<set $bus to "danube">>
+-<<if Time.hour gte 9 and Time.hour lt 14>>
++<<maraInit>><<run statusCheck("Mara")>>
++<<if T.mara_location is "shop">>
+ 	No one is home. Mara is at the shop.
+ 	<br><br>
+ 	<<link [[Return to Danube Street|Danube Street]]>><<pass 2>><</link>>
+ <<else>>
+-	<<set $mara.metHouse to true>>
++	<<set $mara.metHouse to true>><<maraInit>><<run statusCheck("Mara")>>
+ 	<<if $mara.metShop>>
+ 		Mara recognizes you and smiles. "Well, hello again. I'm glad you stopped by. I've got a few things to finish up around the house, and an extra pair of hands would be welcome. Would you mind helping me out?"
+ 	<<else>>
+@@ -2951,12 +2953,13 @@
+ 
+ :: Mara Danube House Visit
+ <<set $outside to 0>><<set $location to "town">><<effects>><<set $bus to "danube">>
+-<<if Time.hour gte 9 and Time.hour lt 14>>
++<<maraInit>><<run statusCheck("Mara")>>
++<<if T.mara_location is "shop">>
+ 	No one is home. Mara is at the shop.
+ 	<br><br>
+ 	<<link [[Return to Danube Street|Danube Street]]>><<pass 2>><</link>>
+ <<else>>
+-	<<set $mara.metHouse to true>>
++	<<set $mara.metHouse to true>><<maraInit>><<run statusCheck("Mara")>>
+ 	Mara opens the door, and her expression brightens when she recognizes you. "It's good to see you again. I was just about to get a few things done around the house. Would you like to give me a hand?"
+ 	<br><br>
+ 	<<link [[Help Mara with the housework|Mara Danube Work Intro]]>><</link>>
+@@ -2966,11 +2969,13 @@
+ 
+ :: Mara Danube Work Intro
+ <<set $outside to 0>><<set $location to "town">><<effects>><<set $bus to "danube">>
+-<<if Time.hour gte 9 and Time.hour lt 14>>
++<<maraInit>><<run statusCheck("Mara")>>
++<<if T.mara_location is "shop">>
+ 	No one is home. Mara is at the shop.
+ 	<br><br>
+ 	<<link [[Return to Danube Street|Danube Street]]>><<pass 2>><</link>>
+ <<else>>
++	<<set $mara.metHouse to true>><<maraInit>><<run statusCheck("Mara")>>
+ 	Mara smiles. "Thank you. I've got a few things that could use doing. Choose whichever you'd like, and I'll pay you for your time."
+ 	<br><br>
+ 	<<link [[Organize pet supplies (30 minutes)|Mara Danube Organize]]>><<pass 30>><</link>>
+--- a/game/overworld-town/loc-shop/main.twee
++++ b/game/overworld-town/loc-shop/main.twee
+@@ -1165,7 +1165,8 @@
+ 
+ :: Mara Pet Shop
+ <<set $outside to 0>><<set $location to "shopping_centre">><<effects>>
+-<<if Time.hour lt 9 or Time.hour gte 14>>
++<<maraInit>><<run statusCheck("Mara")>>
++<<if T.mara_location is "home">>
+ 	<<if $mara.metShop or $mara.metHouse>>
+ 		Mara isn't at the shop right now. She's at home on Danube Street.
+ 		<br><br>
+@@ -1181,7 +1182,7 @@
+ You enter Mara's Pet Shop. Shelves hold pet food, grooming supplies, toys, carriers, and collars. Mara stands behind the counter, dressed neatly in formal clothes.
+ <br><br>
+ <<if !$mara.metShop>>
+-	<<set $mara.metShop to true>>
++	<<set $mara.metShop to true>><<maraInit>><<run statusCheck("Mara")>>
+ 	<<if $mara.metHouse>>
+ 		"It's good to see you again. Welcome to the shop. I'm glad you found your way here. I've got a few things to get through, and an extra pair of hands would be a real help. Would you like to give me a hand?"
+ 	<<else>>
+@@ -1219,7 +1220,13 @@
+ <<link [[Continue|Mara Pet Shop]]>><</link>>
+ 
+ :: Mara Shop Work
+-Mara gives you a quick rundown of what needs doing. "Take whichever task you'd like. Every little bit helps."
++<<maraInit>><<run statusCheck("Mara")>>
++<<if T.mara_location is "home">>
++	Mara isn't at the shop right now. She's at home on Danube Street.
++	<br><br>
++	<<link [[Visit Mara at home|Mara Danube House Visit]]>><<pass 2>><</link>>
++<<else>>
++	Mara gives you a quick rundown of what needs doing. "Take whichever task you'd like. Every little bit helps."
+ <br><br>
+ <<link [[Restock shelves|Mara Shop Restock]]>><</link>>
+ <br>
+@@ -1227,6 +1234,7 @@
+ <br>
+ <<link [[Grooming preparation|Mara Shop Grooming]]>><</link>>
+ <br>
++<</if>>
+ <<link [[Back|Mara Pet Shop]]>><</link>>
