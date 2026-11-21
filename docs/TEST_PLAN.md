@@ -1,42 +1,46 @@
-# Mara v0.1.12 runtime test plan
+# Mara v0.1.13 runtime test plan
 
-The source compiles. The incremental patch applies to v0.1.11 with zero rejects; the cumulative patch applies to clean vanilla 0.5.13.8 with zero rejects, and the full-patch verification tree compiles. In-game verification remains necessary.
+The v0.1.13 source compiles. The incremental patch applies to v0.1.12 source, and the cumulative patch dry-runs/applies to clean vanilla 0.5.13.8. The clean full-patch source tree also compiles. In-game verification remains necessary.
 
-## Cushion random order
+## Room entry and daily chance
 
-- [ ] Load a save with `petRulesEstablished` true.
-- [ ] Enter Mara's pet room and use Wait on the cushion.
-- [ ] Confirm the passage advances ten minutes.
-- [ ] Repeat across multiple waits and confirm roughly 40% trigger a random order over a sufficiently large sample.
-- [ ] Confirm triggered orders include Paw, Down/Stay, Come, Fetch, Grooming, Place, and Heel.
-- [ ] Confirm each order is short and does not require prolonged crawling.
-- [ ] Confirm following the order takes another five minutes and returns to the pet room.
-- [ ] Confirm End waiting returns to the pet room without triggering the action.
-- [ ] Confirm no-order waits finish normally and mention Mara checking comfort.
+- [ ] Load a save where `petRulesEstablished` is true.
+- [ ] Enter Mara's pet room and choose Visit Mara's discipline room.
+- [ ] Confirm the room describes the padded X-frame, restraints, whip, cane, and safety release.
+- [ ] On the first visit that day, confirm the game rolls once and either offers a session or says none is scheduled.
+- [ ] Leave and re-enter several times on the same day; confirm the offer does not reroll.
+- [ ] Advance to a new in-game day and confirm a fresh roll occurs.
 
-## Random daily training
+## Whip and cane choices
 
-- [ ] Begin training and confirm one of seven lessons is selected at random.
-- [ ] Repeat in separate test saves/days to see all seven: basic obedience, Heel, Paw, Fetch, Place, Grooming Manners, Settle.
-- [ ] Confirm the lead attaches only when the collar can accept it and remains slack during movement.
-- [ ] Confirm the player can stop in the lesson passage and the lead is detached.
-- [ ] Confirm stopping gives no Dominance/Trust completion reward.
-- [ ] Confirm completion grants exactly +2 Dominance and +1 Trust.
-- [ ] Confirm training cannot be started again that in-game day once a session has begun.
-- [ ] Confirm the session ends with the lead removed, water offered, and a comfort check.
+- [ ] When the offer appears, choose to hear the session options.
+- [ ] Confirm both Whip and Cane choices are available.
+- [ ] Choose each option in separate test saves/days and confirm Mara's description uses the selected implement.
+- [ ] Confirm the final explicit confirmation appears before the player is restrained.
+- [ ] Choose Not today and confirm no Masochism progress is awarded.
 
-## Safety and regression
+## X-frame session and stop flow
 
-- [ ] Confirm all crawl sequences are brief and take place on the soft mat/rug/cushion.
-- [ ] Confirm Mara does not pull the player by the collar or neck.
-- [ ] Test an existing cursed neck item and confirm training code does not overwrite it.
-- [ ] Confirm the cushion and training event options remain separate from cage sleep and the pet bowl.
-- [ ] Confirm the pet bowl, cage sleep, housework, and house-leave outfit restoration still work.
-- [ ] Confirm non-pet house visits and previous reward values remain unchanged.
-- [ ] Confirm cafe random topics and the v0.1.10 rules scene are unaffected.
+- [ ] Confirm the player is described being secured to a padded X-frame with broad, lined cuffs.
+- [ ] Confirm Mara checks the agreed stop word and signal before beginning.
+- [ ] Confirm the session itself remains implied and non-graphic.
+- [ ] Confirm a Stop and be released now link is available while restrained.
+- [ ] Stop the session and confirm Mara releases the player, returns the player to the pet room, and awards no Masochism progress.
+- [ ] Complete a session and confirm Mara releases the player and offers water.
 
-## Save compatibility
+## Masochism reward
 
-- [ ] Load a v0.1.11 save and confirm Mara progression is preserved.
-- [ ] Confirm `objectVersion.mara` advances to 8.
-- [ ] Confirm no new persistent save fields are required.
+- [ ] Confirm each completed whip session adds exactly +20 to `$masochism`.
+- [ ] Confirm each completed cane session adds exactly +20 to `$masochism`.
+- [ ] Confirm the stat does not increase on decline or stop.
+- [ ] Navigate back/re-enter the completion passage and confirm the daily reward cannot be duplicated.
+- [ ] Confirm the stat remains capped at 1000.
+- [ ] Advance the day and confirm vanilla daily effects update the Masochism level tier when a threshold is crossed.
+
+## Regression and saves
+
+- [ ] Confirm cushion random orders and daily command training remain available.
+- [ ] Confirm pet bowl, cage sleep, optional housework, and house-leave clothing restoration still work.
+- [ ] Confirm non-pet house visits are unchanged.
+- [ ] Confirm the v0.1.12 save loads without losing Mara relationship progress.
+- [ ] Confirm `objectVersion.mara` advances to 9 and no new persistent fields are required.
