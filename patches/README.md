@@ -1,32 +1,31 @@
-# Applying Mara v0.1.13
+# Applying Mara v0.1.14
 
 Target: vanilla Degrees of Lewdity 0.5.13.8.
 
 ## Clean installation
 
-Use the single cumulative patch from clean vanilla:
+Use the cumulative patch from the downloadable v0.1.14 source ZIP:
 
-    patch --dry-run -p1 -i patches/Mara_v0.1.13-Full.patch
-    patch -p1 -i patches/Mara_v0.1.13-Full.patch
+    patch --dry-run -p1 -i patches/Mara_v0.1.14-Full.patch
+    patch -p1 -i patches/Mara_v0.1.14-Full.patch
 
-## Upgrade from v0.1.12
+## Upgrade from v0.1.13
 
-For a source tree already patched through v0.1.12, apply only:
+Apply only the incremental patch:
 
-    patch --dry-run -p1 -i patches/Mara_v0.1.13-DisciplineRoom.patch
-    patch -p1 -i patches/Mara_v0.1.13-DisciplineRoom.patch
+    patch --dry-run -p1 -i patches/Mara_v0.1.14-RoughMaraDialogue.patch
+    patch -p1 -i patches/Mara_v0.1.14-RoughMaraDialogue.patch
 
-The incremental patch changes only `game/04-Variables/variables-maraUpdate.twee`.
-Do not apply it directly to clean vanilla source.
+The incremental patch changes:
+- game/04-Variables/variables-maraUpdate.twee
+- game/overworld-town/loc-danube-homes/work.twee
 
-## Behaviour
+Do not apply the incremental patch directly to clean vanilla source.
 
-- The pet-room hub gains a separate discipline-room destination.
-- The first room visit each in-game day rolls a 35% chance for a discipline offer. The roll is stored for the day, so revisiting does not reroll.
-- On a successful roll, the player may choose a whip or cane session, confirm, or decline.
-- The confirmed scene uses a padded X-frame and broad lined restraints. The actual discipline is implied rather than graphically depicted.
-- The player can stop before or during the session. Mara immediately releases the player, and stopping gives no reward.
-- Completing either implement's session awards +20 Masochism progress via the vanilla widget.
-- No persistent save fields are added. `objectVersion.mara` advances to 9.
+## Dialogue scope
 
-The cumulative patch dry-runs and applies to clean vanilla 0.5.13.8. Both clean and incremental source trees compile. In-game runtime testing remains necessary.
+The sharper, more dismissive tone is limited to the established pet arrangement. The second confirmation, collar scene, house rules, pet-room activities, random orders, training, pet-mode housework, and discipline room all use Mara's revised voice. Ordinary shop, cafe, romance, and non-pet interactions are unchanged.
+
+All mechanics remain unchanged: activity chances, time passage, Masochism and relationship rewards, stop/decline links, and save fields.
+
+Compilation and both patch routes were verified. Browser runtime testing of revised passage flow remains outstanding.
