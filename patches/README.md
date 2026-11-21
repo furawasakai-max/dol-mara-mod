@@ -4,7 +4,7 @@ Target: vanilla Degrees of Lewdity 0.5.13.8.
 
 ## Clean installation
 
-Use the cumulative patch:
+Use `Mara_v0.1.17-Full.patch` from the downloadable v0.1.17 source ZIP:
 
     patch --dry-run -p1 -i patches/Mara_v0.1.17-Full.patch
     patch -p1 -i patches/Mara_v0.1.17-Full.patch
