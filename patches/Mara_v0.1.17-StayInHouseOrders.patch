@@ -265,3 +265,31 @@
  		<<link [[Leave Mara's house|Mara Danube House Leave]]>><</link>>
  <<else>>
  		Mara opens the door, and her expression brightens when she recognizes you. "It's good to see you again. I was just about to get a few things done around the house. Would you like to give me a hand."
+
+@@ -2991,12 +3010,23 @@
+ :: Mara Danube Work Intro
+ <<set $outside to 0>><<set $location to "town">><<effects>><<set $bus to "danube">>
+ <<maraInit>><<run statusCheck("Mara")>>
+-<<if T.mara_location is "shop">>
+-	No one is home. Mara is at the shop.
++<<if $mara.petRulesEstablished and $mara.petWaitActive and Time.date.timeStamp gte $mara.petWaitReturnAt>>
++	<<maraPetHousewear>>
++	<<include "Mara Pet Stay Return Check">>
++<<elseif T.mara_location is "shop">>
++	No one is home. Mara is at the pet shop and is not available for house activities.
++	<<if $mara.petRulesEstablished>>
++		<br><br>
++		<<link [[Enter Mara's empty house and wait for her return|Mara Pet Stay Away Setup]]>><</link>>
++	<</if>>
+ 	<br><br>
+ 	<<link [[Return to Danube Street|Danube Street]]>><<pass 2>><</link>>
+ <<elseif T.mara_location is "cafe">>
+-	No one is home. Mara is at the Ocean Breeze Cafe.
++	No one is home. Mara is at the Ocean Breeze Cafe and is not available for house activities.
++	<<if $mara.petRulesEstablished>>
++		<br><br>
++		<<link [[Enter Mara's empty house and wait for her return|Mara Pet Stay Away Setup]]>><</link>>
++	<</if>>
+ 	<br><br>
+ 	<<link [[Return to Danube Street|Danube Street]]>><<pass 2>><</link>>
+ <<else>>
