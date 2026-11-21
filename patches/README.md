@@ -4,7 +4,7 @@ Target: vanilla Degrees of Lewdity 0.5.13.8.
 
 ## Clean installation
 
-The downloadable v0.1.7 source ZIP includes the cumulative `Mara_v0.1.7-Full.patch` that applies directly to clean vanilla 0.5.13.8 source.
+The v0.1.7 source ZIP contains the cumulative `Mara_v0.1.7-Full.patch` that applies directly to clean vanilla 0.5.13.8 source.
 
 From the source root:
 
@@ -24,6 +24,12 @@ The incremental patch is not for clean vanilla source. Back up saves before test
 
 ## Event details
 
-The new `maraHouseRestOffer` widget is called after each completed house task. It has a 1-in-4 chance to show Mara's offer. If the player accepts, the tea passage applies `wearProp "tea"`, reduces Stress by 6, increases Mara's Love by 1, and increments `$mara.restBreaks`. The Journal displays the accepted-break count. Declining has no stat effect.
+- The check occurs during each of Mara's three housework tasks: Organize Pet Supplies, Clean Animal Equipment, and Prepare Food Supplies.
+- Each attempt has a 20% chance to show the offer, with at most one offer per in-game day.
+- Accepting costs 10 additional minutes, applies the vanilla tea prop, reduces Stress by 6 and Tiredness by 4, and adds 1 Mara Love.
+- After tea, the player returns to the same task's completion passage. Normal payment and task relationship rewards are applied once.
+- Declining returns to that completion passage without the extra time or rest effects. The daily offer is still used up.
+- Accepted breaks are counted in Mara's Journal.
+- Shop work is unaffected.
 
-This event does not change the house-work task's existing pay, task time, or relationship reward. It does not appear during shop work.
+The pattern is adapted from the vanilla Farm Pigs Feed Nausea / Farm Pigs Feed Nausea 2 work interruption. Mara's event is independent of the original pregnancy/nausea conditions.
