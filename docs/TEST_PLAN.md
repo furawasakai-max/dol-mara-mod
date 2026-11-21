@@ -21,7 +21,8 @@ The v0.1.16 source compiles. The incremental patch applies to v0.1.15 with zero 
 - [ ] Confirm the complete route consumes exactly 60 minutes: escort 5 + stages 20, 20, and 10 + return 5.
 - [ ] Confirm a stop link is available before the first round and between all rounds.
 - [ ] Stop during each round in separate test saves. Confirm Mara releases the player, returns them to the cage, and does not clear the until-07:00 lockout.
-- [ ] Revisit or reload a completed round and confirm its `masopain` effect does not apply a second time.
+- [ ] Save and reload during each round, including a session crossing midnight. Confirm each `masopain` effect applies only once and the round flags survive the reload and daily reset.
+- [ ] Confirm all temporary session flags are cleared when Mara returns the player to the cage.
 - [ ] Confirm the lead is attached only when the collar supports it.
 
 ## Sleep and dawn regression
