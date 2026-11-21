@@ -1,47 +1,35 @@
-# Mara v0.1.8 runtime test plan
+# Mara v0.1.9 runtime test plan
 
-The source compiles. The incremental v0.1.7 upgrade patch and cumulative clean-install patch both apply with zero rejects and reproduce the working source files byte-for-byte. JavaScript syntax checks and schedule-function tests passed. Browser testing is still required.
+The v0.1.9 source compiles. The incremental patch applies to v0.1.8 source, and the v0.1.8 full patch followed by the v0.1.9 update applies to clean vanilla 0.5.13.8. Both routes reproduce the final source tree. Random topic selection still needs in-game confirmation.
 
-## Random cafe appearance
+## Single conversation action
 
-- [ ] Meet Mara at her shop or home first.
-- [ ] Visit Ocean Breeze Cafe before 17:00 and confirm the Mara interaction is not offered.
-- [ ] Enter the cafe between 17:00 and 18:59 and check whether Mara is present.
-- [ ] If she is present, confirm the Approach Mara link appears.
-- [ ] If she is absent, leave and re-enter several times and confirm the result does not reroll that evening.
-- [ ] On another in-game day, check again and confirm a fresh daily roll occurs.
-- [ ] Confirm Mara does not make a cafe appearance before the player has met her at the shop or home.
-- [ ] Confirm she is no longer available at the cafe at 19:00.
+- [ ] Visit Ocean Breeze Cafe between 17:00 and 18:59 on a day when Mara is present.
+- [ ] Approach Mara and confirm the page offers one conversation action rather than three topic choices.
+- [ ] Confirm the action reads "Sit and chat with Mara (0:30)".
+- [ ] Select it and confirm exactly 30 minutes pass.
 
-## Cafe conversation topics
+## Random topic selection
 
-- [ ] Select Talk about pets (0:30). Confirm the scene mentions adorable pets, especially kittens.
-- [ ] Select Ask about your life (0:30). Confirm Mara asks how the player's life has been and listens.
-- [ ] Select Chat about the weather (0:30). Confirm the casual weather dialogue appears.
-- [ ] For each topic, confirm exactly 30 minutes pass.
-- [ ] For each completed chat, confirm Mara Love increases by 1 and Trust increases by 1.
-- [ ] Confirm the reward display shows the correct positive stat indicators.
-- [ ] Confirm the Journal cafe conversation count increments once per completed conversation.
+- [ ] Repeat conversations across multiple visits and confirm the topic is selected automatically.
+- [ ] Confirm the pets topic mentions the adorable kittens and animals at Mara's shop.
+- [ ] Confirm the life topic has Mara ask about the player's life and listen to the response.
+- [ ] Confirm the weather topic is casual conversation about the weather over coffee.
+- [ ] Confirm there are no player-facing topic-selection buttons before the conversation.
+- [ ] Confirm a fresh random topic is rolled for each new chat, including when choosing Continue chatting.
 
-## Goodbye and departure
+## Rewards and departure
 
-- [ ] After a completed chat, observe the 25% chance that Mara decides to head home.
-- [ ] When she says goodbye, confirm she is marked as having left for the day.
-- [ ] Return to Ocean Breeze Cafe after the goodbye and confirm the Approach Mara link is gone.
-- [ ] Confirm the player can visit Mara at home after her departure.
-- [ ] Confirm a full 30-minute chat is not offered after 18:30.
-- [ ] Confirm a chat that ends at 19:00 triggers the automatic goodbye.
+- [ ] Confirm every completed topic awards exactly +1 Mara Love and +1 Mara Trust.
+- [ ] Confirm the Journal cafe conversation counter increases once per completed conversation.
+- [ ] Confirm the existing 25% post-chat goodbye chance is unchanged.
+- [ ] Confirm Mara leaves automatically when the chat reaches 19:00.
+- [ ] Confirm a new 30-minute chat is not offered after 18:30.
+- [ ] Confirm manually saying goodbye still prevents another cafe approach for that day.
 
-## Location schedule regression
+## Regression
 
-- [ ] While Mara is at the cafe, visit her home and confirm it says she is at Ocean Breeze Cafe.
-- [ ] While Mara is at the cafe, visit her shop and confirm it says she is at Ocean Breeze Cafe.
-- [ ] Confirm neither location offers housework or shop interactions while she is at the cafe.
-- [ ] Confirm shop hours (09:00-13:59) and the normal home schedule remain unchanged.
-
-## Save migration and regression
-
-- [ ] Load a copy of a v0.1.7 save with Mara's existing stats and flags.
-- [ ] Confirm the v0.1.8 initializer adds cafeChats = 0 without resetting Love, Trust, Dominance, work progress, or event flags.
-- [ ] Complete a cafe conversation, save, reload, and confirm the Journal count persists.
-- [ ] Confirm housework tea breaks, shop work, and existing rewards still work.
+- [ ] Confirm the 40% daily cafe appearance chance remains stable when revisiting locations.
+- [ ] Confirm the shop/home absence notices still point to the cafe while Mara is there.
+- [ ] Confirm shop/home schedule and housework tea break are unchanged.
+- [ ] Save and reload after a cafe chat and confirm the Journal count persists.
