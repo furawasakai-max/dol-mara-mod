@@ -4,13 +4,7 @@ Target: vanilla Degrees of Lewdity 0.5.13.8.
 
 ## Clean installation
 
-From clean vanilla 0.5.13.8 source, apply the v0.1.8 full patch first, then the v0.1.9 topic update:
-
-    patch --dry-run -p1 -i /path/to/Mara_v0.1.8-Full.patch
-    patch -p1 -i /path/to/Mara_v0.1.8-Full.patch
-    patch --dry-run -p1 -i /path/to/Mara_v0.1.9-RandomCafeTopic.patch
-    patch -p1 -i /path/to/Mara_v0.1.9-RandomCafeTopic.patch
-    FORCE_VERSION=0.5.13.8-Mara-Alpha-0.1.9 bash compile.sh
+For a clean vanilla source tree, apply the incremental patches in version order, from v0.1.0 through v0.1.9. The patch files are listed in this folder. Alternatively, use the cumulative `Mara_v0.1.9-Full.patch` from the downloadable v0.1.9 source ZIP.
 
 ## Upgrade from v0.1.8
 
@@ -18,8 +12,9 @@ For a source tree already patched through v0.1.8, apply only:
 
     patch --dry-run -p1 -i /path/to/Mara_v0.1.9-RandomCafeTopic.patch
     patch -p1 -i /path/to/Mara_v0.1.9-RandomCafeTopic.patch
+    FORCE_VERSION=0.5.13.8-Mara-Alpha-0.1.9 bash compile.sh
 
-The incremental patch changes only game/04-Variables/variables-maraUpdate.twee. It is not for clean vanilla source.
+The incremental patch changes only `game/04-Variables/variables-maraUpdate.twee`. It is not for clean vanilla source.
 
 ## Behaviour
 
