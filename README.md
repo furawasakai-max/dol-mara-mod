@@ -31,17 +31,15 @@ Each completed conversation still grants +1 Mara Love and +1 Mara Trust. The exi
 
 ### Clean vanilla 0.5.13.8
 
-Apply the v0.1.8 full patch first, then the v0.1.9 topic update:
-
-    patch --dry-run -p1 -i patches/Mara_v0.1.8-Full.patch
-    patch -p1 -i patches/Mara_v0.1.8-Full.patch
-    patch --dry-run -p1 -i patches/Mara_v0.1.9-RandomCafeTopic.patch
-    patch -p1 -i patches/Mara_v0.1.9-RandomCafeTopic.patch
-    FORCE_VERSION=0.5.13.8-Mara-Alpha-0.1.9 bash compile.sh
+Apply the incremental patches in version order, from v0.1.0 through v0.1.9. The patch files are in the repository's `patches/` folder. For a single-patch clean install, use `Mara_v0.1.9-Full.patch` from the downloadable v0.1.9 source ZIP.
 
 ### Existing v0.1.8 source tree
 
-Use only patches/Mara_v0.1.9-RandomCafeTopic.patch.
+Use only `patches/Mara_v0.1.9-RandomCafeTopic.patch`:
+
+    patch --dry-run -p1 -i patches/Mara_v0.1.9-RandomCafeTopic.patch
+    patch -p1 -i patches/Mara_v0.1.9-RandomCafeTopic.patch
+    FORCE_VERSION=0.5.13.8-Mara-Alpha-0.1.9 bash compile.sh
 
 Do not apply the incremental patch directly to clean vanilla source. Back up your save before testing.
 
