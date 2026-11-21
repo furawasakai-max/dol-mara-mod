@@ -59,7 +59,7 @@ Use `Mara_v0.1.17-Full.patch` from the downloadable v0.1.17 source ZIP:
 
 ### Existing v0.1.16 source tree
 
-Use only the incremental patch:
+Use only `Mara_v0.1.17-StayInHouseOrders.patch` from the downloadable v0.1.17 source ZIP:
 
     patch --dry-run -p1 -i patches/Mara_v0.1.17-StayInHouseOrders.patch
     patch -p1 -i patches/Mara_v0.1.17-StayInHouseOrders.patch
@@ -77,4 +77,4 @@ Do not apply the incremental patch directly to clean vanilla source. Back up you
 - `git diff --check` is clean.
 - In-game testing of return-position checks, daily cafe timing, and the discipline route remains outstanding.
 
-The repository contains source patches and documentation, not vanilla game source or compiled game HTML.
+The repository contains documentation. The validated incremental and full source patches, plus compiled game HTML, are supplied in the downloadable source ZIP.
