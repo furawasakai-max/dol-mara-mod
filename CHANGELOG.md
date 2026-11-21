@@ -1,27 +1,29 @@
 # Changelog
 
-## v0.1.12 - Random Pet-Play Events and Training
+## v0.1.13 - Mara's Discipline Room
 
-- Added a 40% random order chance during each ten-minute cushion wait.
-- Added seven possible cushion orders: Paw, Down/Stay, Come, Fetch, Grooming, Place, and short Heel follow.
-- Added a player choice to follow the random order or end the wait.
-- Replaced the fixed daily command sequence with one of seven random lessons.
-- Added lesson variants for basic obedience, Heel, Paw, Fetch, Place, grooming manners, and Settle.
-- Kept crawling brief and on soft surfaces; the lead remains slack and is not used to pull on the neck.
-- Added a stop option before/during training and a water/comfort check when the session ends.
-- Preserved the once-per-day training limit and the existing +2 Mara Dominance / +1 Mara Trust completion reward.
-- No new persistent save fields; advanced `objectVersion.mara` to 8.
+- Added a separate discipline room to the pet-house hub.
+- Added a 35% chance for Mara to offer a session on the player's first visit to the room each in-game day.
+- The daily roll persists for the rest of the day, preventing repeated entry from rerolling the offer.
+- Added a player choice between a whip session and a cane session.
+- Added an explicit confirmation before the session begins, with an agreed stop word/signal and stop/release choices before and during the event.
+- Added a padded X-frame scene; the discipline itself is implied and non-graphic.
+- Completing either session grants +20 to the vanilla Masochism progress value. Declining or stopping grants nothing.
+- Uses the native `<<masochism 20>>` widget; the value is capped at 1000 and the level tier is recalculated by vanilla daily effects.
+- No new persistent save fields; advances `objectVersion.mara` to 9.
 
 Validation:
 - Tweego compilation succeeded.
-- Incremental patch applies to v0.1.11 with zero rejects and reproduces the updated source files byte-for-byte.
-- Full patch applies to clean vanilla 0.5.13.8 with zero rejects; all 17 modified/added source files match byte-for-byte.
-- The full-patch verification tree compiled successfully.
+- Incremental patch applies to v0.1.12 source and reproduces the changed Mara passage file byte-for-byte.
+- The single cumulative full patch dry-runs and applies to clean vanilla 0.5.13.8.
+- All 17 modified/added source files match the final working tree byte-for-byte.
+- The clean full-patch verification tree compiles.
 - Runtime testing remains outstanding.
 
 ## Previous releases
 
-- **v0.1.11:** Added the pet-room hub, cushion wait, pet bowl, cushioned cage sleep point, and initial command-training event.
+- **v0.1.12:** Added random pet-play orders during cushion waiting and seven random daily training lessons.
+- **v0.1.11:** Added the pet-room hub, cushion wait, pet bowl, cushioned cage sleep point, and initial training.
 - **v0.1.10:** Added the Handler/Pet reaffirmation, collar inspection, four house rules, and repeat-visit outfit handling.
 - **v0.1.9:** Added automatic random cafe conversation topics.
 - **v0.1.8:** Added random evening Ocean Breeze Cafe visits and conversations.
