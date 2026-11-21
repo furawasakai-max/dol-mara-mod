@@ -1,32 +1,22 @@
-# Mara Love Interest
+# Mara Love Interest: Pet-play event design (v0.1.12)
 
-## Pet-house progression
+## Cushion waiting
 
-The existing Handler/Pet proposal and its unlock requirements remain unchanged. After accepting the proposal, the player returns for a second confirmation. The collar inspection and four house rules are established in v0.1.10. While inside Mara's home, the player uses the house outfit and collar; leaving restores the previously stored clothes and neckwear.
+Each ten-minute cushion wait rolls a 40% chance of a random order. The selected order is Paw, Down/Stay, Come, Fetch, Grooming, Place, or a short Heel follow. The player can follow the order (five additional minutes) or end the wait. A failed roll remains a quiet waiting scene with Mara checking comfort.
 
-## Pet-room hub
+## Random training
 
-Once the rules are established, Mara's house opens to a dedicated pet-room hub instead of making housework the primary activity.
+The existing daily training entry point remains once per in-game day. Starting it selects one of seven lessons: basic obedience, Heel, Paw, Fetch, Place, Grooming Manners, or Settle. The player may stop before completion. Completion retains +2 Mara Dominance and +1 Trust; stopping grants no completion reward. The lead is detached at both endpoints.
 
-- **Cushion:** the player can spend ten minutes waiting for Mara's next instruction.
-- **Pet bowl:** once per day, Mara serves a simple meal in a low bowl. Eating takes ten minutes and reduces Hunger by 500 and Stress by 3.
-- **Cushioned cage:** a separate sleep point with the vanilla one-to-eight-hour and Just sleep options. It uses the normal sleep, waking, and sleep-effect systems.
-- **Command training:** once per day Mara leads the player through Down, Heel, Stay, and Come commands. The player gets down on all fours and crawls around the room while following a lead clipped to the collar. The lead is removed when the session ends. Completion grants +2 Mara Dominance and +1 Mara Trust. The player may stop at any stage; stopping grants no completion reward.
-- **Housework:** chores remain available, but are a separate optional activity. In pet mode, completing a task returns the player to the pet room rather than outside.
+## Care and safety details
+
+Training text uses the soft mat/rug/cushion, short crawling durations, a slack lead, and verbal/hand cues instead of neck pressure. It includes a stop link and ends with water and a comfort check. Pet-play roleplay does not remove consent or the ability to stop.
 
 ## Save compatibility
 
-v0.1.11 adds `petTrainingSessions`, initializes it to zero for existing saves, and advances `objectVersion.mara` to 7. Daily activity flags are stored under `$daily.mara` and reset with the game's daily state.
-
-## Existing systems retained
-
-Mara's Pet Shop entry, named-NPC status and schedule, Love Interest integration, Social and Journal entries, housework reward values, tea break, Ocean Breeze Cafe appearance and random conversation topics, and the previous pet-house outfit handling are unchanged.
+No new persistent data fields are introduced. The `objectVersion.mara` marker advances to 8.
 
 ## Relevant source files
 
-- `game/04-Variables/variables-maraUpdate.twee`: save migration, house outfit widgets, pet-room hub, bowl, cage sleep, and command-training passages.
-- `game/overworld-town/loc-danube-homes/work.twee`: house entry and optional housework routing.
-- `game/03-JavaScript/named-npc.js`: Mara's shared status and schedule.
-- `game/base-system/bdsm.twee`: vanilla leash attachment and detachment widgets.
-- `game/base-system/sleep.twee`: vanilla sleep-hour handling.
-- `game/overworld-town/loc-home/widgets.twee`: vanilla sleep-duration link generator.
+- `game/04-Variables/variables-maraUpdate.twee`: cushion random order, random training lessons, training completion and stop passages.
+- `game/overworld-town/loc-danube-homes/work.twee`: short Mara home-entry greeting update.
