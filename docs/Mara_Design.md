@@ -22,21 +22,15 @@ Mara's schedule is centralised in maraSchedule() in game/03-JavaScript/named-npc
 
 The cafe roll is stored in $daily.mara.cafePresent and is not rerolled by revisiting locations. When she leaves the cafe, $daily.mara.cafeDeparted keeps her at home for the rest of that day.
 
-## Evening cafe conversations (v0.1.8)
+## Evening cafe conversations
 
-When Mara is present at Ocean Breeze Cafe, the player can approach her and select one of three 30-minute conversations:
+The cafe interaction now follows the general random-topic pattern used by Avery's mansion conversations. The player sees one action, "Sit and chat with Mara (0:30)". After 30 minutes, the game randomly selects one of three subjects: pets, the player's life, or the weather. The player is not shown a subject menu.
 
-- **Pets:** Mara talks about the adorable kittens and the animals at her shop.
-- **The player's life:** Mara asks how the player has been doing and listens to them.
-- **Weather:** They exchange casual thoughts about the weather and the cafe.
+Each completed conversation grants +1 Mara Love and +1 Mara Trust. After the chat, there is a 25% chance Mara says goodbye and heads home. She also leaves automatically when the time reaches 19:00. A full 30-minute chat is not offered after 18:30. Continuing to chat starts another 30-minute interaction and rolls a new topic.
 
-Each completed chat adds +1 Mara Love and +1 Mara Trust. After each chat, there is a 25% chance she says goodbye and heads home. She also leaves automatically when the time reaches 19:00. A full 30-minute chat is not offered after 18:30.
+The number of completed cafe conversations is stored in $mara.cafeChats and displayed in the Journal. The cafe schedule, goodbye logic, and save-data structure are unchanged by v0.1.9.
 
-The number of completed cafe conversations is stored in $mara.cafeChats and displayed in the Journal.
-
-While Mara is at the cafe, the shop and Danube home passages show that she is away and direct the player to Ocean Breeze rather than offering interactions at her other locations.
-
-## House-work tea break (v0.1.7)
+## House-work tea break
 
 After each of Mara's three housework tasks, there is a 20% chance per task attempt for Mara to offer a short rest, limited to once per in-game day. Accepting takes 10 minutes, shows Mara bringing tea and biscuits, reduces Stress by 6 and Tiredness by 4, and adds 1 Mara Love. The player then returns to the same task's completion passage; normal task rewards are applied once. Declining adds no time or rest effects.
 
@@ -46,19 +40,18 @@ Mara is registered as a Love Interest through the vanilla Attitudes eligibility 
 
 ## Save compatibility
 
-maraInit defaults cafeChats to zero for older saves and advances objectVersion.mara to 5. The existing Mara stat, appearance, and event migration remains intact.
+No new save fields are introduced by v0.1.9. Existing v0.1.8 saves retain their cafe chat count and progression.
 
 ## Relevant source files
 
+- game/04-Variables/variables-maraUpdate.twee: random cafe topic selection and conversation passages.
 - game/03-JavaScript/named-npc.js: shared Mara status and shop/home/cafe schedule.
-- game/04-Variables/variables-maraUpdate.twee: Mara save fields, cafe topic passages, goodbye flow, and housework tea event.
-- game/base-system/overlays/journal.twee: Mara Journal entries and cafe chat count.
-- game/overworld-town/loc-cafe/main.twee: the random evening Approach Mara link.
-- game/overworld-town/loc-shop/main.twee: Mara's cafe absence message at the shop.
-- game/overworld-town/loc-danube-homes/work.twee: Mara's cafe absence message at home.
+- game/base-system/overlays/journal.twee: Mara Journal and cafe conversation count.
+- game/overworld-town/loc-cafe/main.twee: random evening Approach Mara link.
+- game/overworld-town/loc-shop/main.twee and loc-danube-homes/work.twee: cafe absence notices.
 - game/03-JavaScript/ingame.js and game/base-system/attitudes.twee: Love Interest eligibility and assignment.
 - game/base-system/overlays/social.twee: Mara's relationship panel.
 
 ## Not included
 
-Custom portraits/sprites, dedicated combat behaviour, and specific sex-scene hooks are not implemented in v0.1.8. The vanilla persistent-npcs.twee file remains untouched because it manages generated NPC persistence, whereas Mara is a named NPC.
+Custom portraits/sprites, dedicated combat behaviour, and specific sex-scene hooks are not implemented in v0.1.9. The vanilla persistent-npcs.twee file remains untouched because it manages generated NPC persistence, whereas Mara is a named NPC.
