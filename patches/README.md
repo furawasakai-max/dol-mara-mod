@@ -11,7 +11,7 @@ Use `Mara_v0.1.17-Full.patch` from the downloadable v0.1.17 source ZIP:
 
 ## Upgrade from v0.1.16
 
-Use only the incremental patch:
+Use only `Mara_v0.1.17-StayInHouseOrders.patch` from the downloadable v0.1.17 source ZIP:
 
     patch --dry-run -p1 -i patches/Mara_v0.1.17-StayInHouseOrders.patch
     patch -p1 -i patches/Mara_v0.1.17-StayInHouseOrders.patch
