@@ -1,0 +1,215 @@
+diff --git a/game/04-Variables/variables-maraUpdate.twee b/game/04-Variables/variables-maraUpdate.twee
+index cdf449a1..b6dce5b8 100644
+--- a/game/04-Variables/variables-maraUpdate.twee
++++ b/game/04-Variables/variables-maraUpdate.twee
+@@ -25,7 +25,7 @@
+ 		<<initnpc "Mara">>
+ 		<<run ["love", "lust", "trust", "dom", "rage", "trauma", "purity", "corruption", "state", "name_known", "title", "description", "type", "claws", "pronoun", "pronouns", "gender", "penis", "vagina", "penissize", "penisdesc", "bottomsize", "ballssize", "breastsize", "breastdesc", "breastsdesc", "hairColour", "eyeColour", "skincolour", "virginity", "chastity", "clothes", "outfits", "strapons"].forEach(key => { if (_maraPrevious[key] !== undefined) C.npc.Mara[key] = clone(_maraPrevious[key]); })>>
+ 	<</if>>
+-	<<set $objectVersion.mara to 7>>
++	<<set $objectVersion.mara to 8>>
+ <</widget>>
+ 
+ :: Mara Housework Break Check [widget]
+@@ -163,13 +163,66 @@ Mara's pet room is arranged around a broad cushion, a low food bowl, and a sturd
+ <<link [[Leave Mara's house|Mara Danube House Leave]]>><</link>>
+ 
+ :: Mara Pet Cushion Wait
+-Mara points to the broad cushion. "Lie down there and wait. Don't wander off. I'll tell you what I need when I'm ready."
++<<set _maraCushionRoll to random(1, 100)>>
++Mara points to the broad cushion. "Settle there and wait. I'll let you know when I want something."
+ <br><br>
+-You settle onto the cushion and wait quietly. Mara moves about the room, occasionally glancing over to make sure you are still there. After a little while, she comes over and gives your collar a brief check.
++You settle onto the soft cushion. Mara moves around the room, occasionally glancing over to check that you are comfortable.
+ <br><br>
+-"Good. You waited for me instead of deciding for yourself what to do. That's the point. You can get up now."
++<<if _maraCushionRoll lte 40>>
++	<<set $daily.mara.cushionOrderType to random(1, 7)>>
++	After a few minutes, Mara turns towards you with a small, expectant smile. "Since you're waiting so patiently, let's have a little practice."
++	<br><br>
++	<<switch $daily.mara.cushionOrderType>>
++		<<case 1>>
++			"Paw. Offer me one paw, then the other." She holds out her hands and waits for you to respond.
++		<<case 2>>
++			"Down, then stay." Mara gestures towards the cushion and asks you to hold a comfortable position while she counts slowly.
++		<<case 3>>
++			"Come here." She pats the cushion beside her and asks you to crawl the short distance over to her.
++		<<case 4>>
++			"Fetch." Mara rolls a soft toy a short distance across the rug and asks you to bring it back.
++		<<case 5>>
++			"Hold still for me." She sits beside you, gently brushes your hair, and checks that the collar is sitting comfortably.
++		<<case 6>>
++			"Place." Mara points to a small mat beside the cushion and asks you to move there and wait.
++		<<case 7>>
++			"Heel." Mara walks a short, slow circuit around the cushion and invites you to follow on all fours. She keeps the lead slack and uses her voice rather than pulling on your collar.
++	<</switch>>
++	<br><br>
++	<<link [[Follow Mara's instruction (0:05)|Mara Pet Cushion Follow]]>><<pass 5>><</link>>
++	<br>
++	<<link [[End waiting and return to the pet room|Mara Danube Pet House]]>><</link>>
++<<else>>
++	You wait quietly for the rest of the ten-minute break. Mara comes over, checks that you are comfortable, and gives your collar a brief, careful glance.
++	<br><br>
++	"Good. You waited patiently. You can get up now."
++	<br><br>
++	<<link [[Return to the pet room|Mara Danube Pet House]]>><</link>>
++<</if>>
++
++:: Mara Pet Cushion Follow
++<<switch $daily.mara.cushionOrderType>>
++	<<case 1>>
++		You offer one hand, then the other. Mara accepts each with a pleased nod. "Good paws. That's exactly what I asked for."
++	<<case 2>>
++		You lower yourself onto the cushion and hold still until Mara gives the release cue. "Nicely done. You kept your place."
++	<<case 3>>
++		You crawl the short distance to Mara and settle beside her. She gives your head an approving pat. "Good. You came when called."
++	<<case 4>>
++		You crawl after the soft toy, pick it up, and bring it back. Mara trades it for a little praise and a gentle pat. "Good retrieve."
++	<<case 5>>
++		You sit still while Mara brushes your hair and checks the collar fit. She makes sure it is not pressing against your throat. "There. Much tidier, and still comfortable."
++	<<case 6>>
++		You move from the cushion to the mat and wait there. Mara checks your position, then gives the release cue. "Good place. You remembered where to wait."
++	<<case 7>>
++		You follow Mara around the cushion at a slow pace, keeping the movement brief and controlled. She stops before you become tired and praises your steady pace. "Good heel. That's enough crawling for now."
++<</switch>>
++<br><br>
++Mara sets the toy aside and offers you a drink of water. "That's your little task finished. Take a moment to settle before you get up."
++<br><br>
++<<link [[Return to the pet room|Mara Danube Pet House]]>><</link>>
++<br>
++<<link [[End the activity now|Mara Danube Pet House]]>><</link>>
+ 
+ :: Mara Pet Bowl Eat
+ <<set $daily.mara.petBowlFed to true>>
+@@ -205,60 +258,76 @@ The indoor cage is large enough to lie down comfortably. A thick cushion covers
+ <<link [[Wake up in the pet room|Mara Danube Pet House]]>><</link>>
+ 
+ :: Mara Pet Training Intro
+-Mara takes a short training lead from a hook beside the room. Her voice is firm and focused. "It's time to practise following instructions. I'll give you a few simple commands. Listen, respond promptly, and stay with me."
++Mara takes a short, soft training lead from the hook beside the room. Her voice is firm but encouraging. "I've prepared a few different lessons. We'll draw one at random today: commands, following, a little fetch game, or practising how to settle."
+ <br><br>
+-<<link [[Begin the training session|Mara Pet Training Start]]>><</link>>
++"We'll keep it on the soft mat and take it slowly. I won't pull you by the neck, and we'll stop if your wrists or knees become uncomfortable. You can end the session at any point. The stop option means stop immediately."
++<br><br>
++<<link [[Begin a random training lesson|Mara Pet Training Start]]>><</link>>
+ <br>
+ <<link [[Train another time|Mara Danube Pet House]]>><</link>>
+ 
+ :: Mara Pet Training Start
+ <<if $daily.mara is undefined>><<set $daily.mara to {}>><</if>>
+-<<set $daily.mara.petTraining to true>>
++<<set $daily.mara.petTraining to true>><<set $daily.mara.petTrainingType to random(1, 7)>>
+ <<if $worn.neck.cursed isnot 1>>
+ 	<<if $worn.neck.name isnot "leather collar" and $worn.neck.name isnot "leather collar with leash">>
+ 		<<leash 24 "black">>
+ 	<</if>>
+ 	<<if $worn.neck.name is "leather collar">><<attach_leash true>><</if>>
+ <</if>>
+-Mara clips the training lead to the ring on your collar and gathers it in one hand. "First command. Down. Onto your hands and knees, then look towards me."
+-<br><br>
+-<<link [[Obey and lower yourself onto all fours|Mara Pet Training Crawl]]>><<pass 2>><</link>>
+-<br>
+-<<link [[Stop the training session|Mara Pet Training Stop]]>><</link>>
+-
+-:: Mara Pet Training Crawl
+-You lower yourself onto all fours. Mara gives the lead a light guiding tug and steps a short distance away.
+-<br><br>
+-"Heel. Follow me. Keep to all fours and stay beside me as I walk around the room."
+-<br><br>
+-<<link [[Crawl after Mara around the room (0:10)|Mara Pet Training Heel]]>><<pass 10>><</link>>
+-<br>
+-<<link [[Stop the training session|Mara Pet Training Stop]]>><</link>>
+-
+-:: Mara Pet Training Heel
+-Mara walks a slow circuit of the room while you follow on all fours, keeping pace with the lead. When she stops, she turns to face you.
+-<br><br>
+-"Stay. Hold your position until I call you."
+-<br><br>
+-<<link [[Stay still and wait for her command (0:05)|Mara Pet Training Stay]]>><<pass 5>><</link>>
++Mara clips the lead to the ring on your collar, if it can be safely attached. She keeps it loose, using it only as a visual guide; all direction comes from her voice and hand signals. The rug and cushion give you a soft surface for the short exercises.
++<br><br>
++<<switch $daily.mara.petTrainingType>>
++	<<case 1>>
++		"Today's lesson is basic obedience. We'll practise Down, Stay, and Come, one at a time."
++	<<case 2>>
++		"Today's lesson is Heel. Follow beside me around the room, stop when I stop, and wait for the release cue."
++	<<case 3>>
++		"Today's lesson is Paw. Offer one hand when I ask, then switch sides. No rushing."
++	<<case 4>>
++		"Today's lesson is Fetch. I'll roll a soft toy across the rug. Bring it back and place it beside me."
++	<<case 5>>
++		"Today's lesson is Place. Move to the mat when I point, settle there, and wait until I release you."
++	<<case 6>>
++		"Today's lesson is grooming manners. Sit comfortably while I brush your hair and check that your collar is sitting properly."
++	<<case 7>>
++		"Today's lesson is Settle. Lower yourself onto the cushion, roll onto your side if comfortable, and relax until I give the release cue."
++<</switch>>
++<br><br>
++<<link [[Start the lesson (0:05)|Mara Pet Training Lesson]]>><<pass 5>><</link>>
+ <br>
+ <<link [[Stop the training session|Mara Pet Training Stop]]>><</link>>
+ 
+-:: Mara Pet Training Stay
+-You remain where you are. Mara takes a moment to inspect your posture, then gives the lead a small tug.
+-<br><br>
+-"Come here. Crawl back to me."
+-<br><br>
+-<<link [[Follow the lead back to Mara (0:02)|Mara Pet Training Complete]]>><<pass 2>><</link>>
++:: Mara Pet Training Lesson
++<<switch $daily.mara.petTrainingType>>
++	<<case 1>>
++		Mara gives the commands one after another. You lower onto the soft mat for Down, hold a comfortable Stay, and crawl back to her when she calls Come. She praises each response and gives you time between commands.
++	<<case 2>>
++		Mara walks a short circuit around the room. You follow beside her on all fours, pausing whenever she pauses. She keeps the lead slack and never uses it to pull your neck. After one circuit, she gives the release cue.
++	<<case 3>>
++		Mara offers her palm. You place one hand in it when she says Paw, then repeat with the other hand. She praises the careful response and lets you rest your wrists.
++	<<case 4>>
++		Mara rolls a soft toy a short distance across the rug. You crawl after it, pick it up, and return it to her. She praises the retrieve and puts the toy away.
++	<<case 5>>
++		Mara points to the mat. You move to it, settle on the cushion, and wait while she counts to ten. When she gives the release cue, you return to her side.
++	<<case 6>>
++		You sit comfortably while Mara brushes your hair and checks the collar fit. She pauses to make sure the collar is not tight and that you are comfortable before finishing the lesson.
++	<<case 7>>
++		You lower yourself onto the cushion and roll onto your side at Mara's signal. She gives you a moment to relax, then offers her hand as a cue to sit up again. The exercise stays brief and gentle.
++<</switch>>
++<br><br>
++Mara smiles. "Good work. That's enough for one lesson. Remember, the point is to respond clearly and enjoy the routine, not to push yourself past your limits."
++<br><br>
++<<link [[Finish the lesson|Mara Pet Training Complete]]>><<pass 5>><</link>>
+ <br>
+-<<link [[Stop the training session|Mara Pet Training Stop]]>><</link>>
++<<link [[Stop the training session now|Mara Pet Training Stop]]>><</link>>
+ 
+ :: Mara Pet Training Complete
+ <<if $worn.neck.name is "leather collar with leash">><<detach_leash true>><</if>>
+ <<set $mara.petTrainingSessions += 1>><<npcincr Mara dom 2>><<npcincr Mara trust 1>>
+-You crawl back to Mara. She shortens the lead, checks the collar, and unclips it. "Good. You followed each command, kept pace, and came when called. That's a much better response."
++Mara unclips the lead and sets it aside. She offers you water, checks that your wrists and knees are comfortable, and gives you a moment to return to ordinary conversation.
+ <br><br>
+-Mara gives your head a brief, approving pat. The session is over for today.
++"You followed the lesson well. That's enough training for today. You can rest on your cushion now."
+ <br><br>
+ Reward:<<gdom>><<gtrust>>
+ <br><br>
+@@ -266,7 +335,7 @@ Reward:<<gdom>><<gtrust>>
+ 
+ :: Mara Pet Training Stop
+ <<if $worn.neck.name is "leather collar with leash">><<detach_leash true>><</if>>
+-Mara immediately loosens the lead and ends the session. "All right. That's enough for today." She unclips the lead and gives you space to settle again.
++Mara immediately stops the exercise, removes the lead, and gives you space. "All right. We are finished. No explanation needed. Sit down, have some water, and take the time you need."
+ <br><br>
+ <<link [[Return to the pet room|Mara Danube Pet House]]>><</link>>
+ 
+diff --git a/game/overworld-town/loc-danube-homes/work.twee b/game/overworld-town/loc-danube-homes/work.twee
+index 47d68334..70d28a55 100644
+--- a/game/overworld-town/loc-danube-homes/work.twee
++++ b/game/overworld-town/loc-danube-homes/work.twee
+@@ -2970,7 +2970,7 @@ You hear a voice from the door. "I'm back!" It's the <<person>>. <<His>> pets su
+ 	<<set $mara.metHouse to true>><<maraInit>><<run statusCheck("Mara")>>
+ 	<<if $mara.petRulesEstablished>>
+ 		<<maraPetHousewear>>
+-		Mara opens the door and gives your collar a brief, approving glance. "You're here. You know the routine. The pet room is ready."
++		Mara opens the door and gives your collar a brief, approving glance. "You're here. The pet room is ready. There are new little lessons to try today, but you can always choose to rest instead."
+ 		<br><br>
+ 		<<link [[Enter Mara's pet room|Mara Danube Pet House]]>><</link>>
+ 		<br>
