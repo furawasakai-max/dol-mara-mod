@@ -1,22 +1,19 @@
-# Mara Love Interest: Pet-play event design (v0.1.12)
+# Mara Love Interest: discipline room design (v0.1.13)
 
-## Cushion waiting
+## Dungeon-room access
 
-Each ten-minute cushion wait rolls a 40% chance of a random order. The selected order is Paw, Down/Stay, Come, Fetch, Grooming, Place, or a short Heel follow. The player can follow the order (five additional minutes) or end the wait. A failed roll remains a quiet waiting scene with Mara checking comfort.
+The pet-room hub links to a separate discipline room. On the first visit each in-game day, a 1-100 roll is stored under `$daily.mara.disciplineRoll`. A result of 35 or lower offers one session. This prevents repeated entry from rerolling the same day. Declining or completing the offer marks it handled for that day.
 
-## Random training
+## Session selection
 
-The existing daily training entry point remains once per in-game day. Starting it selects one of seven lessons: basic obedience, Heel, Paw, Fetch, Place, Grooming Manners, or Settle. The player may stop before completion. Completion retains +2 Mara Dominance and +1 Trust; stopping grants no completion reward. The lead is detached at both endpoints.
+When an offer appears, the player chooses a whip or a cane, then confirms the session. Mara checks the agreed stop word and signal before securing the player to a padded X-frame with broad lined cuffs. The discipline itself is implied, rather than shown graphically.
 
-## Care and safety details
-
-Training text uses the soft mat/rug/cushion, short crawling durations, a slack lead, and verbal/hand cues instead of neck pressure. It includes a stop link and ends with water and a comfort check. Pet-play roleplay does not remove consent or the ability to stop.
+A stop link remains available after restraint. Choosing it causes Mara to release the player immediately, with no explanation required and no reward. Completing the session releases the player, offers water, and awards +20 Masochism progress with the vanilla `<<masochism 20>>` widget. Both instruments award the same amount. The vanilla stat is capped at 1000; its level tier is recalculated by the game's daily effect system.
 
 ## Save compatibility
 
-No new persistent data fields are introduced. The `objectVersion.mara` marker advances to 8.
+No new persistent save fields are introduced. The daily roll and handled state live under `$daily.mara`, and `objectVersion.mara` advances to 9.
 
-## Relevant source files
+## Relevant source file
 
-- `game/04-Variables/variables-maraUpdate.twee`: cushion random order, random training lessons, training completion and stop passages.
-- `game/overworld-town/loc-danube-homes/work.twee`: short Mara home-entry greeting update.
+- `game/04-Variables/variables-maraUpdate.twee`: pet-room link, daily random offer, tool selection, X-frame scene, stop/release, and Masochism reward.
