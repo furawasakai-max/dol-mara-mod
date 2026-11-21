@@ -1,40 +1,47 @@
-# Mara v0.1.7 runtime test plan
+# Mara v0.1.8 runtime test plan
 
-The v0.1.7 source compiles. Both the incremental v0.1.6 upgrade patch and cumulative clean-install patch apply with zero rejects and reproduce the working source tree exactly. The new event still needs in-game confirmation.
+The source compiles. The incremental v0.1.7 upgrade patch and cumulative clean-install patch both apply with zero rejects and reproduce the working source files byte-for-byte. JavaScript syntax checks and schedule-function tests passed. Browser testing is still required.
 
-## Event chance and daily limit
+## Random cafe appearance
 
-- [ ] Complete Organize Pet Supplies and check whether the tea-break offer appears.
-- [ ] Repeat with Clean Animal Equipment.
-- [ ] Repeat with Prepare Food Supplies.
-- [ ] Repeat housework attempts and confirm the offer is occasional, not guaranteed (20% per attempt).
-- [ ] If the offer triggers, complete more housework on the same day and confirm it cannot trigger a second time.
-- [ ] Advance to the next in-game day and confirm the offer can trigger again.
-- [ ] Confirm shop work never triggers this housework event.
+- [ ] Meet Mara at her shop or home first.
+- [ ] Visit Ocean Breeze Cafe before 17:00 and confirm the Mara interaction is not offered.
+- [ ] Enter the cafe between 17:00 and 18:59 and check whether Mara is present.
+- [ ] If she is present, confirm the Approach Mara link appears.
+- [ ] If she is absent, leave and re-enter several times and confirm the result does not reroll that evening.
+- [ ] On another in-game day, check again and confirm a fresh daily roll occurs.
+- [ ] Confirm Mara does not make a cafe appearance before the player has met her at the shop or home.
+- [ ] Confirm she is no longer available at the cafe at 19:00.
 
-## Accepting the break
+## Cafe conversation topics
 
-- [ ] Confirm Mara naturally notices the player has been working and offers tea.
-- [ ] Accept the ten-minute break.
-- [ ] Confirm Mara brings tea and biscuits and stays to keep the player company.
-- [ ] Confirm time advances by 10 minutes.
-- [ ] Confirm Mara Love increases by exactly 1.
-- [ ] Confirm Stress decreases by 6 and Tiredness decreases by 4.
-- [ ] Confirm the player returns to the same task's completion passage.
-- [ ] Confirm the task's normal money, Love, and conditional Trust rewards are awarded once, not twice.
-- [ ] Confirm the accepted-break count appears in Mara's Journal.
+- [ ] Select Talk about pets (0:30). Confirm the scene mentions adorable pets, especially kittens.
+- [ ] Select Ask about your life (0:30). Confirm Mara asks how the player's life has been and listens.
+- [ ] Select Chat about the weather (0:30). Confirm the casual weather dialogue appears.
+- [ ] For each topic, confirm exactly 30 minutes pass.
+- [ ] For each completed chat, confirm Mara Love increases by 1 and Trust increases by 1.
+- [ ] Confirm the reward display shows the correct positive stat indicators.
+- [ ] Confirm the Journal cafe conversation count increments once per completed conversation.
 
-## Declining the break
+## Goodbye and departure
 
-- [ ] Trigger the offer and politely decline.
-- [ ] Confirm the task continues to its completion passage without an additional time cost.
-- [ ] Confirm no tea, stress, tiredness, or Love effect is applied.
-- [ ] Confirm the daily offer remains used up after declining.
+- [ ] After a completed chat, observe the 25% chance that Mara decides to head home.
+- [ ] When she says goodbye, confirm she is marked as having left for the day.
+- [ ] Return to Ocean Breeze Cafe after the goodbye and confirm the Approach Mara link is gone.
+- [ ] Confirm the player can visit Mara at home after her departure.
+- [ ] Confirm a full 30-minute chat is not offered after 18:30.
+- [ ] Confirm a chat that ends at 19:00 triggers the automatic goodbye.
 
-## Save and regression
+## Location schedule regression
 
-- [ ] Load a copy of an existing v0.1.6 save and confirm Mara's stats and work progress remain intact.
-- [ ] Save and reload after accepting a break; confirm the Journal count persists.
-- [ ] Confirm housework choices still cost 30, 45, and 30 minutes respectively, with the 10-minute rest added only on acceptance.
-- [ ] Confirm all housework payments and relationship rewards remain unchanged.
-- [ ] Confirm the shop/home schedule and shop tasks are unaffected.
+- [ ] While Mara is at the cafe, visit her home and confirm it says she is at Ocean Breeze Cafe.
+- [ ] While Mara is at the cafe, visit her shop and confirm it says she is at Ocean Breeze Cafe.
+- [ ] Confirm neither location offers housework or shop interactions while she is at the cafe.
+- [ ] Confirm shop hours (09:00-13:59) and the normal home schedule remain unchanged.
+
+## Save migration and regression
+
+- [ ] Load a copy of a v0.1.7 save with Mara's existing stats and flags.
+- [ ] Confirm the v0.1.8 initializer adds cafeChats = 0 without resetting Love, Trust, Dominance, work progress, or event flags.
+- [ ] Complete a cafe conversation, save, reload, and confirm the Journal count persists.
+- [ ] Confirm housework tea breaks, shop work, and existing rewards still work.
