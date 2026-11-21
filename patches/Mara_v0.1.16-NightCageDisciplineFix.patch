@@ -1,14 +1,18 @@
 --- a/game/04-Variables/variables-maraUpdate.twee
 +++ b/game/04-Variables/variables-maraUpdate.twee
-@@ -308,15 +308,80 @@
- <<link [[Follow Mara to the dungeon (1:00)|Mara Pet Cage Night Discipline]]>><<pass 60>><</link>>
+@@ -305,25 +305,84 @@
+ :: Mara Pet Cage Night Caught
+ Mara opens the cage, takes the pick from your hand, and gives you a cold, unimpressed look. "Really? You thought you could make that much noise and I wouldn't notice? Out. You're coming with me. An hour in the discipline room should remind you why I keep that cage locked."
+ <br><br>
+-<<link [[Follow Mara to the dungeon (1:00)|Mara Pet Cage Night Discipline]]>><<pass 60>><</link>>
++<<set $daily.mara.nightDisciplineTool to random(1, 2)>>
++<<link [[Follow Mara to the dungeon (0:05)|Mara Pet Cage Night Discipline]]>><<pass 5>><</link>>
  
  :: Mara Pet Cage Night Discipline
 -Mara closes the dungeon door behind you. The next hour is spent in a stern, controlled disciplinary session. The details remain private; the time passes slowly under her watchful attention.
--<br><br>
--Mara finally sets the implements aside. "That's enough. Up. You're going back where you belong."
 +Mara leads you to the padded frame and points to the restraints. "You wanted to test the lock. Now you can spend an hour learning why that was a poor idea. The stop signal we agreed remains in effect. Use it and I'll release you immediately."
  <br><br>
+-Mara finally sets the implements aside. "That's enough. Up. You're going back where you belong."
 +<<if $daily.mara.nightDisciplineTool is 1>>
 +	Mara takes the whip from its hook and checks its length. "The whip, then. Stand still. This is going to take more than one reminder."
 +<<else>>
@@ -16,7 +20,7 @@
 +<</if>>
 +<br><br>
 +She secures you to the padded X-frame with the broad-lined cuffs, checks each fastening, and makes sure your arms and legs are resting at a comfortable angle. She steps back and studies the setup before beginning.
-+<br><br>
+ <br><br>
 +<<link [[Begin the first round (0:20)|Mara Pet Cage Night Discipline Stage 1]]>><<pass 20>><</link>>
 +<br>
 +<<link [[Stop and be released now|Mara Pet Cage Night Discipline Stop]]>><</link>>
