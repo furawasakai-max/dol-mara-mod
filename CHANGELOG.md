@@ -1,27 +1,25 @@
 # Changelog
 
-## v0.1.13 - Mara's Discipline Room
+## v0.1.14 - Harsher Pet-Role Dialogue
 
-- Added a separate discipline room to the pet-house hub.
-- Added a 35% chance for Mara to offer a session on the player's first visit to the room each in-game day.
-- The daily roll persists for the rest of the day, preventing repeated entry from rerolling the offer.
-- Added a player choice between a whip session and a cane session.
-- Added an explicit confirmation before the session begins, with an agreed stop word/signal and stop/release choices before and during the event.
-- Added a padded X-frame scene; the discipline itself is implied and non-graphic.
-- Completing either session grants +20 to the vanilla Masochism progress value. Declining or stopping grants nothing.
-- Uses the native `<<masochism 20>>` widget; the value is capped at 1000 and the level tier is recalculated by vanilla daily effects.
-- No new persistent save fields; advances `objectVersion.mara` to 9.
+- Rewrote Mara's dialogue in established pet-role scenes to be colder, more impatient, and dismissive.
+- Added curt commands and dry criticism to the pet-house welcome, cushion orders, pet-bowl meal, cage, training introduction, random lessons, and training completion.
+- Updated collar inspection and house-rule dialogue to sound more authoritarian and less reassuring.
+- Updated discipline-room dialogue for the random offer, implement selection, X-frame scene, completion, decline, and stop/release paths.
+- Updated optional housework dialogue while the player is in pet mode; non-pet dialogue remains unchanged.
+- Preserved all stat values, relationship thresholds, scene choices, stop options, daily chances, and time costs.
+- No new save fields; objectVersion.mara remains 9.
 
 Validation:
 - Tweego compilation succeeded.
-- Incremental patch applies to v0.1.12 source and reproduces the changed Mara passage file byte-for-byte.
-- The single cumulative full patch dry-runs and applies to clean vanilla 0.5.13.8.
-- All 17 modified/added source files match the final working tree byte-for-byte.
-- The clean full-patch verification tree compiles.
-- Runtime testing remains outstanding.
+- Incremental patch applies to v0.1.13 source with zero rejects and reproduces both modified files byte-for-byte.
+- Cumulative full patch applies to clean vanilla 0.5.13.8 with zero rejects; all 17 changed/added source files match byte-for-byte.
+- Clean full-patch verification tree compiled successfully.
+- In-game review of revised dialogue remains outstanding.
 
 ## Previous releases
 
+- **v0.1.13:** Added Mara's discipline room, daily random offer, whip/cane choices, X-frame scene, and +20 Masochism progress.
 - **v0.1.12:** Added random pet-play orders during cushion waiting and seven random daily training lessons.
 - **v0.1.11:** Added the pet-room hub, cushion wait, pet bowl, cushioned cage sleep point, and initial training.
 - **v0.1.10:** Added the Handler/Pet reaffirmation, collar inspection, four house rules, and repeat-visit outfit handling.
