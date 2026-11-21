@@ -1,24 +1,16 @@
-# Mara NPC integration map (v0.1.6)
+# Mara NPC integration map (v0.1.7)
 
-This document maps the checklist supplied for the project to the actual vanilla 0.5.13.8 source integration.
+This release builds on the vanilla named-NPC integration in v0.1.6 and adds one house-work interruption event.
 
-| NPC subsystem | v0.1.6 implementation |
+| Subsystem | Implementation |
 |---|---|
-| $NPCName / $NPCNameList data | Mara is appended to setup.NPCNameList; metadata arrays and migration entry are aligned in npcNamed.twee. |
-| Love Interest registration | setup.loveInterestNpc, setup.loveAlias, isPossibleLoveInterest(), and loveInterestAdd are connected. |
-| Stat widgets | Mara remains whitelisted for npcincr; Love, Trust, and Dominance are clamped and displayed. Negative changes use negative npcincr values in this vanilla version. |
-| Location / encounter | Mara's maraSchedule() is called through statusCheck(). Shop and Danube house passages use the shared schedule. |
-| Event chain | Existing introduction, work, private collection, romance, and Handler passages remain. Romance acceptance now participates in the vanilla Attitudes selection system. |
-| Journal | Mara's progression summary appears after the player has met her. |
-| Character / relationship UI | Mara is added to Social's Primary Relationships after meeting her, with Love, Trust, and Dominance. |
-| Save compatibility | $objectVersion.mara is set to version 2. Legacy alpha records are initialized as named NPCs while previous stat and appearance data is restored. |
-| Portrait / sprites | Not implemented. No custom art was provided. |
-| Combat / sex-scene hooks | Not implemented in this release. |
+| Named NPC data | Mara remains in `$NPCName` / `$NPCNameList` with named-NPC defaults and versioned initialization. |
+| Status / schedule | `maraSchedule()` and `maraStatusCheck()` join the existing `statusCheck()` switch. |
+| Love Interest | `isPossibleLoveInterest()` and vanilla `loveInterestAdd` connect Mara to Attitudes. |
+| Social panel | Mara appears in Primary Relationships after meeting her; Trust display is limited to Mara. |
+| Journal | Shows house/shop progress and accepted tea-break count. |
+| Housework event | `maraHouseworkBreakCheck` gives a 20% chance during each of three Mara housework tasks, with a once-per-day limit. |
+| Break effects | Accepting takes 10 minutes, applies the tea prop, reduces Stress by 6 and Tiredness by 4, and increases Mara Love by 1. |
+| Save compatibility | `maraInit` defaults `restBreaks` on old saves and sets `objectVersion.mara` to 3. |
 
-## Why persistent-npcs.twee is untouched
-
-Vanilla persistent-npcs.twee handles generated NPCs through $NPCList and $per_npc. Mara is a named NPC in $NPCName and is accessed through C.npc.Mara. Her initialization belongs in the named-NPC and save-version flow, not the generated-NPC persistence path.
-
-## Save migration behaviour
-
-When the player has met Mara and C.npc.Mara.init is not yet 1, maraInit captures the existing Mara record, calls the vanilla initnpc widget, and then restores saved relationship/body/appearance/state fields. This lets older v0.1.5 saves receive the vanilla named-NPC initialization without wiping accumulated Love, Trust, Dominance, or progress flags.
+The event uses the vanilla Farm Pigs Feed Nausea work-interruption structure as a reference, but it does not reuse pregnancy or nausea conditions. The vanilla `persistent-npcs.twee` remains untouched because Mara is a named NPC, not a generated NPC.
