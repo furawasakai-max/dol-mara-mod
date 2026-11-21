@@ -1,53 +1,39 @@
-# v0.1.6 runtime test plan
+# v0.1.7 runtime test plan
 
-The v0.1.5 base and location features have been confirmed by the user in-game. v0.1.6 compiles and both patch paths apply. The newly integrated NPC UI and save migration require browser tests.
+The source compiles, and both patch routes apply cleanly. Test this update using a copy of an existing save with Mara already met.
 
-## New game / first meetings
+## Event chance and trigger
 
-- [ ] Start a new game and confirm Mara is registered but does not appear as a met relationship before meeting her.
-- [ ] Meet Mara at the pet shop and confirm her named-NPC record initializes.
-- [ ] Meet Mara through the Danube house encounter and confirm it routes through the intro passage and sets metHouse.
-- [ ] Confirm black hair and female pronouns are retained.
+- [ ] Complete Organize Pet Supplies and confirm the rest offer can appear.
+- [ ] Complete Clean Animal Equipment and confirm the rest offer can appear.
+- [ ] Complete Prepare Food Supplies and confirm the rest offer can appear.
+- [ ] Repeat several house-work tasks to confirm the event is occasional (25% per completed task), not guaranteed.
+- [ ] Confirm shop work does not trigger the house rest event.
 
-## Status and schedule
+## Dialogue and choices
 
-- [ ] Test 08:59, 09:00, 13:59, and 14:00.
-- [ ] Confirm statusCheck routes Mara to the shop or home consistently.
-- [ ] Confirm the house shows "No one is home. Mara is at the shop." during shop hours.
-- [ ] Confirm the shop directs the player to Danube Street when Mara is home.
-- [ ] Confirm the Danube random introduction does not appear while Mara is at the shop.
+- [ ] Confirm Mara naturally notices the player has been working and asks them to take a short break.
+- [ ] Confirm she prepares two cups of tea and sits with the player.
+- [ ] Accept the tea and confirm the tea scene plays.
+- [ ] Decline the tea and confirm the player returns to Danube Street without receiving tea effects.
+- [ ] Confirm the normal Continue option is hidden when the rest offer appears, so the player chooses accept or decline.
 
-## Social / character screen
+## Effects and progression
 
-- [ ] Open Social after meeting Mara.
-- [ ] Confirm Mara appears under Primary Relationships.
-- [ ] Confirm Love, Trust, and Dominance display with the correct icons/ranges.
-- [ ] Confirm other NPCs do not display Trust merely because Trust was added to the shared stat list.
+- [ ] Confirm accepting tea reduces Stress by 6.
+- [ ] Confirm accepting tea increases Mara's Love by 1.
+- [ ] Confirm accepted tea-break count increases by one.
+- [ ] Confirm the work task's normal money reward and relationship increases remain unchanged.
+- [ ] Confirm the event does not advance time separately from the completed work task.
 
-## Attitudes / Love Interest
+## Journal and saves
 
-- [ ] Meet the Love/Trust threshold and complete Mara's romance confession.
-- [ ] Confirm acceptance calls the vanilla Love Interest assignment flow.
-- [ ] Open Attitudes and confirm Mara is selectable.
-- [ ] Select Mara and confirm primary/secondary/tertiary assignment works.
-- [ ] Re-enter the accepted passage via history and confirm it does not add Mara a second time.
-- [ ] Run debugUnlockAllLoveInterests and confirm Mara unlocks without errors.
+- [ ] Open Journal after accepting tea and confirm the tea-break count is recorded.
+- [ ] Load an existing v0.1.6 save and confirm restBreaks initializes to zero without resetting Mara's existing stats or progress.
+- [ ] Accept a tea break, save, reload, and confirm the count persists.
 
-## Journal
+## Existing core systems
 
-- [ ] Open Journal after meeting Mara.
-- [ ] Confirm first-meeting, work count, private collection, romance, and Handler status are reflected accurately.
-
-## Existing v0.1.5 save migration
-
-- [ ] Make a copy of a working v0.1.5 save where Mara has met flags and non-zero relationship/work values.
-- [ ] Load the copy in v0.1.6.
-- [ ] Confirm Mara's named-NPC init becomes 1.
-- [ ] Confirm Love, Trust, Dominance, appearance, pronouns, work counters, and romance/Handler flags are preserved.
-- [ ] Save, reload, and confirm the same values persist.
-
-## Regression
-
-- [ ] Existing shop/house work options and rewards still work.
-- [ ] Reward-line spacing and Blind Stats behaviour remain unchanged.
-- [ ] Pet Shop stays in the original Shopping Centre row with its icon and leave icon.
+- [ ] Confirm Mara appears in Social after meeting her.
+- [ ] Confirm Mara can be selected from Attitudes after accepting the romance route.
+- [ ] Confirm shop/home schedule and Pet Shop placement are unchanged.
