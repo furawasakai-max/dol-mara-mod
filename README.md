@@ -1,20 +1,18 @@
-# DoL Mara Mod v0.1.8
+# DoL Mara Mod v0.1.9
 
 A Yareth-style direct source modification for vanilla **Degrees of Lewdity 0.5.13.8**.
 
-## v0.1.8: Mara's evening café visits
+## v0.1.9: Random cafe conversation topic
 
-After the player has met Mara at her shop or home, she has a **40% chance per in-game day** to spend part of the early evening at Ocean Breeze Cafe. The daily roll is made the first time her schedule is checked between **17:00 and 18:59** and is saved for that day, so revisiting locations cannot reroll her availability.
+Mara's Ocean Breeze Cafe interaction now follows the conversation pattern used by Avery's mansion conversations. The player no longer chooses the subject from a three-option menu.
 
-When present, Mara can be approached at the cafe. The player can choose one of three conversations:
+When Mara is present, the player chooses one action, **Sit and chat with Mara (0:30)**. After the 30-minute time passage, the game randomly selects one of three topics:
 
-- **Talk about pets (30 minutes):** Mara talks about the adorable kittens and the personalities of the animals she cares for.
-- **Ask about your life (30 minutes):** Mara asks how the player's life has been and listens to them.
-- **Chat about the weather (30 minutes):** They exchange casual thoughts about the weather and the comfort of the cafe.
+1. Pets and the adorable animals Mara cares for at her shop.
+2. The player's life, with Mara asking how things have been and listening to the answer.
+3. The weather and casual conversation over coffee.
 
-Each completed conversation adds **+1 Mara Love** and **+1 Mara Trust**. After each chat there is a **25% chance** Mara decides it is time to head home. If the conversation reaches 19:00, she leaves automatically. Once she has left, she is considered at home for the rest of that day and cannot be approached at the cafe again.
-
-While Mara is at the cafe, her shop and home passages report that she is away and point the player to Ocean Breeze Cafe. Full 30-minute conversations are not offered after 18:30. Her existing shop/home schedule is otherwise unchanged. The Journal records the number of cafe conversations. Existing v0.1.7 saves initialize the new counter to zero without resetting previous progress.
+Each completed conversation still grants +1 Mara Love and +1 Mara Trust. The existing post-chat 25% goodbye chance, automatic 19:00 departure, cafe availability roll, away messages, and Journal counter are unchanged. Continuing for another chat rolls a fresh random topic.
 
 ## Release history
 
@@ -26,36 +24,33 @@ While Mara is at the cafe, her shop and home passages report that she is away an
 - v0.1.5: Mara's Pet Shop replaces the vanilla Pet Shop row in Shopping Centre.
 - v0.1.6: Named-NPC status, Attitudes, Social, Journal, and save migration integration.
 - v0.1.7: Random housework rest and tea interruption.
-- v0.1.8: Random evening cafe appearance and three 30-minute conversation topics.
+- v0.1.8: Random evening cafe appearance and three conversation topics.
+- v0.1.9: Cafe chat automatically selects a random conversation topic, following Avery's mansion chat pattern.
 
 ## Installation
 
 ### Clean vanilla 0.5.13.8
 
-Use `Mara_v0.1.8-Full.patch` from the downloadable v0.1.8 source ZIP:
+Apply the v0.1.8 full patch first, then the v0.1.9 topic update:
 
     patch --dry-run -p1 -i patches/Mara_v0.1.8-Full.patch
     patch -p1 -i patches/Mara_v0.1.8-Full.patch
-    FORCE_VERSION=0.5.13.8-Mara-Alpha-0.1.8 bash compile.sh
+    patch --dry-run -p1 -i patches/Mara_v0.1.9-RandomCafeTopic.patch
+    patch -p1 -i patches/Mara_v0.1.9-RandomCafeTopic.patch
+    FORCE_VERSION=0.5.13.8-Mara-Alpha-0.1.9 bash compile.sh
 
-### Existing v0.1.7 source tree
+### Existing v0.1.8 source tree
 
-Use only [Mara_v0.1.8-CafeChats.patch](patches/Mara_v0.1.8-CafeChats.patch):
-
-    patch --dry-run -p1 -i patches/Mara_v0.1.8-CafeChats.patch
-    patch -p1 -i patches/Mara_v0.1.8-CafeChats.patch
-    FORCE_VERSION=0.5.13.8-Mara-Alpha-0.1.8 bash compile.sh
+Use only patches/Mara_v0.1.9-RandomCafeTopic.patch.
 
 Do not apply the incremental patch directly to clean vanilla source. Back up your save before testing.
 
 ## Validation
 
 - Tweego compilation succeeded.
-- JavaScript syntax checks passed for `named-npc.js` and `ingame.js`.
-- The incremental patch applies to v0.1.7 source with zero rejects.
-- The cumulative patch applies to clean vanilla 0.5.13.8 with zero rejects.
-- Both patched source trees reproduce the v0.1.8 working source byte-for-byte.
-- The schedule function was tested for shop/home/cafe hours, stable daily rolls, and the post-goodbye return home state.
-- Browser runtime testing of the actual cafe interaction, time cost, relationship gains, goodbye chance, and Journal count remains required.
+- The incremental patch applies to v0.1.8 source with zero rejects and reproduces the updated Mara passage file byte-for-byte.
+- The cumulative v0.1.8 base patch plus v0.1.9 update applies to clean vanilla 0.5.13.8 with zero rejects and reproduces all modified source files byte-for-byte.
+- The compiled source contains a single 30-minute chat action and randomly selects among the three existing conversation subjects.
+- Browser runtime testing is still needed to confirm random dialogue selection and repeated chat flow in-game.
 
 The repository contains source patches and documentation, not the vanilla game source or compiled game HTML.
