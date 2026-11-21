@@ -1,0 +1,210 @@
+diff --git a/game/04-Variables/variables-maraUpdate.twee b/game/04-Variables/variables-maraUpdate.twee
+index 8f6136d..d39ef22 100644
+--- a/game/04-Variables/variables-maraUpdate.twee
++++ b/game/04-Variables/variables-maraUpdate.twee
+@@ -2,7 +2,7 @@
+ <<widget "maraInit">>
+ 	<<if $objectVersion is undefined>><<set $objectVersion to {}>><</if>>
+ 	<<if $mara is undefined>>
+-		<<set $mara to { metShop: false, metHouse: false, shopHelp: 0, houseHelp: 0, restBreaks: 0, cafeChats: 0, privateCollectionSeen: false, handlerProposalSeen: false, handlerRelationship: false, romanceUnlocked: false }>>
++		<<set $mara to { metShop: false, metHouse: false, shopHelp: 0, houseHelp: 0, restBreaks: 0, cafeChats: 0, privateCollectionSeen: false, handlerProposalSeen: false, handlerRelationship: false, romanceUnlocked: false, petRulesEstablished: false, petHouseDressed: false, petNeckWasNaked: false }>>
+ 	<<else>>
+ 		<<if $mara.metShop is undefined>><<set $mara.metShop to false>><</if>>
+ 		<<if $mara.metHouse is undefined>><<set $mara.metHouse to false>><</if>>
+@@ -14,6 +14,9 @@
+ 		<<if $mara.handlerProposalSeen is undefined>><<set $mara.handlerProposalSeen to false>><</if>>
+ 		<<if $mara.handlerRelationship is undefined>><<set $mara.handlerRelationship to false>><</if>>
+ 		<<if $mara.romanceUnlocked is undefined>><<set $mara.romanceUnlocked to false>><</if>>
++		<<if $mara.petRulesEstablished is undefined>><<set $mara.petRulesEstablished to false>><</if>>
++		<<if $mara.petHouseDressed is undefined>><<set $mara.petHouseDressed to false>><</if>>
++		<<if $mara.petNeckWasNaked is undefined>><<set $mara.petNeckWasNaked to false>><</if>>
+ 	<</if>>
+ 	/* Initialise Mara as a named NPC once the player has met her. Preserve relationship and appearance data from earlier alpha saves. */
+ 	<<if ($mara.metShop or $mara.metHouse) and C.npc.Mara.init isnot 1>>
+@@ -21,7 +24,7 @@
+ 		<<initnpc "Mara">>
+ 		<<run ["love", "lust", "trust", "dom", "rage", "trauma", "purity", "corruption", "state", "name_known", "title", "description", "type", "claws", "pronoun", "pronouns", "gender", "penis", "vagina", "penissize", "penisdesc", "bottomsize", "ballssize", "breastsize", "breastdesc", "breastsdesc", "hairColour", "eyeColour", "skincolour", "virginity", "chastity", "clothes", "outfits", "strapons"].forEach(key => { if (_maraPrevious[key] !== undefined) C.npc.Mara[key] = clone(_maraPrevious[key]); })>>
+ 	<</if>>
+-	<<set $objectVersion.mara to 5>>
++	<<set $objectVersion.mara to 6>>
+ <</widget>>
+ 
+ :: Mara Housework Break Check [widget]
+@@ -55,6 +58,96 @@ Reward:<<glove Mara>> | <<lstress>><<ltiredness>>
+ <br><br>
+ <<link [[Finish your tea and return to work|$mara.houseBreakReturn]]>><</link>>
+ 
++:: Mara Pet Housewear [widget]
++<<widget "maraPetHousewear">>
++	<<if $mara.petRulesEstablished and !$mara.petHouseDressed>>
++		/* Keep the player's existing outfit in a named storage location so it can be restored on leaving Mara's home. */
++		<<set $mara.petNeckWasNaked to ($worn.neck.name is "naked")>>
++		<<undress "maraHouse">>
++		<<if $worn.neck.name is "naked">><<neckwear "leather collar" "black">><</if>>
++		<<set $mara.petHouseDressed to true>>
++	<</if>>
++<</widget>>
++
++:: Mara Pet House Leave [widget]
++<<widget "maraPetHouseLeave">>
++	<<if $mara.petHouseDressed>>
++		<<storeon "maraHouse">>
++		/* If the player entered without neckwear, remove the temporary Mara collar as well. */
++		<<if $mara.petNeckWasNaked and $worn.neck.name is "leather collar">><<neckundress "wardrobe">><</if>>
++		<<set $mara.petHouseDressed to false>>
++		<<set $mara.petNeckWasNaked to false>>
++	<</if>>
++<</widget>>
++
++:: Mara Pet Reaffirm
++Mara's expression turns thoughtful. "Before we start, I want to hear you say it once more, clearly. Do you still want to be my pet? Do you accept that, while you're here with me, you'll follow my instructions?"
++<br><br>
++<<link [[Yes. I am your pet, and I will follow your commands.|Mara Pet Collar Demand]]>><</link>>
++<br>
++<<link [[I need more time before we begin.|Mara Danube House Visit]]>><</link>>
++
++:: Mara Pet Collar Demand
++Mara's usual cheerful smile fades. Her posture straightens, and her voice becomes calm, firm, and unmistakably authoritative.
++<br><br>
++"Good. Then listen carefully. Take off your clothes and put on the leather collar I have prepared. Once it is fastened, get down on all fours and wait for my inspection. I won't ask you twice."
++<br><br>
++<<link [[Wear the collar and obey her command|Mara Pet Collar Inspection]]>><</link>>
++<br>
++<<link [[Stop here for today|Mara Danube House Visit]]>><</link>>
++
++:: Mara Pet Collar Inspection
++<<set $mara.petNeckWasNaked to ($worn.neck.name is "naked")>>
++<<undress "maraHouse">>
++<<if $worn.neck.name is "naked">><<neckwear "leather collar" "black">><</if>>
++<<set $mara.petHouseDressed to true>>
++Mara's tone leaves no room for confusion. "Everything off. I want you bare except for the collar."
++<br><br>
++<<if $worn.neck.name is "leather collar" and $worn.neck.cursed isnot 1>>
++You remove your clothes and leave them where Mara indicates. The cool leather settles around your neck, its buckle clicking shut.
++<<elseif $worn.neck.cursed is 1>>
++You remove every item you can. The collar already fastened around your neck cannot be removed, so Mara checks that it sits securely and leaves it in place.
++<<else>>
++You remove every item you can. Mara checks the collar already around your neck and leaves it in place.
++<</if>>
++<br><br>
++"Now, down on your hands and knees. Crawl over here. Slowly."
++<br><br>
++You lower yourself onto all fours and crawl across the room to her. Mara watches your posture and pace, then circles you once, checking the fit of the collar and how you respond to her instructions. She lifts your chin with two fingers and studies your expression.
++<br><br>
++"There. That's the first time you've followed my instructions as my pet. Now we are going to make the rules clear."
++<br><br>
++<<link [[Listen to Mara's rules|Mara Pet Rules]]>><</link>>
++
++:: Mara Pet Rules
++<<set $mara.petRulesEstablished to true>>
++Mara stands in front of you, her voice still firm. "These are the rules while you are in my home. I expect you to remember every one."
++<br><br>
++1. <b>You speak only when I allow it.</b> Unless I invite you to speak, you remain quiet.
++<br><br>
++2. <b>You stay naked, with your collar on, for the entire time you are in my house.</b> Your clothes will be returned when you leave.
++<br><br>
++3. <b>You do as I tell you.</b> Follow my instructions promptly and without arguing or deliberately delaying.
++<br><br>
++4. <b>If you break a rule or disobey me, you will be punished.</b> I decide what correction is appropriate, within the boundaries we agreed to.
++<br><br>
++Mara pauses to make sure you understand. "The agreement is still something we both choose. You can pause or end it, but while you choose to take part in my home, I expect you to respect these rules. Understood?"
++<br><br>
++<<link [[Nod and accept the rules|Mara Danube Pet House]]>><</link>>
++
++:: Mara Danube Pet House
++<<set $outside to 0>><<set $location to "town">><<effects>><<set $bus to "danube">>
++<<maraInit>><<maraPetHousewear>>
++Mara gives your collar a brief inspection. "Good. You remember the routine. Stay close, keep quiet unless I ask you something, and wait for my instructions."
++<br><br>
++<<link [[Ask Mara what she wants you to do|Mara Danube Work Intro]]>><</link>>
++<br>
++<<link [[Leave Mara's house|Mara Danube House Leave]]>><</link>>
++
++:: Mara Danube House Leave
++<<maraInit>><<maraPetHouseLeave>>
++<<link [[Leave Mara's house|Danube Street]]>><<pass 2>><</link>>
++
+ :: Mara Relationship Events
+ <<if C.npc.Mara.love gte 100 and C.npc.Mara.trust gte 50 and !$mara.romanceUnlocked>>
+ 	<<link [[Talk to Mara about your relationship|Mara Romance Confession]]>><</link>>
+diff --git a/game/overworld-town/loc-danube-homes/work.twee b/game/overworld-town/loc-danube-homes/work.twee
+index 7e06ac5..dc9a312 100644
+--- a/game/overworld-town/loc-danube-homes/work.twee
++++ b/game/overworld-town/loc-danube-homes/work.twee
+@@ -2968,11 +2968,24 @@ You hear a voice from the door. "I'm back!" It's the <<person>>. <<His>> pets su
+ 	<<link [[Visit Mara at the cafe|Ocean Breeze]]>><<pass 2>><</link>>
+ <<else>>
+ 	<<set $mara.metHouse to true>><<maraInit>><<run statusCheck("Mara")>>
+-	Mara opens the door, and her expression brightens when she recognizes you. "It's good to see you again. I was just about to get a few things done around the house. Would you like to give me a hand?"
+-	<br><br>
+-	<<link [[Help Mara with the housework|Mara Danube Work Intro]]>><</link>>
+-	<br>
+-	<<link [[Just stop by to say hello|Danube Street]]>><</link>>
++	<<if $mara.petRulesEstablished>>
++		<<maraPetHousewear>>
++		Mara opens the door and gives your collar a brief, approving glance. "You're here. You know the routine. Keep quiet unless I invite you to speak, and wait for my instructions."
++		<br><br>
++		<<link [[Ask Mara what she wants you to do|Mara Danube Work Intro]]>><</link>>
++		<br>
++		<<link [[Leave Mara's house|Mara Danube House Leave]]>><</link>>
++	<<else>>
++		Mara opens the door, and her expression brightens when she recognizes you. "It's good to see you again. I was just about to get a few things done around the house. Would you like to give me a hand?"
++		<br><br>
++		<<if $mara.handlerRelationship>>
++			<<link [[Talk about your arrangement|Mara Pet Reaffirm]]>><</link>>
++			<br>
++		<</if>>
++		<<link [[Help Mara with the housework|Mara Danube Work Intro]]>><</link>>
++		<br>
++		<<link [[Just stop by to say hello|Mara Danube House Leave]]>><</link>>
++	<</if>>
+ <</if>>
+ 
+ :: Mara Danube Work Intro
+@@ -2988,7 +3001,12 @@ You hear a voice from the door. "I'm back!" It's the <<person>>. <<His>> pets su
+ 	<<link [[Visit Mara at the cafe|Ocean Breeze]]>><<pass 2>><</link>>
+ <<else>>
+ 	<<set $mara.metHouse to true>><<maraInit>><<run statusCheck("Mara")>>
+-	Mara smiles. "Thank you. I've got a few things that could use doing. Choose whichever you'd like, and I'll pay you for your time."
++	<<if $mara.petRulesEstablished>>
++		<<maraPetHousewear>>
++		Mara gives a small nod towards the supplies. "There is work to be done. Stay quiet, listen carefully, and choose a task. I'll tell you what I expect."
++	<<else>>
++		Mara smiles. "Thank you. I've got a few things that could use doing. Choose whichever you'd like, and I'll pay you for your time."
++	<</if>>
+ 	<br><br>
+ 	<<link [[Organize pet supplies (30 minutes)|Mara Danube Organize]]>><<pass 30>><</link>>
+ 	<br>
+@@ -2996,7 +3014,7 @@ You hear a voice from the door. "I'm back!" It's the <<person>>. <<His>> pets su
+ 	<br>
+ 	<<link [[Prepare food supplies (30 minutes)|Mara Danube Food]]>><<pass 30>><</link>>
+ 	<br>
+-	<<link [[Decline for now|Danube Street]]>><</link>>
++	<<link [[Decline for now|Mara Danube House Leave]]>><</link>>
+ <</if>>
+ 
+ :: Mara Danube Organize
+@@ -3010,7 +3028,7 @@ Mara checks your work and nods approvingly. "Good. You have an eye for order."
+ <br><br>
+ Reward:<<glove Mara>><<if C.npc.Mara.love gte 50>><<gtrust>><</if>> | + <<moneyGain 800>>
+ <br><br>
+-<<link [[Finish up|Danube Street]]>><</link>>
++<<link [[Finish up|Mara Danube House Leave]]>><</link>>
+ 
+ :: Mara Danube Clean
+ You gather the animal equipment and start cleaning it carefully, making sure everything is ready for use.
+@@ -3023,7 +3041,7 @@ Mara looks over the clean equipment and thanks you for being thorough.
+ <br><br>
+ Reward:<<glove Mara>><<if C.npc.Mara.love gte 50>><<gtrust>><</if>> | + <<moneyGain 1200>>
+ <br><br>
+-<<link [[Finish up|Danube Street]]>><</link>>
++<<link [[Finish up|Mara Danube House Leave]]>><</link>>
+ 
+ :: Mara Danube Food
+ You lay out the food supplies and start preparing everything for the next round of feeding.
+@@ -3036,4 +3054,4 @@ Mara checks the prepared supplies and seems pleased with your work.
+ <br><br>
+ Reward:<<glove Mara>><<if C.npc.Mara.love gte 50>><<gtrust>><</if>> | + <<moneyGain 1000>>
+ <br><br>
+-<<link [[Finish up|Danube Street]]>><</link>>
++<<link [[Finish up|Mara Danube House Leave]]>><</link>>

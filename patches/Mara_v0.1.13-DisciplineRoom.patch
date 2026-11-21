@@ -1,0 +1,118 @@
+--- a/game/04-Variables/variables-maraUpdate.twee
++++ b/game/04-Variables/variables-maraUpdate.twee
+@@ -25,7 +25,7 @@
+ 		<<initnpc "Mara">>
+ 		<<run ["love", "lust", "trust", "dom", "rage", "trauma", "purity", "corruption", "state", "name_known", "title", "description", "type", "claws", "pronoun", "pronouns", "gender", "penis", "vagina", "penissize", "penisdesc", "bottomsize", "ballssize", "breastsize", "breastdesc", "breastsdesc", "hairColour", "eyeColour", "skincolour", "virginity", "chastity", "clothes", "outfits", "strapons"].forEach(key => { if (_maraPrevious[key] !== undefined) C.npc.Mara[key] = clone(_maraPrevious[key]); })>>
+ 	<</if>>
+-	<<set $objectVersion.mara to 8>>
++	<<set $objectVersion.mara to 9>>
+ <</widget>>
+ 
+ :: Mara Housework Break Check [widget]
+@@ -158,6 +158,8 @@
+ 	<<exerciseicon>>Mara has finished today's training session.
+ <</if>>
+ <br>
++<<link [[Visit Mara's discipline room|Mara Pet Dungeon Room]]>><</link>>
++<br>
+ <<link [[Help Mara with the housework|Mara Danube Work Intro]]>><</link>>
+ <br>
+ <<link [[Leave Mara's house|Mara Danube House Leave]]>><</link>>
+@@ -339,6 +341,99 @@
+ <br><br>
+ <<link [[Return to the pet room|Mara Danube Pet House]]>><</link>>
+ 
++:: Mara Pet Dungeon Room
++<<set $outside to 0>><<set $location to "town">><<effects>><<set $bus to "danube">>
++<<maraInit>><<maraPetHousewear>>
++<<if $daily.mara is undefined>><<set $daily.mara to {}>><</if>>
++<<if $daily.mara.disciplineRoll is undefined>><<set $daily.mara.disciplineRoll to random(1, 100)>><</if>>
++The door opens into a private room at the back of Mara's house. A padded X-frame stands against one wall, with wide-lined restraints, a safety release, a whip, and a light cane stored neatly nearby. A thick mat covers the floor. Mara keeps the room orderly and quiet.
++<br><br>
++<<if $daily.mara.disciplineHandled>>
++	Mara has already offered today's session, so the room is quiet for now. She gives you a small nod and leaves the choice to return to the pet room up to you.
++<<elseif $daily.mara.disciplineRoll lte 35>>
++	Mara looks over from the equipment. "I have time for a short discipline session today. We agreed this could be part of our arrangement, but I still want you to choose it. You can decline, or stop at any time."
++	<br><br>
++	<<link [[Hear today's discipline-session options|Mara Pet Dungeon Select]]>><</link>>
++	<br>
++	<<link [[Not today|Mara Pet Dungeon Decline]]>><</link>>
++<<else>>
++	Mara checks the straps and the padded frame, but makes no move to begin a session. "Not every visit needs to be a discipline day. You can look around, then go back to the pet room."
++<</if>>
++<br><br>
++<<link [[Return to the pet room|Mara Danube Pet House]]>><</link>>
++
++:: Mara Pet Dungeon Select
++Mara gestures towards the two implements. "Would you prefer the whip or the cane for today's agreed session? The scene will stay controlled, and you can stop it whenever you need to."
++<br><br>
++<<link [[Choose the whip|Mara Pet Dungeon Confirm]]>><<set $daily.mara.disciplineTool to "whip">><</link>>
++<br>
++<<link [[Choose the cane|Mara Pet Dungeon Confirm]]>><<set $daily.mara.disciplineTool to "cane">><</link>>
++<br>
++<<link [[Change your mind|Mara Pet Dungeon Decline]]>><</link>>
++
++:: Mara Pet Dungeon Confirm
++<<if $daily.mara.disciplineTool is "whip">>
++	Mara takes the whip from its hook and checks its handle and condition.
++<<else>>
++	Mara takes the cane from its place and checks it before setting it within reach.
++<</if>>
++<br><br>
++"Before we begin: the agreed stop word is 'Red'. Say it, or use our agreed hand signal, and I will stop immediately. If anything feels wrong, you do not need to explain. Do you want to continue?"
++<br><br>
++<<link [[Yes, begin the agreed session|Mara Pet Dungeon Start]]>><</link>>
++<br>
++<<link [[No, not today|Mara Pet Dungeon Decline]]>><</link>>
++
++:: Mara Pet Dungeon Start
++<<set $daily.mara.disciplineHandled to true>>
++Mara guides you to the padded X-frame and helps you take position. She fastens the broad, lined cuffs around your wrists and ankles, checks each release, and makes sure nothing is pressing uncomfortably. She confirms that you can use the agreed signal at any moment. The restraints hold you in place without forcing your joints beyond a comfortable position.
++<br><br>
++<<if $daily.mara.disciplineTool is "whip">>
++	Mara picks up the whip and takes her place behind you. "Stay as comfortable as you can. Remember, Red means stop."
++<<else>>
++	Mara picks up the cane and takes her place behind you. "Stay as comfortable as you can. Remember, Red means stop."
++<</if>>
++<br><br>
++<<link [[Continue with the agreed session (0:15)|Mara Pet Dungeon Session]]>><<pass 15>><</link>>
++<br>
++<<link [[Stop and be released now|Mara Pet Dungeon Stop]]>><</link>>
++
++:: Mara Pet Dungeon Session
++<<if $daily.mara.disciplineTool is "whip">>
++	The whip makes a sharp sound in the quiet room. Mara keeps the session measured, pausing between each set to check your response and make sure you still want to continue. The scene passes in a few controlled moments; the details are left private.
++<<else>>
++	The cane makes a crisp sound in the quiet room. Mara keeps the session measured, pausing between each set to check your response and make sure you still want to continue. The scene passes in a few controlled moments; the details are left private.
++<</if>>
++<br><br>
++Mara sets the implement aside. "That's enough. Are you ready for me to let you down?"
++<br><br>
++<<link [[Finish the session and be released|Mara Pet Dungeon Complete]]>><</link>>
++<br>
++<<link [[Stop now and end the scene|Mara Pet Dungeon Stop]]>><</link>>
++
++:: Mara Pet Dungeon Complete
++<<if !$daily.mara.disciplineRewarded>>
++	<<masochism 20>><<set $daily.mara.disciplineRewarded to true>>
++<</if>>
++Mara releases the cuffs one by one and helps you step away from the padded frame. She puts the implement away, offers you water, and gives you a moment to recover before speaking again.
++<br><br>
++"You did well. That's enough for today. We can leave the room behind us now."
++<br><br>
++Reward: +20 Masochism progress. Current progress: <<print Math.trunc($masochism)>> / 1000.
++<br><br>
++<<link [[Return to the pet room|Mara Danube Pet House]]>><</link>>
++
++:: Mara Pet Dungeon Stop
++Mara immediately puts the implement down and releases the restraints. She gives you space, brings over water, and does not ask you to justify stopping. The session ends without a reward.
++<br><br>
++<<link [[Return to the pet room|Mara Danube Pet House]]>><</link>>
++
++:: Mara Pet Dungeon Decline
++<<set $daily.mara.disciplineHandled to true>>
++Mara nods and puts the equipment away. "All right. Not today. You don't owe me an explanation."
++<br><br>
++<<link [[Return to the pet room|Mara Danube Pet House]]>><</link>>
++
+ :: Mara Danube House Leave

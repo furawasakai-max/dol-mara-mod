@@ -1,0 +1,340 @@
+--- a/game/04-Variables/variables-static.twee
++++ b/game/04-Variables/variables-static.twee
+@@ -31,9 +31,9 @@
+ 	<<init_tips>>
+ 
+ 	<<set setup.baseNNPC = {penis : 0, vagina: 0, gender: "none", description: 0, title: 0, insecurity: 0, pronoun: "none", penissize: 0, penisdesc: "none", bottomsize: 0, ballssize: 0, breastsize: 0, breastdesc: 0, breastsdesc: 0, teen: 0, adult: 0, init: 0, intro: 0, type: "human", trust: 0, love: 0, dom: 0, lust: 0, rage: 0, state: "", trauma: 0, eyeColour: 0, hairColour: 0, chastity: {penis: "", vagina: "", anus: ""}}>>
+-	<<set setup.NPCNameList = ["Avery","Bailey","Briar","Charlie","Darryl","Doren","Eden","Gwylan","Harper","Jordan","Kylar","Landry","Leighton","Mason","Morgan","River","Robin","Sam","Sirris","Whitney","Winter","Black Wolf","Niki","Quinn","Remy","Alex","Great Hawk","Wren","Sydney","Ivory Wraith","Zephyr","Night Monster"]>>
+-
+-	<<set setup.loveInterestNpc = ["Robin","Whitney","Kylar","Sydney","Eden","Avery","Black Wolf","Great Hawk","Alex","Gwylan"]>>
++	<<set setup.NPCNameList = ["Avery","Bailey","Briar","Charlie","Darryl","Doren","Eden","Gwylan","Harper","Jordan","Kylar","Landry","Leighton","Mason","Morgan","River","Robin","Sam","Sirris","Whitney","Winter","Black Wolf","Niki","Quinn","Remy","Alex","Great Hawk","Wren","Sydney","Ivory Wraith","Zephyr","Night Monster","Mara"]>>
++
++	<<set setup.loveInterestNpc = ["Robin","Whitney","Kylar","Sydney","Eden","Avery","Black Wolf","Great Hawk","Alex","Gwylan","Mara"]>>
+ 
+ 	<<set setup.loveAlias to {
+ 		/* Named NPC */
+@@ -69,6 +69,7 @@
+ 		"Ivory Wraith": () => "Love",
+ 		"Zephyr": () => "Interest",
+ 		"Night Monster": () => "Interest",
++		"Mara": () => "Love",
+ 
+ 		/* Persistent NPC */
+ 		"anxious_guard": () => "Trust",
+--- a/game/04-Variables/npcNamed.twee
++++ b/game/04-Variables/npcNamed.twee
+@@ -16,14 +16,14 @@
+ 	<!-- Draft default pronoun list. Random selection is part of initNPCgender widget -->
+ 	/% <<set _pro to ["m","f","f","m","m","m","m","m","f","f","m","m","f","m","f","m","m","m","f","m","m","m","m","m","f","m","m"]>> %/
+ 
+-	<<set _tit to ["businessperson", "caretaker", "brothel owner", "dance coach", "club owner", "English teacher", "hunter", "shopkeeper", "doctor", "pious", "loner", "criminal", "headteacher", "swimming teacher", "sewer dweller", "maths teacher", "orphan", "cafe owner", "science teacher", "bully", "history teacher", "alpha", "photographer", "mayor", "farmer", "farmhand", "terror", "smuggler", "faithful", "reflection", "pirate", "horror"]>>
+-
+-	<<set _ins to ["weak", "weak", "looks", "ethics", "ethics", "ethics", "looks", "weak", "skill", "ethics", "weak", "skill", "skill", "ethics", "weak", "ethics", "ethics", "ethics", "ethics", "looks", "skill", "weak", "skill", "looks", "looks", "weak", "looks", "ethics", "skill", "looks", "skill", "weak"]>>
++	<<set _tit to ["businessperson", "caretaker", "brothel owner", "dance coach", "club owner", "English teacher", "hunter", "shopkeeper", "doctor", "pious", "loner", "criminal", "headteacher", "swimming teacher", "sewer dweller", "maths teacher", "orphan", "cafe owner", "science teacher", "bully", "history teacher", "alpha", "photographer", "mayor", "farmer", "farmhand", "terror", "smuggler", "faithful", "reflection", "pirate", "horror", "pet shop owner"]>>
++
++	<<set _ins to ["weak", "weak", "looks", "ethics", "ethics", "ethics", "looks", "weak", "skill", "ethics", "weak", "skill", "skill", "ethics", "weak", "ethics", "ethics", "ethics", "ethics", "looks", "skill", "weak", "skill", "looks", "looks", "weak", "looks", "ethics", "skill", "looks", "skill", "weak", "skill"]>>
+ 
+ 	<!-- Type needs to conform to beast type: wolf, dog, etc. -->
+-	<<set _tpe to ["human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "wolf", "human", "human", "human", "human", "hawk", "human", "human", "human", "human", "creature"]>>
+-
+-	<<set _swi to ["a","a","a","a","a","a","a","t","a","a","t","a","a","a","a","a","t","a","a","t","a","a","a","a","a","t","a","a","t","a","a","a"]>>
++	<<set _tpe to ["human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "human", "wolf", "human", "human", "human", "human", "hawk", "human", "human", "human", "human", "creature", "human"]>>
++
++	<<set _swi to ["a","a","a","a","a","a","a","t","a","a","t","a","a","a","a","a","t","a","a","t","a","a","a","a","a","t","a","a","t","a","a","a","a"]>>
+ 
+ 	<<for _i to 0; _i lt $NPCName.length; _i++>>
+ 
+@@ -132,7 +132,8 @@
+ 			"sydney": {nam : "Sydney", title: "faithful", insecurity: "skill", teen: 1},
+ 			"ivorywraith": {nam : "Ivory Wraith", title: "reflection", insecurity: "looks", adult: 1},
+ 			"zephyr": {nam : "Zephyr", title: "captain", insecurity: "skill", adult: 1},
+-			"nightmonster": {nam : "Night Monster", title: "horror", insecurity: "weak", adult: 1, type: "creature", claws: "claws"}
++			"nightmonster": {nam : "Night Monster", title: "horror", insecurity: "weak", adult: 1, type: "creature", claws: "claws"},
++			"mara": {nam: "Mara", title: "pet shop owner", insecurity: "skill", adult: 1, pronoun: "f", type: "human", hairColour: "black"}
+ 		}>>
+ 		<<for _npc range Object.keys(_newNNPCs)>>
+ 			<<if !$NPCNameList.includes(_newNNPCs[_npc].nam)>>
+--- a/game/04-Variables/variables-start2.twee
++++ b/game/04-Variables/variables-start2.twee
+@@ -517,4 +517,6 @@
+ 
+ 
+ 	<<generateTipsList>>
++	<<maraInit>>
++
+ <</widget>>
+--- a/game/04-Variables/variables-versionUpdate.twee
++++ b/game/04-Variables/variables-versionUpdate.twee
+@@ -115,6 +115,7 @@
+ 		<<npcList>>
+ 	<</if>>
+ 	<<npcNamedUpdate>> /*Updates old Named NPC code to new system*/
++	<<maraInit>> /*Initialises Mara custom save data*/
+ 
+ 	<<if $availableMapsVersion isnot 3>>
+ 		<<mapLocations>>
+--- /dev/null
++++ b/game/04-Variables/variables-maraUpdate.twee
+@@ -0,0 +1,59 @@
++:: Mara Init [widget]
++<<widget "maraInit">>
++	<<if $mara is undefined>>
++		<<set $mara to { version: 1, metShop: false, metHouse: false, shopHelp: 0, houseHelp: 0, privateCollectionSeen: false, handlerProposalSeen: false, handlerRelationship: false, romanceUnlocked: false }>>
++	<<else>>
++		<<if $mara.version is undefined>><<set $mara.version to 1>><</if>>
++		<<if $mara.metShop is undefined>><<set $mara.metShop to false>><</if>>
++		<<if $mara.metHouse is undefined>><<set $mara.metHouse to false>><</if>>
++		<<if $mara.shopHelp is undefined>><<set $mara.shopHelp to 0>><</if>>
++		<<if $mara.houseHelp is undefined>><<set $mara.houseHelp to 0>><</if>>
++		<<if $mara.privateCollectionSeen is undefined>><<set $mara.privateCollectionSeen to false>><</if>>
++		<<if $mara.handlerProposalSeen is undefined>><<set $mara.handlerProposalSeen to false>><</if>>
++		<<if $mara.handlerRelationship is undefined>><<set $mara.handlerRelationship to false>><</if>>
++		<<if $mara.romanceUnlocked is undefined>><<set $mara.romanceUnlocked to false>><</if>>
++	<</if>>
++<</widget>>
++
++:: Mara Relationship Events
++<<if C.npc.Mara.love gte 100 and C.npc.Mara.trust gte 50 and !$mara.romanceUnlocked>>
++	<<link [[Talk to Mara about your relationship|Mara Romance Confession]]>><</link>>
++<</if>>
++<<if $mara.romanceUnlocked and C.npc.Mara.trust gt 70 and C.npc.Mara.dom gte 100 and !$mara.handlerProposalSeen>>
++	<<link [[Mara has something personal to ask|Mara Handler Proposal]]>><</link>>
++<</if>>
++
++:: Mara Romance Confession
++Mara sets aside her work and speaks more quietly. "You've become important to me. I would like us to be more than friends, if you feel the same."
++<br><br>
++<<link [[Accept her feelings|Mara Romance Accepted]]>><<set $mara.romanceUnlocked to true>><<run setup.loveInterestNpc.includes("Mara") || setup.loveInterestNpc.push("Mara")>><</link>>
++<br>
++<<link [[Ask for more time|Mara Pet Shop]]>><</link>>
++
++:: Mara Romance Accepted
++<<set $mara.romanceUnlocked to true>>
++Mara smiles, visibly relieved. "Then let's see where this takes us."
++<br><br>
++<<link [[Continue|Mara Pet Shop]]>><</link>>
++
++:: Mara Private Collection
++<<set $mara.privateCollectionSeen to true>><<npcincr Mara love 2>><<npcincr Mara dom 2>>
++Mara opens a cabinet in her private workshop. Inside are carefully maintained collars, cuffs, leads, and other specialist role-play accessories. "I opened the shop because I care about animals and training. But I also have a private interest in the symbolism of collars, rules, and consensual power exchange. I don't share this side of my life with just anyone."
++<br><br>
++<<link [[Ask her to explain more|Mara Pet Shop]]>><</link>>
++
++:: Mara Handler Proposal
++<<set $mara.handlerProposalSeen to true>>
++Mara takes a moment before speaking. "I trust you, and I care for you. I'd like to ask whether you'd be interested in a consensual Handler and pet relationship with me. We would agree on boundaries together, and you could change your mind at any time."
++<br><br>
++<<link [[Accept her proposal|Mara Handler Accepted]]>><<set $mara.handlerRelationship to true>><</link>>
++<br>
++<<link [[Ask for time to think|Mara Pet Shop]]>><</link>>
++<br>
++<<link [[Decline|Mara Pet Shop]]>><</link>
++
++:: Mara Handler Accepted
++<<set $mara.handlerRelationship to true>>
++Mara nods. "Then we'll establish our rules together, carefully and honestly."
++<br><br>
++<<link [[Continue|Mara Pet Shop]]>><</link>
+--- a/game/base-system/named-npcs.twee
++++ b/game/base-system/named-npcs.twee
+@@ -1176,7 +1176,7 @@
+ 		head over to game/base-system/widgets.twee and give this new NNPC relevant clamps before whitelisting them below.
+ 	-->
+-	<<set _validNNPCNames to ["Avery","Bailey","Briar","Charlie","Darryl","Doren","Eden","Gwylan","Harper","Jordan","Kylar","Landry","Leighton","Mason","Morgan","River","Robin","Sam","Sirris","Whitney","Winter","Black Wolf","Niki","Quinn","Remy","Alex","Great Hawk","Wren","Sydney","Ivory Wraith","Zephyr"]>>
++	<<set _validNNPCNames to ["Avery","Bailey","Briar","Charlie","Darryl","Doren","Eden","Gwylan","Harper","Jordan","Kylar","Landry","Leighton","Mason","Morgan","River","Robin","Sam","Sirris","Whitney","Winter","Black Wolf","Niki","Quinn","Remy","Alex","Great Hawk","Wren","Sydney","Ivory Wraith","Zephyr","Mara"]>>
+ 	<<if !_validNNPCNames.includes(_nam)>>
+ 		<<error { message: "NNPC '" + _nam + "' is not whitelisted for use with <<npcincr>>"}>>
+ 	<</if>>
+@@ -1204,8 +1204,8 @@
+ 			<<set $NPCName[_i].dom += _val>>
+ 		<</if>>
+ 	<<case trust>>
+-		<<if _nam isnot "Eden">>
+-			<<error { message: "<<npcincr>> attempted to modify trust for someone other than Eden (" + _nam + ")" }>>
++		<<if !["Eden", "Mara"].includes(_nam)>>
++			<<error { message: "<<npcincr>> attempted to modify trust for a non-whitelisted NPC (" + _nam + ")" }>>
+ 		<</if>>
+ 		<<set $NPCName[_i].trust += _val>>
+ 	<<case lust>>
+--- a/game/base-system/widgets.twee
++++ b/game/base-system/widgets.twee
+@@ -3658,6 +3658,10 @@
+ 	<<set $NPCName[_i].harmony = Math.clamp($wolfpackharmony || 0, 0, 100)>>
+ 	<<set $NPCName[_i].ferocity = Math.clamp($wolfpackferocity || 0, 0, 100)>>
+ 	<<set $NPCName[_i].trust to Math.clamp($NPCName[_i].trust,- 100, 300)>>
++	<<set _i to $NPCNameList.indexOf("Mara")>>
++	<<set $NPCName[_i].love = Math.clamp($NPCName[_i].love, 0, 100)>>
++	<<set $NPCName[_i].dom = Math.clamp($NPCName[_i].dom, 0, 100)>>
++	<<set $NPCName[_i].trust = Math.clamp($NPCName[_i].trust, -100, 300)>>
+ 	<<set _i to $NPCNameList.indexOf("Gwylan")>>
+ 	<<set $NPCName[_i].love = Math.clamp($NPCName[_i].love, 0, (getSpecialSets(sets => sets.shop.includes("forest")).length * 2))>>
+ 	<<set $NPCName[_i].lust = Math.clamp($NPCName[_i].lust, 0, 100)>>
+--- a/game/base-system/overlays/cheats.twee
++++ b/game/base-system/overlays/cheats.twee
+@@ -1268,6 +1268,12 @@
+ 			<span class="gold">Mara</span>
+ 			<<numberStepper "<<symbol love>> Love" `C.npc.Mara.love` { callback: value => { C.npc.Mara.love = value }, min: 0, max: 100 }>>
+ 			<<numberStepper "<<symbol trust>> Trust" `C.npc.Mara.trust` { callback: value => { C.npc.Mara.trust = value }, min: -100, max: 300 }>>
+ 			<<numberStepper "<<symbol dominance>> Dominance" `C.npc.Mara.dom` { callback: value => { C.npc.Mara.dom = value }, min: 0, max: 100 }>>
+ 		</div>
+ 		<div class="settingsToggleItem">
+ 			<span class="gold">Alex</span>
+ 			<<numberStepper "<<symbol love>> Love" `C.npc.Alex.love` { callback: value => { C.npc.Alex.love = value } }>>
+--- a/game/overworld-town/loc-danube-homes/work.twee
++++ b/game/overworld-town/loc-danube-homes/work.twee
+@@ -99,6 +99,15 @@
+ 			<<getouticon>><<link [[Say you've got the wrong address and leave|Danube Street]]>><<endevent>><</link>>
+ 			<br>
+ 			</<addinlineevent>>
++	</if>>
++	<<if !$mara.metHouse>>
++		<<addinlineevent "Mara Danube Pre-Intro" 1>>
++			A well-dressed woman opens the door. Her dark hair is neatly arranged, and her sharp eyes study you with calm curiosity. "Good afternoon. Are you looking for work? I own a pet shop on High Street. I sometimes need an extra pair of hands here at home, too."
++			<br><br>
++			<<socialiseicon "ask">><<link [[Ask what work she has|Mara Danube Work Intro]]>><</link>>
++			<br>
++			<<getouticon>><<link [[Politely decline and leave|Danube Street]]>><<endevent>><</link>>
++		</<addinlineevent>>
+ 	</if>>
+ 	<<addinlineevent "Danube Catperson Pre-Intro">>
+ 		<<generate1>><<person1>>A <<person>> answers the door.
+@@ -2919,3 +2928,43 @@
+ 
+ <<link [[Leave|Danube Street]]>><<unset $danubecathappiness>><<endevent>><</link>>
+ <br>
++
++
++:: Mara Danube Pre-Intro
++<<set $outside to 0>><<set $location to "town">><<effects>><<set $bus to "danube">>
++<<set $mara.metHouse to true>>
++Mara gives you a measured, professional smile. "I'm Mara. I run the pet shop at the shopping centre. If you're looking for work, I occasionally need help with deliveries, cleaning, and organizing supplies."
++<br><br>
++<<link [[Ask what work is available|Mara Danube Work Intro]]>><</link>>
++<br>
++<<link [[Leave|Danube Street]]>><</link>
++
++:: Mara Danube Work Intro
++<<set $outside to 0>><<set $location to "town">><<effects>><<set $bus to "danube">>
++Mara considers your offer. "I have a few jobs that need doing. I'll pay you for your time, of course."
++<br><br>
++<<link [[Organize pet supplies (30 minutes)|Mara Danube Organize]]>><<pass 30>><</link>>
++<br>
++<<link [[Clean animal equipment (45 minutes)|Mara Danube Clean]]>><<pass 45>><</link>>
++<br>
++<<link [[Prepare food supplies (30 minutes)|Mara Danube Food]]>><<pass 30>><</link>>
++<br>
++<<link [[Decline for now|Danube Street]]>><</link>>
++
++:: Mara Danube Organize
++<<set $mara.houseHelp += 1>><<npcincr Mara love 2>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 1>><</if>><<moneyGain 800>>
++You organize the supplies into neat groups. Mara checks your work and nods approvingly. "Good. You have an eye for order."
++<br><br>
++<<link [[Continue|Danube Street]]>><</link>>
++
++:: Mara Danube Clean
++<<set $mara.houseHelp += 1>><<npcincr Mara love 2>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 2>><</if>><<moneyGain 1200>>
++You clean the animal equipment carefully. Mara thanks you for being thorough.
++<br><br>
++<<link [[Continue|Danube Street]]>><</link>>
++
++:: Mara Danube Food
++<<set $mara.houseHelp += 1>><<npcincr Mara love 2>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 1>><</if>><<moneyGain 1000>>
++You prepare and organize the food supplies. Mara seems pleased with your work.
++<br><br>
++<<link [[Continue|Danube Street]]>><</link>>
+--- a/game/overworld-town/loc-shop/main.twee
++++ b/game/overworld-town/loc-shop/main.twee
+@@ -423,7 +423,12 @@
+ <<commercialquick>>
+ 
+ :: Shopping Centre
++<<maraInit>>
+ <<set $outside to 0>><<set $location to "shopping_centre">><<effects>>
++<<if Time.hour gte 9 and Time.hour lt 14>>
++	<<link [[Mara's Pet Shop|Mara Pet Shop]]>><</link>>
++	<br>
++<</if>>
+ <<if Time.dayState is "day">>
+ 	You are on the main floor of the shopping centre. It's crowded with shoppers.
+ <<elseif Time.dayState is "dusk">>
+@@ -1160,3 +1165,80 @@
+ 
+ <<link [[Next|Shopping Centre]]>><<endevent>><</link>>
+ <br>
++
++
++:: Mara Pet Shop
++<<set $outside to 0>><<set $location to "shopping_centre">><<effects>>
++<<if Time.hour lt 9 or Time.hour gte 14>>
++The shop is closed. Mara's opening hours are 9 AM to 2 PM.
++<<else>>
++You enter Mara's Pet Shop. Shelves hold pet food, grooming supplies, toys, carriers, and collars. Mara stands behind the counter, dressed neatly in formal clothes.
++<br><br>
++<<if !$mara.metShop>>
++	<<set $mara.metShop to true>>
++	"Welcome. I'm Mara, the owner. Are you looking for anything in particular?"
++	<br><br>
++	<<link [[Introduce yourself and offer to help|Mara Shop Intro]]>><</link>>
++	<br>
++<<else>>
++	"Good to see you again. Do you have time to help today?"
++	<br><br>
++	<<link [[Offer to help with the shop|Mara Shop Work]]>><</link>>
++	<br>
++<</if>>
++<<link [[Browse pet supplies|Mara Shop Browse]]>><</link>>
++<<if C.npc.Mara.trust gte 50 and !$mara.privateCollectionSeen>>
++	<br><<link [[Ask Mara about her private collection|Mara Private Collection]]>><</link>>
++<</if>>
++<<if C.npc.Mara.love gte 100 and C.npc.Mara.trust gte 50 and !$mara.romanceUnlocked>>
++	<br><<link [[Talk about your relationship|Mara Romance Confession]]>><</link>>
++<</if>>
++<<if $mara.romanceUnlocked and C.npc.Mara.trust gt 70 and C.npc.Mara.dom gte 100 and !$mara.handlerProposalSeen>>
++	<br><<link [[Mara has a personal question|Mara Handler Proposal]]>><</link>>
++<</if>>
++<</if>>
++<br>
++<<link [[Leave the shop|Shopping Centre]]>><</link>>
++
++:: Mara Shop Intro
++Mara gives you a thoughtful look. "That's kind of you. I can always use help keeping the place organized. If you come by during opening hours, ask me what needs doing."
++<<set $mara.metShop to true>><<npcincr Mara love 1>>
++<br><br>
++<<link [[Continue|Mara Pet Shop]]>><</link>>
++
++:: Mara Shop Work
++<<if Time.hour gte 9 and Time.hour lt 14>>
++Mara has several tasks available.
++<br><br>
++<<link [[Restock shelves|Mara Shop Restock]]>><</link>>
++<br>
++<<link [[Help customers|Mara Shop Customers]]>><</link>>
++<br>
++<<link [[Grooming preparation|Mara Shop Grooming]]>><</link>>
++<<else>>The shop is closed.
++<</if>>
++<br>
++<<link [[Back|Mara Pet Shop]]>><</link>>
++
++:: Mara Shop Restock
++<<set $mara.shopHelp += 1>><<npcincr Mara love 2>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 1>><</if>><<npcincr Mara dom 1>><<moneyGain 800>>
++You restock the shelves while Mara checks the inventory. She gives a small approving nod.
++<br><br>
++<<link [[Next|Mara Pet Shop]]>><</link>>
++
++:: Mara Shop Customers
++<<set $mara.shopHelp += 1>><<npcincr Mara love 3>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 2>><</if>><<npcincr Mara dom 1>><<moneyGain 1200>>
++You help a customer choose suitable supplies. Mara watches your interaction and compliments your patience.
++<br><br>
++<<link [[Next|Mara Pet Shop]]>><</link>>
++
++:: Mara Shop Grooming
++<<set $mara.shopHelp += 1>><<npcincr Mara love 3>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 2>><</if>><<npcincr Mara dom 2>><<moneyGain 1500>>
++Mara shows you how she prepares grooming supplies and explains the importance of consistency and calm handling.
++<br><br>
++<<link [[Next|Mara Pet Shop]]>><</link>>
++
++:: Mara Shop Browse
++You browse the pet supplies. Mara answers questions about animal care, food, grooming, and training equipment.
++<br><br>
++<<link [[Back|Mara Pet Shop]]>><</link>

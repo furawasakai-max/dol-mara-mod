@@ -1,0 +1,54 @@
+--- a/game/overworld-town/loc-shop/main.twee
++++ b/game/overworld-town/loc-shop/main.twee
+@@ -425,10 +425,6 @@
+ :: Shopping Centre
+ <<maraInit>>
+ <<set $outside to 0>><<set $location to "shopping_centre">><<effects>>
+-<<if $mara.metShop or $mara.metHouse or (Time.hour gte 9 and Time.hour lt 14)>>
+-	<<link [[Mara's Pet Shop|Mara Pet Shop]]>><</link>>
+-	<br>
+-<</if>>
+ <<if Time.dayState is "day">>
+ 	You are on the main floor of the shopping centre. It's crowded with shoppers.
+ <<elseif Time.dayState is "dusk">>
+@@ -522,7 +518,7 @@
+ 		<<if Time.dayState is "night">>
+ 			<<hairdressericon>><<link [[Hairdressers (0:01)|Hairdressers Lock]]>><<pass 1>><</link>>
+ 			<br>
+-			<<petshopicon>><<link [[Pet shop (0:01)|Pet Shop Lock]]>><<pass 1>><</link>>
++			<<petshopicon>><<link [[Mara's Pet Shop (0:01)|Mara Pet Shop]]>><<pass 1>><</link>>
+ 			<br>
+ 			<<shopicon "tattoo">><<link [[Tattoo parlour (0:01)|Tattoo Parlour Lock]]>><<pass 1>><</link>>
+ 			<br>
+@@ -609,7 +605,7 @@
+ 			<</if>>
+ 			<<hairdressericon>><<link [[Hairdressers (0:01)|Hairdressers]]>><<pass 1>><</link>>
+ 			<br>
+-			<<petshopicon>><<link [[Pet shop (0:01)|Pet Shop]]>><<pass 1>><</link>>
++			<<petshopicon>><<link [[Mara's Pet Shop (0:01)|Mara Pet Shop]]>><<pass 1>><</link>>
+ 			<br>
+ 			<<shopicon "tattoo">><<link [[Tattoo parlour (0:01)|Tattoo Parlour]]>><<pass 1>><</link>>
+ 			<br>
+@@ -1175,11 +1171,11 @@
+ 		<br><br>
+ 		<<link [[Visit Mara at home|Mara Danube House Visit]]>><<pass 2>><</link>>
+ 		<br>
+-		<<link [[Leave the shop|Shopping Centre]]>><</link>>
++		<<getouticon>><<link [[Leave the shop|Shopping Centre]]>><</link>>
+ 	<<else>>
+ 		The shop is closed. Mara's usual opening hours are 9 AM to 2 PM.
+ 		<br><br>
+-		<<link [[Leave the shop|Shopping Centre]]>><</link>>
++		<<getouticon>><<link [[Leave the shop|Shopping Centre]]>><</link>>
+ 	<</if>>
+ <<else>>
+ You enter Mara's Pet Shop. Shelves hold pet food, grooming supplies, toys, carriers, and collars. Mara stands behind the counter, dressed neatly in formal clothes.
+@@ -1212,7 +1208,7 @@
+ <</if>>
+ <</if>>
+ <br>
+-<<link [[Leave the shop|Shopping Centre]]>><</link>>
++<<getouticon>><<link [[Leave the shop|Shopping Centre]]>><</link>>
+ 
+ :: Mara Shop Intro
+ Mara gives you a grateful smile. "Thank you. I appreciate the help. There are a few things that need doing, so let me show you where to start."

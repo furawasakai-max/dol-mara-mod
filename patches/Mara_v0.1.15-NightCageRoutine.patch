@@ -1,0 +1,162 @@
+--- a/game/04-Variables/variables-maraUpdate.twee
++++ b/game/04-Variables/variables-maraUpdate.twee
+@@ -2,7 +2,7 @@
+ <<widget "maraInit">>
+ 	<<if $objectVersion is undefined>><<set $objectVersion to {}>><</if>>
+ 	<<if $mara is undefined>>
+-		<<set $mara to { metShop: false, metHouse: false, shopHelp: 0, houseHelp: 0, restBreaks: 0, cafeChats: 0, privateCollectionSeen: false, handlerProposalSeen: false, handlerRelationship: false, romanceUnlocked: false, petRulesEstablished: false, petHouseDressed: false, petNeckWasNaked: false, petTrainingSessions: 0 }>>
++		<<set $mara to { metShop: false, metHouse: false, shopHelp: 0, houseHelp: 0, restBreaks: 0, cafeChats: 0, privateCollectionSeen: false, handlerProposalSeen: false, handlerRelationship: false, romanceUnlocked: false, petRulesEstablished: false, petHouseDressed: false, petNeckWasNaked: false, petTrainingSessions: 0, nightCageCaughtUntil: 0 }>>
+ 	<<else>>
+ 		<<if $mara.metShop is undefined>><<set $mara.metShop to false>><</if>>
+ 		<<if $mara.metHouse is undefined>><<set $mara.metHouse to false>><</if>>
+@@ -18,6 +18,7 @@
+ 		<<if $mara.petHouseDressed is undefined>><<set $mara.petHouseDressed to false>><</if>>
+ 		<<if $mara.petNeckWasNaked is undefined>><<set $mara.petNeckWasNaked to false>><</if>>
+ 		<<if $mara.petTrainingSessions is undefined>><<set $mara.petTrainingSessions to 0>><</if>>
++		<<if $mara.nightCageCaughtUntil is undefined>><<set $mara.nightCageCaughtUntil to 0>><</if>>
+ 	<</if>>
+ 	/* Initialise Mara as a named NPC once the player has met her. Preserve relationship and appearance data from earlier alpha saves. */
+ 	<<if ($mara.metShop or $mara.metHouse) and C.npc.Mara.init isnot 1>>
+@@ -25,7 +26,7 @@
+ 		<<initnpc "Mara">>
+ 		<<run ["love", "lust", "trust", "dom", "rage", "trauma", "purity", "corruption", "state", "name_known", "title", "description", "type", "claws", "pronoun", "pronouns", "gender", "penis", "vagina", "penissize", "penisdesc", "bottomsize", "ballssize", "breastsize", "breastdesc", "breastsdesc", "hairColour", "eyeColour", "skincolour", "virginity", "chastity", "clothes", "outfits", "strapons"].forEach(key => { if (_maraPrevious[key] !== undefined) C.npc.Mara[key] = clone(_maraPrevious[key]); })>>
+ 	<</if>>
+-	<<set $objectVersion.mara to 9>>
++	<<set $objectVersion.mara to 10>>
+ <</widget>>
+ 
+ :: Mara Housework Break Check [widget]
+@@ -138,6 +139,9 @@
+ <<set $outside to 0>><<set $location to "town">><<effects>><<set $bus to "danube">>
+ <<maraInit>><<maraPetHousewear>>
+ <<if $daily.mara is undefined>><<set $daily.mara to {}>><</if>>
++<<if Time.hour gte 22 or Time.hour lt 7>>
++	<<include "Mara Pet Cage Night">>
++<<else>>
+ Mara's pet room is arranged around a broad cushion, a low food bowl, and a sturdy indoor cage with a soft cushion inside. Mara gives you a flat look. "There you are. Try not to be useless all day. Your cushion is there, your bowl is there, and your cage is there. I shouldn't have to explain the room every time you enter it."
+ <br><br>
+ <<link [[Wait on the cushion for an order (0:10)|Mara Pet Cushion Wait]]>><<pass 10>><</link>>
+@@ -161,6 +165,7 @@
+ <<link [[Help Mara with the housework|Mara Danube Work Intro]]>><</link>>
+ <br>
+ <<link [[Leave Mara's house|Mara Danube House Leave]]>><</link>>
++<</if>>
+ 
+ :: Mara Pet Cushion Wait
+ <<set _maraCushionRoll to random(1, 100)>>
+@@ -235,13 +240,17 @@
+ 
+ :: Mara Pet Cage
+ <<set $outside to 0>><<set $location to "town">><<set $bus to "mara_pet_cage">>
+-The indoor cage is large enough to lie down comfortably. A thick cushion covers the floor, with a blanket folded at one end. The door is left open for you.
+-<br><br>
+-Mara looks inside. "Get in and sleep if you're tired. I expect you to keep the place tidy. Don't make me regret giving you a comfortable bed."
+-<br><br>
+-<<nightmareCheck "Mara Pet Cage Sleep">>
+-<<generateSleepLinks "Mara Pet Cage Sleep">>
+-<<bedicon "zzz">><<link [[Climb out of the cage|Mara Danube Pet House]]>><</link>>
++<<if Time.hour gte 22 or Time.hour lt 7>>
++	<<include "Mara Pet Cage Night">>
++<<else>>
++	The indoor cage is large enough to lie down comfortably. A thick cushion covers the floor, with a blanket folded at one end. The door is left open for you.
++	<br><br>
++	Mara looks inside. "Get in and sleep if you're tired. I expect you to keep the place tidy. Don't make me regret giving you a comfortable bed."
++	<br><br>
++	<<nightmareCheck "Mara Pet Cage Sleep">>
++	<<generateSleepLinks "Mara Pet Cage Sleep">>
++	<<bedicon "zzz">><<link [[Climb out of the cage|Mara Danube Pet House]]>><</link>>
++<</if>>
+ 
+ :: Mara Pet Cage Sleep
+ <<set _autosavehere to true>>
+@@ -257,6 +266,90 @@
+ <<sleepeffects>>
+ <<link [[Wake up in the pet room|Mara Danube Pet House]]>><</link>>
+ 
++:: Mara Pet Cage Night
++<<set $outside to 0>><<set $location to "town">><<set $bus to "mara_pet_cage">>
++Mara closes the padded cage door and turns the key with a decisive click. "It's night. You're staying in the cage until seven. Don't bother arguing with the lock."
++<br><br>
++The cushion and folded blanket are still inside. The door is locked from the outside.
++<br><br>
++<<if $mara.nightCageCaughtUntil and Time.date.timeStamp lt $mara.nightCageCaughtUntil>>
++	Mara has already caught you trying the lock tonight. The punishment and return to the cage are still fresh in your memory. There will be no second attempt before morning.
++<<elseif currentSkillValue('skulduggery') gte 400>>
++	<<set $skulduggerydifficulty to 700>>
++	<<link [[Try to pick the cage lock|Mara Pet Cage Night Lockpick]]>><</link>><<skulduggerydifficulty>>
++<<else>>
++	You consider the lock, but you do not have the Skulduggery skill needed to attempt it. You will have to wait until morning.
++<</if>>
++<br><br>
++<<bedicon "zzz">><<link [[Curl up on the cushion and sleep until 07:00|Mara Pet Cage Night Sleep]]>><</link>>
++
++:: Mara Pet Cage Night Lockpick
++<<set $skulduggerydifficulty to 700>>
++<<skulduggerycheck>>
++<<skulduggeryuse>>
++<<if $skulduggerysuccess is 1>>
++	You work the tiny tool into the lock. After a tense moment, the mechanism gives with a soft click. You manage to open the cage without waking Mara.
++	<br><br>
++	<<link [[Slip out of Mara's house (0:02)|Mara Danube House Leave]]>><<pass 2>><</link>>
++<<else>>
++	The pick slips. Metal scrapes loudly against the lock, followed by a sharp clatter. A light comes on in the hallway. You hear Mara's footsteps approaching.
++	<br><br>
++	<<if Time.hour lt 7>>
++		<<set $mara.nightCageCaughtUntil to Time.date.timeStamp + ((7 * 60 - (Time.hour * 60 + Time.minute)) * 60)>>
++	<<else>>
++		<<set $mara.nightCageCaughtUntil to Time.date.timeStamp + (((31 * 60) - (Time.hour * 60 + Time.minute)) * 60)>>
++	<</if>>
++	<<link [[Wait for Mara to come and investigate|Mara Pet Cage Night Caught]]>><<pass 1>><</link>>
++<</if>>
++
++:: Mara Pet Cage Night Caught
++Mara opens the cage, takes the pick from your hand, and gives you a cold, unimpressed look. "Really? You thought you could make that much noise and I wouldn't notice? Out. You're coming with me. An hour in the discipline room should remind you why I keep that cage locked."
++<br><br>
++<<link [[Follow Mara to the dungeon (1:00)|Mara Pet Cage Night Discipline]]>><<pass 60>><</link>>
++
++:: Mara Pet Cage Night Discipline
++Mara closes the dungeon door behind you. The next hour is spent in a stern, controlled disciplinary session. The details remain private; the time passes slowly under her watchful attention.
++<br><br>
++Mara finally sets the implements aside. "That's enough. Up. You're going back where you belong."
++<br><br>
++<<if $worn.neck.cursed isnot 1>>
++	<<if $worn.neck.name is "leather collar">><<attach_leash true>><<elseif $worn.neck.name isnot "leather collar with leash">><<leash 24 "black">><</if>>
++<</if>>
++Mara clips the lead to your collar and guides you back to the cage.
++<br><br>
++<<if Time.date.timeStamp gte $mara.nightCageCaughtUntil or Time.hour gte 7>>
++	Mara opens the cage and removes the lead. "It's seven already. You're free of the cage, but don't mistake that for permission to wander off. Back to the pet room."
++	<br><br>
++	<<if $worn.neck.name is "leather collar with leash">><<detach_leash true>><</if>><<set $mara.nightCageCaughtUntil to 0>>
++	<<link [[Return to the pet room|Mara Danube Pet House]]>><</link>>
++<<else>>
++	She helps you onto the cushion, closes the door, and turns the key again. "There. No more attempts. You stay here until seven."
++	<br><br>
++	<<link [[Settle back onto the cushion|Mara Pet Cage Night]]>><</link>>
++<</if>>
++
++:: Mara Pet Cage Night Sleep
++<<set _autosavehere to true>>
++<<set $location to "town">><<set $bus to "mara_pet_cage">>
++/* Sleep in full hours, then pass the remaining minutes to exactly 07:00. */
++<<set $sleephour to Math.floor(((7 * 60 - (Time.hour * 60 + Time.minute) + 1440) % 1440) / 60)>>
++<<sleep>>
++<<passTimeUntil 7>>
++<<effects>>
++<<wakingEffects $sleepHoursTotal>>
++You sleep on the cushion inside the locked cage. At exactly seven in the morning, footsteps approach and a key turns in the lock.
++<br><br>
++<<sleepeffects>>
++<<include "Mara Pet Cage Night Morning">>
++
++:: Mara Pet Cage Night Morning
++<<set $outside to 0>><<set $location to "town">><<set $bus to "mara_pet_cage">>
++<<if $worn.neck.name is "leather collar with leash">><<detach_leash true>><</if>>
++<<set $mara.nightCageCaughtUntil to 0>>
++At seven, Mara unlocks the cage and swings the door open. She gives you a curt look. "Morning. Out. You can return to the pet room, and don't make me regret letting you out."
++<br><br>
++<<link [[Climb out and return to the pet room|Mara Danube Pet House]]>><</link>>
++
+ :: Mara Pet Training Intro
+ Mara takes a short, soft training lead from the hook. "You need practice. Frankly, your responses are embarrassing. I've prepared a lesson; perhaps today you'll manage to follow it without turning every simple instruction into a struggle."
+ <br><br>
