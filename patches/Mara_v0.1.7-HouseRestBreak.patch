@@ -1,0 +1,101 @@
+--- a/game/04-Variables/variables-maraUpdate.twee
++++ b/game/04-Variables/variables-maraUpdate.twee
+@@ -2,12 +2,13 @@
+ <<widget "maraInit">>
+ 	<<if $objectVersion is undefined>><<set $objectVersion to {}>><</if>>
+ 	<<if $mara is undefined>>
+-		<<set $mara to { metShop: false, metHouse: false, shopHelp: 0, houseHelp: 0, privateCollectionSeen: false, handlerProposalSeen: false, handlerRelationship: false, romanceUnlocked: false }>>
++		<<set $mara to { metShop: false, metHouse: false, shopHelp: 0, houseHelp: 0, restBreaks: 0, privateCollectionSeen: false, handlerProposalSeen: false, handlerRelationship: false, romanceUnlocked: false }>>
+ 	<<else>>
+ 		<<if $mara.metShop is undefined>><<set $mara.metShop to false>><</if>>
+ 		<<if $mara.metHouse is undefined>><<set $mara.metHouse to false>><</if>>
+ 		<<if $mara.shopHelp is undefined>><<set $mara.shopHelp to 0>><</if>>
+ 		<<if $mara.houseHelp is undefined>><<set $mara.houseHelp to 0>><</if>>
++		<<if $mara.restBreaks is undefined>><<set $mara.restBreaks to 0>><</if>>
+ 		<<if $mara.privateCollectionSeen is undefined>><<set $mara.privateCollectionSeen to false>><</if>>
+ 		<<if $mara.handlerProposalSeen is undefined>><<set $mara.handlerProposalSeen to false>><</if>>
+ 		<<if $mara.handlerRelationship is undefined>><<set $mara.handlerRelationship to false>><</if>>
+@@ -19,8 +20,31 @@
+ 		<<initnpc "Mara">>
+ 		<<run ["love", "lust", "trust", "dom", "rage", "trauma", "purity", "corruption", "state", "name_known", "title", "description", "type", "claws", "pronoun", "pronouns", "gender", "penis", "vagina", "penissize", "penisdesc", "bottomsize", "ballssize", "breastsize", "breastdesc", "breastsdesc", "hairColour", "eyeColour", "skincolour", "virginity", "chastity", "clothes", "outfits", "strapons"].forEach(key => { if (_maraPrevious[key] !== undefined) C.npc.Mara[key] = clone(_maraPrevious[key]); })>>
+ 	<</if>>
+-	<<set $objectVersion.mara to 2>>
++	<<set $objectVersion.mara to 3>>
+ <</widget>>
++
++:: Mara House Rest Offer [widget]
++<<widget "maraHouseRestOffer">>
++	/* 25% chance for Mara to offer a proper break after a completed house-work task. */
++	<<set T.maraRestOfferShown to false>>
++	<<if random(1, 4) is 1>>
++		<<set T.maraRestOfferShown to true>>
++		<br><br>
++		As you finish up, Mara notices you have been working steadily for a while. She sets her things aside and gives you a considerate smile. "That's enough for a few minutes. Why don't you sit down and rest? I'll put the kettle on and make you a cup of tea."
++		<br><br>
++		<<link [[Accept her offer of tea|Mara Danube Rest Tea]]>><</link>>
++		<br>
++		<<link [[Thank her and finish up|Danube Street]]>><</link>>
++	<</if>>
++<</widget>>
++
++:: Mara Danube Rest Tea
++<<effects>><<wearProp "tea">><<set $mara.restBreaks += 1>><<stress -6>><<npcincr Mara love 1>>
++Mara returns with two cups of freshly brewed tea. She places one in front of you before settling into the chair opposite. "There. Take your time. The work can wait for a moment." The warmth of the tea and the quiet pause help you catch your breath. Mara keeps you company, chatting easily while you finish your cup.
++<br><br>
++Reward:<<lstress>><<glove Mara>>
++<br><br>
++<<link [[Thank Mara and head back to Danube Street|Danube Street]]>><</link>>
+ 
+ :: Mara Relationship Events
+ <<if C.npc.Mara.love gte 100 and C.npc.Mara.trust gte 50 and !$mara.romanceUnlocked>>
+--- a/game/overworld-town/loc-danube-homes/work.twee
++++ b/game/overworld-town/loc-danube-homes/work.twee
+@@ -2992,6 +2992,10 @@
+ You organize the supplies into neat groups. Mara checks your work and nods approvingly. "Good. You have an eye for order."
+ <br><br>
+ Reward:<<glove Mara>><<if C.npc.Mara.love gte 50>><<gtrust>><</if>> | + <<moneyGain 800>>
++<<maraHouseRestOffer>>
++<<if !T.maraRestOfferShown>>
++	<br><br>
++	<<link [[Continue|Danube Street]]>><</link>>
++<</if>>
+-<br><br>
+-<<link [[Continue|Danube Street]]>><</link>>
+ 
+ :: Mara Danube Clean
+ <<set $mara.houseHelp += 1>><<npcincr Mara love 2>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 2>><</if>>
+ You clean the animal equipment carefully. Mara thanks you for being thorough.
+ <br><br>
+ Reward:<<glove Mara>><<if C.npc.Mara.love gte 50>><<gtrust>><</if>> | + <<moneyGain 1200>>
++<<maraHouseRestOffer>>
++<<if !T.maraRestOfferShown>>
++	<br><br>
++	<<link [[Continue|Danube Street]]>><</link>>
++<</if>>
+-<br><br>
+-<<link [[Continue|Danube Street]]>><</link>>
+ 
+ :: Mara Danube Food
+ <<set $mara.houseHelp += 1>><<npcincr Mara love 2>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 1>><</if>>
+ You prepare and organize the food supplies. Mara seems pleased with your work.
+ <br><br>
+ Reward:<<glove Mara>><<if C.npc.Mara.love gte 50>><<gtrust>><</if>> | + <<moneyGain 1000>>
++<<maraHouseRestOffer>>
++<<if !T.maraRestOfferShown>>
++	<br><br>
++	<<link [[Continue|Danube Street]]>><</link>>
++<</if>>
+-<br><br>
+-<<link [[Continue|Danube Street]]>><</link>>
+--- a/game/base-system/overlays/journal.twee
++++ b/game/base-system/overlays/journal.twee
+@@ -370,6 +370,9 @@
+ 			<li>Mara owns a pet shop in the shopping centre. She works there from 9 AM until 2 PM and is usually at her home on Danube Street outside those hours.</li>
+ 			<<if $mara.shopHelp gt 0 || $mara.houseHelp gt 0>>
+ 				<li>You've helped Mara with <<= $mara.shopHelp + $mara.houseHelp >> <<pluralise ($mara.shopHelp + $mara.houseHelp) "task">>.</li>
++			<</if>>
++			<<if $mara.restBreaks gt 0>>
++				<li>You have shared <<= $mara.restBreaks >> <<pluralise $mara.restBreaks "tea break">> with Mara while helping around her home.</li>
+ 			<</if>>
+ 			<<if $mara.privateCollectionSeen>>
+ 				<li>Mara has trusted you enough to share her private interest in collars, rules, and consensual power exchange.</li>
