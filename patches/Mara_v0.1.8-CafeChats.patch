@@ -1,0 +1,271 @@
+--- a/game/03-JavaScript/named-npc.js
++++ b/game/03-JavaScript/named-npc.js
+@@ -46,12 +46,21 @@
+ window.statusCheck = statusCheck;
+ 
+ /**
+- * Mara works at the pet shop from 09:00 until 13:59 and is at home at all other times.
+- * Keep the schedule in one place so her shop, home, and encounter passages cannot drift apart.
+- * @returns {"shop" | "home"}
++ * Mara works at the pet shop from 09:00 to 13:59. If the player has met her, she may
++ * spend a randomly selected evening at Ocean Breeze between 17:00 and 18:59.
++ * The daily roll is saved so revisiting locations cannot reroll her availability.
++ * @returns {"shop" | "cafe" | "home"}
+  */
+ function maraSchedule() {
+-	return Time.hour >= 9 && Time.hour < 14 ? "shop" : "home";
++	if (Time.hour >= 9 && Time.hour < 14) return "shop";
++
++	if (Time.hour >= 17 && Time.hour < 19 && (V.mara?.metShop || V.mara?.metHouse)) {
++		V.daily.mara ??= {};
++		if (V.daily.mara.cafeDeparted) return "home";
++		if (V.daily.mara.cafePresent === undefined) V.daily.mara.cafePresent = random(1, 100) <= 40;
++		if (V.daily.mara.cafePresent) return "cafe";
++	}
++	return "home";
+ }
+ window.maraSchedule = maraSchedule;
+ 
+@@ -64,6 +73,7 @@
+ 	if (V.mara?.romanceUnlocked) status.push("romance");
+ 	if (V.mara?.handlerRelationship) status.push("handler");
+ 	T.mara_location = maraSchedule();
++	if (T.mara_location === "cafe") status.push("cafe");
+ 	return (T.maraStatus = status);
+ }
+ window.maraStatusCheck = maraStatusCheck;
+
+--- a/game/04-Variables/variables-maraUpdate.twee
++++ b/game/04-Variables/variables-maraUpdate.twee
+@@ -2,13 +2,14 @@
+ <<widget "maraInit">>
+ 	<<if $objectVersion is undefined>><<set $objectVersion to {}>><</if>>
+ 	<<if $mara is undefined>>
+-		<<set $mara to { metShop: false, metHouse: false, shopHelp: 0, houseHelp: 0, restBreaks: 0, privateCollectionSeen: false, handlerProposalSeen: false, handlerRelationship: false, romanceUnlocked: false }>>
++		<<set $mara to { metShop: false, metHouse: false, shopHelp: 0, houseHelp: 0, restBreaks: 0, cafeChats: 0, privateCollectionSeen: false, handlerProposalSeen: false, handlerRelationship: false, romanceUnlocked: false }>>
+ 	<<else>>
+ 		<<if $mara.metShop is undefined>><<set $mara.metShop to false>><</if>>
+ 		<<if $mara.metHouse is undefined>><<set $mara.metHouse to false>><</if>>
+ 		<<if $mara.shopHelp is undefined>><<set $mara.shopHelp to 0>><</if>>
+ 		<<if $mara.houseHelp is undefined>><<set $mara.houseHelp to 0>><</if>>
+ 		<<if $mara.restBreaks is undefined>><<set $mara.restBreaks to 0>><</if>>
++		<<if $mara.cafeChats is undefined>><<set $mara.cafeChats to 0>><</if>>
+ 		<<if $mara.privateCollectionSeen is undefined>><<set $mara.privateCollectionSeen to false>><</if>>
+ 		<<if $mara.handlerProposalSeen is undefined>><<set $mara.handlerProposalSeen to false>><</if>>
+ 		<<if $mara.handlerRelationship is undefined>><<set $mara.handlerRelationship to false>><</if>>
+@@ -20,7 +21,7 @@
+ 		<<initnpc "Mara">>
+ 		<<run ["love", "lust", "trust", "dom", "rage", "trauma", "purity", "corruption", "state", "name_known", "title", "description", "type", "claws", "pronoun", "pronouns", "gender", "penis", "vagina", "penissize", "penisdesc", "bottomsize", "ballssize", "breastsize", "breastdesc", "breastsdesc", "hairColour", "eyeColour", "skincolour", "virginity", "chastity", "clothes", "outfits", "strapons"].forEach(key => { if (_maraPrevious[key] !== undefined) C.npc.Mara[key] = clone(_maraPrevious[key]); })>>
+ 	<</if>>
+-	<<set $objectVersion.mara to 3>>
++	<<set $objectVersion.mara to 5>>
+ </widget>>
+ 
+ :: Mara Housework Break Check [widget]
+@@ -99,3 +100,96 @@
+ Mara nods. "Then we'll establish our rules together, carefully and honestly."
+ <br><br>
+ <<link [[Continue|Mara Pet Shop]]>><</link>>
++
++:: Mara Cafe Chat
++<<set $outside to 0>><<set $location to "cafe">><<effects>><<maraInit>><<run statusCheck("Mara")>>
++<<if T.mara_location is "cafe" and ($mara.metShop or $mara.metHouse) and $exposed lt 1>>
++	Mara is sitting at a table near the window, enjoying a quiet moment away from the pet shop. When she notices you, she smiles and gestures to the empty chair across from her.
++	<br><br>
++	"It's nice to see a familiar face. I have a little time before I need to head home. Would you like to sit and chat for a while?"
++	<br><br>
++	<<if Time.hour lt 18 or (Time.hour is 18 and Time.minute lte 30)>>
++		<<socialiseicon>><<link [[Talk about pets (0:30)|Mara Cafe Pets]]>><<pass 30>><</link>>
++		<br>
++		<<socialiseicon>><<link [[Ask about your life (0:30)|Mara Cafe Life]]>><<pass 30>><</link>>
++		<br>
++		<<socialiseicon>><<link [[Chat about the weather (0:30)|Mara Cafe Weather]]>><<pass 30>><</link>>
++	<<else>>
++		Mara glances at the time. "I should be heading home shortly, so I don't think we have time for a proper chat today. But I'm glad you stopped by."
++		<br><br>
++		<<link [[Say goodbye to Mara|Mara Cafe Goodbye]]>><</link>>
++	<</if>>
++	<br>
++	<<getouticon>><<link [[Let Mara enjoy her coffee|Ocean Breeze]]>><</link>>
++<<else>>
++	Mara isn't here at the moment. She may stop by the cafe between 5 PM and 7 PM on some evenings.
++	<br><br>
++	<<link [[Return to the cafe|Ocean Breeze]]>><</link>>
++<</if>>
++
++:: Mara Cafe Pets
++<<set $outside to 0>><<set $location to "cafe">><<effects>><<maraInit>><<run statusCheck("Mara")>>
++Mara's expression brightens when you mention her work. "I could talk about animals all day. There's something special about the way a nervous little creature gradually learns that it can trust you."
++<br><br>
++"The kittens are especially adorable when they tumble over their own paws, then look around as though they meant to do it. And the older dogs have such lovely personalities. They may take a little longer to warm up, but once they do, they're wonderfully affectionate."
++<br><br>
++Mara smiles into her cup. "I never get tired of seeing them find a home where they're loved. That's the best part of running the shop."
++<<set $mara.cafeChats += 1>><<npcincr Mara love 1>><<npcincr Mara trust 1>>
++<br><br>
++Reward:<<glove Mara>> | <<gtrust>>
++<br><br>
++<<maraCafeAfterChat>>
++
++:: Mara Cafe Life
++<<set $outside to 0>><<set $location to "cafe">><<effects>><<maraInit>><<run statusCheck("Mara")>>
++Mara rests her hands around her cup and looks at you with gentle curiosity. "I've told you plenty about the shop. I'd like to hear a little about you, too. How have things been going lately?"
++<br><br>
++You tell her a little about your recent days. She listens without interrupting, occasionally asking a thoughtful question and giving you time to answer.
++<br><br>
++"Thank you for telling me," she says. "It's easy to get caught up in our own routines. I think it's important to make time to hear how someone else is doing. I hope things become a little easier for you."
++<<set $mara.cafeChats += 1>><<npcincr Mara love 1>><<npcincr Mara trust 1>>
++<br><br>
++Reward:<<glove Mara>> | <<gtrust>>
++<br><br>
++<<maraCafeAfterChat>>
++
++:: Mara Cafe Weather
++<<set $outside to 0>><<set $location to "cafe">><<effects>><<maraInit>><<run statusCheck("Mara")>>
++Mara glances towards the cafe windows. "The weather has been rather changeable lately, hasn't it? I never know whether to bring a coat or leave it at home."
++<br><br>
++You exchange a few thoughts about the temperature, the clouds, and whether the next few days might bring clearer skies.
++<br><br>
++Mara gives a quiet laugh. "I suppose a little rain is good for the gardens, at least. Still, it's much nicer to enjoy it from somewhere warm with a cup of coffee."
++<<set $mara.cafeChats += 1>><<npcincr Mara love 1>><<npcincr Mara trust 1>>
++<br><br>
++Reward:<<glove Mara>> | <<gtrust>>
++<br><br>
++<<maraCafeAfterChat>>
++
++:: Mara Cafe After Chat [widget]
++<<widget "maraCafeAfterChat">>
++	<<maraInit>><<run statusCheck("Mara")>>
++	<<if T.mara_location isnot "cafe" or random(1, 100) lte 25>>
++		<<set $daily.mara.cafeDeparted to true>>
++		Mara glances at the time and gives you an apologetic smile. "I should be getting home. It's been lovely catching up with you, but I still have a few things to take care of tonight. Thank you for keeping me company."
++		<br><br>
++		<<link [[Say goodbye to Mara|Mara Cafe Goodbye]]>><</link>>
++	<<else>>
++		Mara settles back into her seat, looking happy to continue the conversation.
++		<br><br>
++		<<link [[Continue chatting|Mara Cafe Chat]]>><</link>>
++		<br>
++		<<getouticon>><<link [[Say goodbye for now|Ocean Breeze]]>><</link>>
++	<</if>>
++</</widget>>
++
++:: Mara Cafe Goodbye
++<<set $outside to 0>><<set $location to "cafe">><<effects>><<set $daily.mara.cafeDeparted to true>><<maraInit>>
++Mara stands and gathers her things. "I should head home now. It was really nice spending some time with you. Take care, and I'll see you again soon."
++<br><br>
++She gives you a warm smile before leaving the cafe and heading back towards Danube Street.
++<br><br>
++<<link [[Head home too|Mara Danube House Visit]]>><<pass 2>><</link>>
++<br>
++<<link [[Stay at the cafe|Ocean Breeze]]>><</link>>
++
+--- a/game/base-system/overlays/journal.twee
++++ b/game/base-system/overlays/journal.twee
+@@ -383,6 +383,9 @@
+ 			<<if $mara.restBreaks gt 0>>
+ 				<li>Mara has made you tea and encouraged you to take <<= $mara.restBreaks >> <<pluralise $mara.restBreaks "short break">> while helping at her home.</li>
+ 			<</if>>
++			<<if $mara.cafeChats gt 0>>
++				<li>You've shared <<= $mara.cafeChats >> <<pluralise $mara.cafeChats "conversation">> with Mara at the Ocean Breeze Cafe.</li>
++			<</if>>
+ 		</ul>
+ 	<</if>>
+ 
+--- a/game/overworld-town/loc-cafe/main.twee
++++ b/game/overworld-town/loc-cafe/main.twee
+@@ -204,6 +204,17 @@
+ 		<br>
+ 	<</if>>
+ 
++	<<if ($mara?.metShop or $mara?.metHouse) and Time.hour gte 17 and Time.hour lt 19 and $exposed lt 1>>
++		<<maraInit>><<run statusCheck("Mara")>>
++		<<if T.mara_location is "cafe">>
++			<br>
++			Mara is sitting by the window with a cup of coffee. She notices you and gives you a friendly smile.
++			<br>
++			<<socialiseicon>><<link [[Approach Mara|Mara Cafe Chat]]>><</link>>
++			<br>
++		<</if>>
++	<</if>>
++
+ 	<<if gwylanSchedule() is "cafe" and Time.openingHours() and $exposed lt 1>>
+ 		<<run statusCheck("Gwylan")>>
+ 		<<if _gwylanStatus?.includes("met")>>
+@@ -2938,6 +2938,10 @@
+ 	No one is home. Mara is at the shop.
+ 	<br><br>
+ 	<<link [[Return to Danube Street|Danube Street]]>><<pass 2>><</link>>
++<<elseif T.mara_location is "cafe">>
++	No one is home. Mara is at the Ocean Breeze Cafe.
++	<br><br>
++	<<link [[Visit Mara at the cafe|Ocean Breeze]]>><<pass 2>><</link>>
+ <<else>>
+ 	<<set $mara.metHouse to true>><<maraInit>><<run statusCheck("Mara")>>
+ 	<<if $mara.metShop>>
+@@ -2958,6 +2962,10 @@
+ 	No one is home. Mara is at the shop.
+ 	<br><br>
+ 	<<link [[Return to Danube Street|Danube Street]]>><<pass 2>><</link>>
++<<elseif T.mara_location is "cafe">>
++	No one is home. Mara is at the Ocean Breeze Cafe.
++	<br><br>
++	<<link [[Visit Mara at the cafe|Ocean Breeze]]>><<pass 2>><</link>>
+ <<else>>
+ 	<<set $mara.metHouse to true>><<maraInit>><<run statusCheck("Mara")>>
+ 	Mara opens the door, and her expression brightens when she recognizes you. "It's good to see you again. I was just about to get a few things done around the house. Would you like to give me a hand?"
+@@ -2974,6 +2982,10 @@
+ 	No one is home. Mara is at the shop.
+ 	<br><br>
+ 	<<link [[Return to Danube Street|Danube Street]]>><<pass 2>><</link>>
++<<elseif T.mara_location is "cafe">>
++	No one is home. Mara is at the Ocean Breeze Cafe.
++	<br><br>
++	<<link [[Visit Mara at the cafe|Ocean Breeze]]>><<pass 2>><</link>>
+ <<else>>
+ 	<<set $mara.metHouse to true>><<maraInit>><<run statusCheck("Mara")>>
+ 	Mara smiles. "Thank you. I've got a few things that could use doing. Choose whichever you'd like, and I'll pay you for your time."
+--- a/game/overworld-town/loc-shop/main.twee
++++ b/game/overworld-town/loc-shop/main.twee
+@@ -1166,18 +1166,20 @@
+ :: Mara Pet Shop
+ <<set $outside to 0>><<set $location to "shopping_centre">><<effects>>
+ <<maraInit>><<run statusCheck("Mara")>>
+-<<if T.mara_location is "home">>
+-	<<if $mara.metShop or $mara.metHouse>>
++	<<if T.mara_location is "home" or T.mara_location is "cafe">>
++		<<if T.mara_location is "cafe">>
++			Mara isn't at the shop right now. She's spending some time at the Ocean Breeze Cafe.
++			<br><br>
++			<<link [[Visit Mara at the cafe|Ocean Breeze]]>><<pass 2>><</link>>
++		<<elseif $mara.metShop or $mara.metHouse>>
+ 		Mara isn't at the shop right now. She's at home on Danube Street.
+ 		<br><br>
+ 		<<link [[Visit Mara at home|Mara Danube House Visit]]>><<pass 2>><</link>>
+-		<br>
+-		<<getouticon>><<link [[Leave the shop|Shopping Centre]]>><</link>>
+-	<<else>>
++		<<else>>
+ 		The shop is closed. Mara's usual opening hours are 9 AM to 2 PM.
+-		<br><br>
+-		<<getouticon>><<link [[Leave the shop|Shopping Centre]]>><</link>>
+-	</if>>
++		<</if>>
++		<br>
++		<<getouticon>><<link [[Leave the shop|Shopping Centre]]>><</link>>
++	<<else>>
+ You enter Mara's Pet Shop. Shelves hold pet food, grooming supplies, toys, carriers, and collars. Mara stands behind the counter, dressed neatly in formal clothes.
+ <br><br>
+ <<if !$mara.metShop>>
+@@ -1221,7 +1223,11 @@
+ 
+ :: Mara Shop Work
+ <<maraInit>><<run statusCheck("Mara")>>
+-<<if T.mara_location is "home">>
++	<<if T.mara_location is "cafe">>
++		Mara isn't at the shop right now. She's spending some time at the Ocean Breeze Cafe.
++		<br><br>
++		<<link [[Visit Mara at the cafe|Ocean Breeze]]>><<pass 2>><</link>>
++	<<elseif T.mara_location is "home">>
+ 	Mara isn't at the shop right now. She's at home on Danube Street.
+ 	<br><br>
+ 	<<link [[Visit Mara at home|Mara Danube House Visit]]>><<pass 2>><</link>>
