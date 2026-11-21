@@ -1,28 +1,30 @@
 # Changelog
 
-## v0.1.7 - Mara's housework tea break
+## v0.1.8 - Mara's evening cafe chats
 
-- Added a 20% chance per housework task attempt for Mara to notice the player has been working hard and offer a rest.
-- Limited the offer to once per in-game day.
-- Added accept and politely-decline choices.
-- Accepting takes 10 minutes. Mara brings tea and biscuits, sits with the player, and keeps them company.
-- Accepting reduces Stress by 6 and Tiredness by 4, and increases Mara Love by 1.
-- After the break, the player returns to the same task's completion passage, where the normal task payment and relationship reward are applied once.
-- Declining continues the task without extra time or rest effects.
-- Added a persistent accepted-break count to Mara's Journal.
-- Existing housework time costs and rewards are unchanged; shop work is unaffected.
-- Adapted the interruption pattern from the vanilla Farm Pigs Feed Nausea passages without copying their pregnancy/nausea trigger.
+- Added a 40% once-per-day chance for Mara to visit Ocean Breeze Cafe between 17:00 and 18:59, after the player has met her at the shop or home.
+- The daily presence roll is saved so revisiting locations cannot reroll her availability.
+- Added an Approach Mara interaction at Ocean Breeze Cafe when she is present.
+- Added three 30-minute conversations: pets, the player's life, and the weather.
+- Each completed chat adds 1 Mara Love and 1 Mara Trust.
+- After each chat, a 25% chance has Mara say goodbye and head home; she also leaves automatically at 19:00.
+- Prevented starting a 30-minute chat when there is not enough time before 19:00.
+- Updated Mara's shop and home passages to show that she is away at the cafe rather than allowing interaction at the wrong location.
+- Added a persistent cafe conversation count to Mara's Journal and migrated older saves with a default of zero.
+- Existing shop/home schedules and housework rewards are unchanged.
 
 Validation:
 - Tweego compilation succeeded.
-- Incremental v0.1.7 patch applies on top of v0.1.6 with zero rejects.
-- Cumulative v0.1.7 patch applies to clean vanilla 0.5.13.8 with zero rejects.
-- Both resulting source trees match the v0.1.7 working source byte-for-byte.
-- In-game event chance and reward-flow testing remains outstanding.
+- JavaScript syntax checks passed for named-npc.js and ingame.js.
+- Incremental v0.1.8 patch applies to v0.1.7 source with zero rejects.
+- Cumulative v0.1.8 patch applies to clean vanilla 0.5.13.8 with zero rejects.
+- Both resulting source trees match the v0.1.8 working source byte-for-byte.
+- In-game cafe availability, time cost, conversation rewards, goodbye chance, and Journal count still require player testing.
 
 ## Previous releases
 
-- **v0.1.6:** Integrated Mara into vanilla named-NPC status, Love Interest eligibility, Attitudes, Social, Journal, appearance defaults, and save migration.
+- **v0.1.7:** Added a random once-per-day Mara housework tea break.
+- **v0.1.6:** Integrated Mara into named-NPC status, Attitudes, Social, Journal, appearance defaults, and save migration.
 - **v0.1.5:** Replaced the Shopping Centre Pet Shop row with Mara's Pet Shop and added the standard leave icon.
 - **v0.1.4:** Added the daily shop/home schedule.
 - **v0.1.3:** Added persistent visits to both Mara locations.
