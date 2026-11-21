@@ -1,36 +1,33 @@
-# Applying Mara v0.1.8
+# Applying Mara v0.1.9
 
 Target: vanilla Degrees of Lewdity 0.5.13.8.
 
 ## Clean installation
 
-The downloadable v0.1.8 source ZIP contains the cumulative `Mara_v0.1.8-Full.patch`.
-
-From the source root:
+From clean vanilla 0.5.13.8 source, apply the v0.1.8 full patch first, then the v0.1.9 topic update:
 
     patch --dry-run -p1 -i /path/to/Mara_v0.1.8-Full.patch
     patch -p1 -i /path/to/Mara_v0.1.8-Full.patch
-    FORCE_VERSION=0.5.13.8-Mara-Alpha-0.1.8 bash compile.sh
+    patch --dry-run -p1 -i /path/to/Mara_v0.1.9-RandomCafeTopic.patch
+    patch -p1 -i /path/to/Mara_v0.1.9-RandomCafeTopic.patch
+    FORCE_VERSION=0.5.13.8-Mara-Alpha-0.1.9 bash compile.sh
 
-## Upgrade from v0.1.7
+## Upgrade from v0.1.8
 
-For a source tree already patched through v0.1.7, download `Mara_v0.1.8-CafeChats.patch` from this folder and apply:
+For a source tree already patched through v0.1.8, apply only:
 
-    patch --dry-run -p1 -i /path/to/Mara_v0.1.8-CafeChats.patch
-    patch -p1 -i /path/to/Mara_v0.1.8-CafeChats.patch
-    FORCE_VERSION=0.5.13.8-Mara-Alpha-0.1.8 bash compile.sh
+    patch --dry-run -p1 -i /path/to/Mara_v0.1.9-RandomCafeTopic.patch
+    patch -p1 -i /path/to/Mara_v0.1.9-RandomCafeTopic.patch
 
-The incremental patch is not for clean vanilla source. Back up saves before testing.
+The incremental patch changes only game/04-Variables/variables-maraUpdate.twee. It is not for clean vanilla source.
 
-## Event rules
+## Behaviour
 
-- Mara must already have been met at her shop or Danube Street home.
-- Between 17:00 and 18:59, there is a 40% chance she is at Ocean Breeze Cafe. The chance is rolled once per in-game day and remains stable for that evening.
-- The player can approach her and choose one of three 30-minute chat topics: pets, the player's life, or the weather.
-- Each completed conversation adds 1 Mara Love and 1 Mara Trust.
-- After each chat, there is a 25% chance that Mara says goodbye and returns home. She also leaves automatically at 19:00.
-- A full 30-minute chat is not offered after 18:30.
-- While Mara is at the cafe, her shop and home passages show an away notice and point the player to Ocean Breeze.
-- The Journal tracks the number of completed cafe conversations.
+- The cafe introduction has one conversation action: **Sit and chat with Mara (0:30)**.
+- After the 30-minute time passage, a random topic is selected with equal probability from pets, the player's life, or the weather.
+- Each completed chat still grants +1 Mara Love and +1 Mara Trust.
+- After the chat, the existing 25% chance for Mara to say goodbye remains in place. She still leaves automatically at 19:00.
+- If the player chooses to continue chatting, the next 30-minute interaction rolls a new random topic.
+- The cafe presence chance, schedule, away messages, and Journal conversation count are unchanged.
 
-The v0.1.8 initializer adds `cafeChats` to older saves without resetting existing Mara data. `objectVersion.mara` advances to 5.
+This uses the same overall pattern as Avery's mansion conversation: one chat action followed by a random topic selection inside the conversation passage.
