@@ -1,29 +1,28 @@
 # Changelog
 
-## v0.1.11 - Pet Room and Command Training
+## v0.1.12 - Random Pet-Play Events and Training
 
-- Changed Mara's established Handler/Pet house visit to lead into a dedicated pet-room hub.
-- Added a cushion wait activity (10 minutes).
-- Added a once-per-day pet-bowl meal (10 minutes, Hunger -500, Stress -3).
-- Added a cushioned cage sleep point with native sleep-duration links and sleep/wake effects.
-- Added once-per-day command training: Down, Heel, Stay, and Come.
-- Uses the vanilla leash attachment and detachment widgets during the training scene.
-- Training includes following Mara on all fours around the room; completion grants +2 Mara Dominance and +1 Mara Trust.
-- Added a stop option throughout training; stopping removes the lead and gives no completion reward.
-- Kept housework available as an optional activity from the pet room. Pet-mode chores return to the room after completion.
-- Added `petTrainingSessions` save migration and advanced `objectVersion.mara` to 7.
-- Preserved non-pet house visits, prior housework rewards, cafe events, and the v0.1.10 pet-house outfit handling.
+- Added a 40% random order chance during each ten-minute cushion wait.
+- Added seven possible cushion orders: Paw, Down/Stay, Come, Fetch, Grooming, Place, and short Heel follow.
+- Added a player choice to follow the random order or end the wait.
+- Replaced the fixed daily command sequence with one of seven random lessons.
+- Added lesson variants for basic obedience, Heel, Paw, Fetch, Place, grooming manners, and Settle.
+- Kept crawling brief and on soft surfaces; the lead remains slack and is not used to pull on the neck.
+- Added a stop option before/during training and a water/comfort check when the session ends.
+- Preserved the once-per-day training limit and the existing +2 Mara Dominance / +1 Mara Trust completion reward.
+- No new persistent save fields; advanced `objectVersion.mara` to 8.
 
 Validation:
 - Tweego compilation succeeded.
-- The incremental patch applies to v0.1.10 source with zero rejects and recreates both modified source files byte-for-byte.
-- The full patch applies to clean vanilla 0.5.13.8 with zero rejects; all 17 changed files match byte-for-byte.
-- The full-patch verification tree compiles successfully.
-- In-game verification of sleep/wake, leash transitions, and daily limits remains outstanding.
+- Incremental patch applies to v0.1.11 with zero rejects and reproduces the updated source files byte-for-byte.
+- Full patch applies to clean vanilla 0.5.13.8 with zero rejects; all 17 modified/added source files match byte-for-byte.
+- The full-patch verification tree compiled successfully.
+- Runtime testing remains outstanding.
 
 ## Previous releases
 
-- **v0.1.10:** Added the Handler/Pet reaffirmation, collar inspection scene, four house rules, outfit handling, and migration.
+- **v0.1.11:** Added the pet-room hub, cushion wait, pet bowl, cushioned cage sleep point, and initial command-training event.
+- **v0.1.10:** Added the Handler/Pet reaffirmation, collar inspection, four house rules, and repeat-visit outfit handling.
 - **v0.1.9:** Added automatic random cafe conversation topics.
 - **v0.1.8:** Added random evening Ocean Breeze Cafe visits and conversations.
 - **v0.1.7:** Added the random housework tea break.
