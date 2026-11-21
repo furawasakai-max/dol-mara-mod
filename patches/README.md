@@ -1,31 +1,34 @@
-# Applying Mara v0.1.14
+# Applying Mara v0.1.15
 
 Target: vanilla Degrees of Lewdity 0.5.13.8.
 
 ## Clean installation
 
-Use the cumulative patch from the downloadable v0.1.14 source ZIP:
+Use the single cumulative patch:
 
-    patch --dry-run -p1 -i patches/Mara_v0.1.14-Full.patch
-    patch -p1 -i patches/Mara_v0.1.14-Full.patch
+    patch --dry-run -p1 -i patches/Mara_v0.1.15-Full.patch
+    patch -p1 -i patches/Mara_v0.1.15-Full.patch
 
-## Upgrade from v0.1.13
+## Upgrade from v0.1.14
 
-Apply only the incremental patch:
+For a source tree already patched through v0.1.14, apply only:
 
-    patch --dry-run -p1 -i patches/Mara_v0.1.14-RoughMaraDialogue.patch
-    patch -p1 -i patches/Mara_v0.1.14-RoughMaraDialogue.patch
+    patch --dry-run -p1 -i patches/Mara_v0.1.15-NightCageRoutine.patch
+    patch -p1 -i patches/Mara_v0.1.15-NightCageRoutine.patch
+    FORCE_VERSION=0.5.13.8-Mara-Alpha-0.1.15 bash compile.sh
 
-The incremental patch changes:
-- game/04-Variables/variables-maraUpdate.twee
-- game/overworld-town/loc-danube-homes/work.twee
+The incremental patch changes only `game/04-Variables/variables-maraUpdate.twee`. Do not apply it directly to clean vanilla source.
 
-Do not apply the incremental patch directly to clean vanilla source.
+## Night behaviour
 
-## Dialogue scope
+- After 22:00, the normal pet-room activity menu is replaced by the locked cage night routine.
+- The cage is the cushioned sleep point already used during daytime.
+- If Skulduggery is at least 400, the player can attempt to pick the lock. The vanilla skill check difficulty is 700.
+- Success unlocks the cage and lets the player leave.
+- Failure makes noise. Mara arrives and takes the player to the discipline room for a one-hour non-graphic reprimand, then leashes and returns the player to the cage.
+- The failed-attempt lock holds until 07:00; repeated entry cannot reroll it.
+- Choosing sleep invokes native sleep and wake effects, then advances exactly to 07:00.
+- At 07:00, Mara unlocks the cage and removes an attached lead.
+- If the one-hour reprimand crosses 07:00, the cage is unlocked on return.
 
-The sharper, more dismissive tone is limited to the established pet arrangement. The second confirmation, collar scene, house rules, pet-room activities, random orders, training, pet-mode housework, and discipline room all use Mara's revised voice. Ordinary shop, cafe, romance, and non-pet interactions are unchanged.
-
-All mechanics remain unchanged: activity chances, time passage, Masochism and relationship rewards, stop/decline links, and save fields.
-
-Compilation and both patch routes were verified. Browser runtime testing of revised passage flow remains outstanding.
+The incremental patch applies to v0.1.14. The cumulative patch applies to clean vanilla 0.5.13.8. Both source paths compile. Runtime testing is still needed.
