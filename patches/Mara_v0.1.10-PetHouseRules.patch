@@ -202,7 +202,9 @@ index 7e06ac5..dc9a312 100644
  
  :: Mara Danube Food
  You lay out the food supplies and start preparing everything for the next round of feeding.
-@@ -3036,4 +3054,4 @@ Mara checks the prepared supplies and seems pleased with the prepared supplies
+@@ -3036,4 +3054,4 @@ Mara checks the prepared supplies and seems pleased with your work.
+ <br><br>
+ Reward:<<glove Mara>><<if C.npc.Mara.love gte 50>><<gtrust>><</if>> | + <<moneyGain 1000>>
  <br><br>
 -<<link [[Finish up|Danube Street]]>><</link>>
 +<<link [[Finish up|Mara Danube House Leave]]>><</link>>
