@@ -53,7 +53,7 @@
 +<br><br>
 +<<link [[Continue to the final round (0:10)|Mara Pet Cage Night Discipline Stage 3]]>><<pass 10>><</link>>
 +<br>
-+<<link [[Stop and be released now|Mara Pet Cage Night Discipline Stop]]>></</link>>
++<<link [[Stop and be released now|Mara Pet Cage Night Discipline Stop]]>><</link>>
 +
 +:: Mara Pet Cage Night Discipline Stage 3
 +<<if $mara.nightDisciplineActive and !$mara.nightDisciplinePain3>>
