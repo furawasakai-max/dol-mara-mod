@@ -17,37 +17,48 @@ Mara uses the existing C.npc.Mara record, with Love, Lust, Trust, and Dominance 
 Mara's schedule is centralised in maraSchedule() in game/03-JavaScript/named-npc.js and exposed through statusCheck().
 
 - Pet shop: 09:00-13:59.
-- Danube Street home: 14:00-08:59.
+- Ocean Breeze Cafe: randomly available from 17:00-18:59, with a 40% daily chance after the player has met her.
+- Danube Street home: 14:00-08:59 when she is not at the cafe.
 
-Both locations remain discoverable after the first meeting, but interaction is limited to Mara's current location.
+The cafe roll is stored in $daily.mara.cafePresent and is not rerolled by revisiting locations. When she leaves the cafe, $daily.mara.cafeDeparted keeps her at home for the rest of that day.
+
+## Evening cafe conversations (v0.1.8)
+
+When Mara is present at Ocean Breeze Cafe, the player can approach her and select one of three 30-minute conversations:
+
+- **Pets:** Mara talks about the adorable kittens and the animals at her shop.
+- **The player's life:** Mara asks how the player has been doing and listens to them.
+- **Weather:** They exchange casual thoughts about the weather and the cafe.
+
+Each completed chat adds +1 Mara Love and +1 Mara Trust. After each chat, there is a 25% chance she says goodbye and heads home. She also leaves automatically when the time reaches 19:00. A full 30-minute chat is not offered after 18:30.
+
+The number of completed cafe conversations is stored in $mara.cafeChats and displayed in the Journal.
+
+While Mara is at the cafe, the shop and Danube home passages show that she is away and direct the player to Ocean Breeze rather than offering interactions at her other locations.
 
 ## House-work tea break (v0.1.7)
 
-During each of Mara's three housework tasks, a 20% chance check can interrupt the work and have Mara offer the player a short rest. The event can occur at most once per in-game day.
-
-- Accepting takes 10 minutes, shows Mara bringing tea and biscuits, reduces Stress by 6 and Tiredness by 4, and adds 1 Mara Love.
-- After tea, the player returns to the same task's completion passage. The task's regular money and relationship rewards are applied once.
-- Declining continues to task completion without extra time or rest effects.
-- Accepted breaks are counted in Mara's Journal.
-- The event's structure is adapted from the vanilla Farm Pigs Feed Nausea work interruption without its pregnancy/nausea trigger.
+After each of Mara's three housework tasks, there is a 20% chance per task attempt for Mara to offer a short rest, limited to once per in-game day. Accepting takes 10 minutes, shows Mara bringing tea and biscuits, reduces Stress by 6 and Tiredness by 4, and adds 1 Mara Love. The player then returns to the same task's completion passage; normal task rewards are applied once. Declining adds no time or rest effects.
 
 ## Relationship and UI integration
 
-Mara is registered as a Love Interest through the vanilla Attitudes eligibility and loveInterestAdd flow. She appears in Social's Primary Relationships after being met, with Love, Trust, and Dominance. The Journal records her shop/home progress, accepted tea breaks, private collection, romance, and Handler relationship.
+Mara is registered as a Love Interest through the vanilla Attitudes eligibility and loveInterestAdd flow. She appears in Social's Primary Relationships after being met, with Love, Trust, and Dominance. The Journal records her shop/home progress, housework breaks, cafe conversations, private collection, romance, and Handler relationship.
 
 ## Save compatibility
 
-maraInit defaults restBreaks to zero in older saves and advances objectVersion.mara to 3. The existing Mara stat and appearance migration remains intact.
+maraInit defaults cafeChats to zero for older saves and advances objectVersion.mara to 5. The existing Mara stat, appearance, and event migration remains intact.
 
 ## Relevant source files
 
-- game/04-Variables/variables-maraUpdate.twee: Mara save state, initialization, rest-offer widget and tea passage.
-- game/base-system/overlays/journal.twee: Mara Journal and accepted-break count.
-- game/overworld-town/loc-danube-homes/work.twee: the three housework task interruptions and completion passages.
-- game/03-JavaScript/named-npc.js: shared Mara status and schedule.
+- game/03-JavaScript/named-npc.js: shared Mara status and shop/home/cafe schedule.
+- game/04-Variables/variables-maraUpdate.twee: Mara save fields, cafe topic passages, goodbye flow, and housework tea event.
+- game/base-system/overlays/journal.twee: Mara Journal entries and cafe chat count.
+- game/overworld-town/loc-cafe/main.twee: the random evening Approach Mara link.
+- game/overworld-town/loc-shop/main.twee: Mara's cafe absence message at the shop.
+- game/overworld-town/loc-danube-homes/work.twee: Mara's cafe absence message at home.
 - game/03-JavaScript/ingame.js and game/base-system/attitudes.twee: Love Interest eligibility and assignment.
-- game/base-system/overlays/social.twee: Mara relationship panel.
+- game/base-system/overlays/social.twee: Mara's relationship panel.
 
 ## Not included
 
-Custom portraits/sprites, dedicated combat behaviour, and specific sexual-scene hooks are not implemented in v0.1.7. The vanilla persistent-npcs.twee file remains untouched because it manages generated NPC persistence, whereas Mara is a named NPC.
+Custom portraits/sprites, dedicated combat behaviour, and specific sex-scene hooks are not implemented in v0.1.8. The vanilla persistent-npcs.twee file remains untouched because it manages generated NPC persistence, whereas Mara is a named NPC.
