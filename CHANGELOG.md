@@ -1,27 +1,29 @@
 # Changelog
 
-## v0.1.16 - Night Cage Timing Fix and Detailed Discipline
+## v0.1.17 - Stay-at-Home Orders
 
-- Fixed the false morning branch: `Time.hour >= 7` also evaluates true at 22:00 and 23:00. The dungeon return now uses only the stored absolute timestamp for the next 07:00 release.
-- Reworked the failed-lockpick punishment to use three stages, following the pacing pattern of Avery's vanilla dungeon event.
-- Mara randomly selects a whip or cane for the night scene.
-- Added detailed but non-graphic descriptions for five opening strokes, six measured middle strokes, and three final strokes.
-- Added one `<<masopain 15>>` effect for each completed round, guarded against duplicate application on passage revisit.
-- Added a stop/release route at the start and between each round.
-- The completed route remains exactly one hour: five minutes escort + 20 + 20 + 10 minutes for the three rounds + five minutes return.
-- Returning before 07:00 relocks the same cushioned cage; returning at or after 07:00 unlocks it and removes the lead.
-- No new persistent save fields; `objectVersion.mara` remains 10.
+- Mara is now unavailable for house interactions while she is at the pet shop or Ocean Breeze Cafe.
+- The player can enter and remain in Mara's empty house while she is away, but Mara's pet activities and discipline-room interactions are hidden until she returns.
+- Added a pre-departure waiting order before the 09:00 shop shift.
+- Added a pre-cafe waiting order before the 17:00 cafe period, using the existing 40% daily cafe roll.
+- Mara randomly assigns one greeting position: front door, cushioned cage, or discipline room.
+- Added three player waiting-position choices and a timed wait until Mara returns at 14:00 or 19:00.
+- Added a return check: correct position receives a terse acknowledgement; wrong position, leaving the house, or being absent triggers discipline.
+- The reprimand randomly selects whip or cane, includes three timed rounds and one guarded Masochism-pain effect per round, and has a stop/release option.
+- Entering the empty house applies the pet-house outfit; choosing to leave before entering does not alter clothing. Leaving during an active order marks the player as absent.
+- Added save migration for the waiting assignment and punishment-session state; advances `objectVersion.mara` to 11.
 
 Validation:
-- Tweego compilation succeeded for v0.1.16.
-- Incremental patch applies to v0.1.15 with zero rejects and recreates the changed source file byte-for-byte.
-- Cumulative full patch applies to clean vanilla 0.5.13.8; all 17 modified/added files match the development tree byte-for-byte.
-- Clean full-patch verification tree compiled successfully.
-- Static passage-link checks and time-allocation checks passed.
+- Tweego compilation succeeded for v0.1.17.
+- Incremental patch applies to v0.1.16 source with zero rejects; both changed source files match byte-for-byte.
+- Cumulative full patch applies to clean vanilla 0.5.13.8; all 17 changed/added source files match the development tree byte-for-byte.
+- The clean full-patch verification tree compiles successfully.
+- Static Mara passage-link checks found no missing targets or duplicate names.
 - In-game runtime testing remains outstanding.
 
 ## Previous releases
 
+- **v0.1.16:** Fixed premature dawn unlock and expanded failed-lockpick punishment into three timed rounds.
 - **v0.1.15:** Added the night cage routine, Skulduggery escape check, failed-attempt punishment, and dawn unlock.
 - **v0.1.14:** Rewrote Mara's pet-role dialogue to be colder and more dismissive.
 - **v0.1.13:** Added Mara's discipline room, daily random offer, whip/cane choices, X-frame scene, and +20 Masochism progress.
