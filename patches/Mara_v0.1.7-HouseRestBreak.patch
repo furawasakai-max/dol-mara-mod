@@ -15,7 +15,7 @@
  		<<if $mara.privateCollectionSeen is undefined>><<set $mara.privateCollectionSeen to false>><</if>>
  		<<if $mara.handlerProposalSeen is undefined>><<set $mara.handlerProposalSeen to false>><</if>>
  		<<if $mara.handlerRelationship is undefined>><<set $mara.handlerRelationship to false>><</if>>
-@@ -19,8 +20,31 @@
+@@ -19,8 +20,39 @@
  		<<initnpc "Mara">>
  		<<run ["love", "lust", "trust", "dom", "rage", "trauma", "purity", "corruption", "state", "name_known", "title", "description", "type", "claws", "pronoun", "pronouns", "gender", "penis", "vagina", "penissize", "penisdesc", "bottomsize", "ballssize", "breastsize", "breastdesc", "breastsdesc", "hairColour", "eyeColour", "skincolour", "virginity", "chastity", "clothes", "outfits", "strapons"].forEach(key => { if (_maraPrevious[key] !== undefined) C.npc.Mara[key] = clone(_maraPrevious[key]); })>>
  	<</if>>
@@ -23,79 +23,96 @@
 +	<<set $objectVersion.mara to 3>>
  <</widget>>
 +
-+:: Mara House Rest Offer [widget]
-+<<widget "maraHouseRestOffer">>
-+	/* 25% chance for Mara to offer a proper break after a completed house-work task. */
-+	<<set T.maraRestOfferShown to false>>
-+	<<if random(1, 4) is 1>>
-+		<<set T.maraRestOfferShown to true>>
++:: Mara Housework Break Check [widget]
++<<widget "maraHouseworkBreakCheck">>
++	<<if $daily.mara is undefined>><<set $daily.mara to {}>><</if>>
++	<<set $mara.houseBreakReturn to _args[0]>>
++	<<if !$daily.mara.houseBreak and random(1, 100) gte 81>>
++		<<set $daily.mara.houseBreak to true>>
++		Mara notices you pause to stretch your back. "You've been working hard. Why don't you take a short break? I'll put the kettle on and bring you some tea."
 +		<br><br>
-+		As you finish up, Mara notices you have been working steadily for a while. She sets her things aside and gives you a considerate smile. "That's enough for a few minutes. Why don't you sit down and rest? I'll put the kettle on and make you a cup of tea."
-+		<br><br>
-+		<<link [[Accept her offer of tea|Mara Danube Rest Tea]]>><</link>>
++		<<link [[Accept her offer (0:10)|Mara Housework Tea Break]]>><<pass 10>><</link>>
 +		<br>
-+		<<link [[Thank her and finish up|Danube Street]]>><</link>>
++		<<link [[Thank her and carry on|$mara.houseBreakReturn]]>><</link>>
++	<<else>>
++		<<link [[Continue|$mara.houseBreakReturn]]>><</link>>
 +	<</if>>
 +<</widget>>
 +
-+:: Mara Danube Rest Tea
-+<<effects>><<wearProp "tea">><<set $mara.restBreaks += 1>><<stress -6>><<npcincr Mara love 1>>
-+Mara returns with two cups of freshly brewed tea. She places one in front of you before settling into the chair opposite. "There. Take your time. The work can wait for a moment." The warmth of the tea and the quiet pause help you catch your breath. Mara keeps you company, chatting easily while you finish your cup.
++:: Mara Housework Tea Break
++<<maraInit>>
++<<set $mara.restBreaks += 1>>
++<<set $outside to 0>><<set $location to "town">><<set $bus to "danube">><<effects>><<wearProp "tea">>
++Mara leads you into the kitchen and sets a small tray on the table. A freshly brewed cup of tea sits beside a couple of biscuits.
 +<br><br>
-+Reward:<<lstress>><<glove Mara>>
++"Here you are," she says, sliding the cup towards you. "Put your feet up for a few minutes. The work can wait; there's no need to wear yourself out."
 +<br><br>
-+<<link [[Thank Mara and head back to Danube Street|Danube Street]]>><</link>>
++You settle into the chair and take a sip. The warmth and quiet give you a welcome chance to catch your breath. Mara stays nearby, keeping you company while you finish your tea.
++<<npcincr Mara love 1>><<stress -6>><<tiredness -4>>
++<br><br>
++Reward:<<glove Mara>> | <<lstress>><<ltiredness>>
++<br><br>
++<<link [[Finish your tea and return to work|$mara.houseBreakReturn]]>><</link>>
  
  :: Mara Relationship Events
  <<if C.npc.Mara.love gte 100 and C.npc.Mara.trust gte 50 and !$mara.romanceUnlocked>>
---- a/game/overworld-town/loc-danube-homes/work.twee
-+++ b/game/overworld-town/loc-danube-homes/work.twee
-@@ -2992,6 +2992,10 @@
- You organize the supplies into neat groups. Mara checks your work and nods approvingly. "Good. You have an eye for order."
- <br><br>
- Reward:<<glove Mara>><<if C.npc.Mara.love gte 50>><<gtrust>><</if>> | + <<moneyGain 800>>
-+<<maraHouseRestOffer>>
-+<<if !T.maraRestOfferShown>>
-+	<br><br>
-+	<<link [[Continue|Danube Street]]>><</link>>
-+<</if>>
--<br><br>
--<<link [[Continue|Danube Street]]>><</link>>
- 
- :: Mara Danube Clean
- <<set $mara.houseHelp += 1>><<npcincr Mara love 2>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 2>><</if>>
- You clean the animal equipment carefully. Mara thanks you for being thorough.
- <br><br>
- Reward:<<glove Mara>><<if C.npc.Mara.love gte 50>><<gtrust>><</if>> | + <<moneyGain 1200>>
-+<<maraHouseRestOffer>>
-+<<if !T.maraRestOfferShown>>
-+	<br><br>
-+	<<link [[Continue|Danube Street]]>><</link>>
-+<</if>>
--<br><br>
--<<link [[Continue|Danube Street]]>><</link>>
- 
- :: Mara Danube Food
- <<set $mara.houseHelp += 1>><<npcincr Mara love 2>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 1>><</if>>
- You prepare and organize the food supplies. Mara seems pleased with your work.
- <br><br>
- Reward:<<glove Mara>><<if C.npc.Mara.love gte 50>><<gtrust>><</if>> | + <<moneyGain 1000>>
-+<<maraHouseRestOffer>>
-+<<if !T.maraRestOfferShown>>
-+	<br><br>
-+	<<link [[Continue|Danube Street]]>><</link>>
-+<</if>>
--<br><br>
--<<link [[Continue|Danube Street]]>><</link>>
 --- a/game/base-system/overlays/journal.twee
 +++ b/game/base-system/overlays/journal.twee
-@@ -370,6 +370,9 @@
- 			<li>Mara owns a pet shop in the shopping centre. She works there from 9 AM until 2 PM and is usually at her home on Danube Street outside those hours.</li>
- 			<<if $mara.shopHelp gt 0 || $mara.houseHelp gt 0>>
- 				<li>You've helped Mara with <<= $mara.shopHelp + $mara.houseHelp >> <<pluralise ($mara.shopHelp + $mara.houseHelp) "task">>.</li>
+@@ -379,6 +379,9 @@
+ 			<</if>>
+ 			<<if $mara.handlerRelationship>>
+ 				<li>You and Mara have agreed to a consensual Handler and pet relationship.</li>
 +			<</if>>
 +			<<if $mara.restBreaks gt 0>>
-+				<li>You have shared <<= $mara.restBreaks >> <<pluralise $mara.restBreaks "tea break">> with Mara while helping around her home.</li>
++				<li>Mara has made you tea and encouraged you to take <<= $mara.restBreaks >> <<pluralise $mara.restBreaks "short break">> while helping at her home.</li>
  			<</if>>
- 			<<if $mara.privateCollectionSeen>>
- 				<li>Mara has trusted you enough to share her private interest in collars, rules, and consensual power exchange.</li>
+ 		</ul>
+ 	<</if>>
+--- a/game/overworld-town/loc-danube-homes/work.twee
++++ b/game/overworld-town/loc-danube-homes/work.twee
+@@ -2988,25 +2988,40 @@
+ <</if>>
+ 
+ :: Mara Danube Organize
++You begin sorting the supplies into neat groups, checking each shelf against Mara's list.
++<br><br>
++<<maraHouseworkBreakCheck "Mara Danube Organize Complete">>
++
++:: Mara Danube Organize Complete
+ <<set $mara.houseHelp += 1>><<npcincr Mara love 2>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 1>><</if>>
+-You organize the supplies into neat groups. Mara checks your work and nods approvingly. "Good. You have an eye for order."
++Mara checks your work and nods approvingly. "Good. You have an eye for order."
+ <br><br>
+ Reward:<<glove Mara>><<if C.npc.Mara.love gte 50>><<gtrust>><</if>> | + <<moneyGain 800>>
+ <br><br>
+-<<link [[Continue|Danube Street]]>><</link>>
++<<link [[Finish up|Danube Street]]>><</link>>
+ 
+ :: Mara Danube Clean
++You gather the animal equipment and start cleaning it carefully, making sure everything is ready for use.
++<br><br>
++<<maraHouseworkBreakCheck "Mara Danube Clean Complete">>
++
++:: Mara Danube Clean Complete
+ <<set $mara.houseHelp += 1>><<npcincr Mara love 2>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 2>><</if>>
+-You clean the animal equipment carefully. Mara thanks you for being thorough.
++Mara looks over the clean equipment and thanks you for being thorough.
+ <br><br>
+ Reward:<<glove Mara>><<if C.npc.Mara.love gte 50>><<gtrust>><</if>> | + <<moneyGain 1200>>
+ <br><br>
+-<<link [[Continue|Danube Street]]>><</link>>
++<<link [[Finish up|Danube Street]]>><</link>>
+ 
+ :: Mara Danube Food
++You lay out the food supplies and start preparing everything for the next round of feeding.
++<br><br>
++<<maraHouseworkBreakCheck "Mara Danube Food Complete">>
++
++:: Mara Danube Food Complete
+ <<set $mara.houseHelp += 1>><<npcincr Mara love 2>><<if C.npc.Mara.love gte 50>><<npcincr Mara trust 1>><</if>>
+-You prepare and organize the food supplies. Mara seems pleased with your work.
++Mara checks the prepared supplies and seems pleased with your work.
+ <br><br>
+ Reward:<<glove Mara>><<if C.npc.Mara.love gte 50>><<gtrust>><</if>> | + <<moneyGain 1000>>
+ <br><br>
+-<<link [[Continue|Danube Street]]>><</link>>
