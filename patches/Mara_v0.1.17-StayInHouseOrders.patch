@@ -1,0 +1,423 @@
+--- a/game/04-Variables/variables-maraUpdate.twee
++++ b/game/04-Variables/variables-maraUpdate.twee
+@@ -2,7 +2,7 @@
+ <<widget "maraInit">>
+ 	<<if $objectVersion is undefined>><<set $objectVersion to {}>><</if>>
+ 	<<if $mara is undefined>>
+-		<<set $mara to { metShop: false, metHouse: false, shopHelp: 0, houseHelp: 0, restBreaks: 0, cafeChats: 0, privateCollectionSeen: false, handlerProposalSeen: false, handlerRelationship: false, romanceUnlocked: false, petRulesEstablished: false, petHouseDressed: false, petNeckWasNaked: false, petTrainingSessions: 0, nightCageCaughtUntil: 0 }>>
++		<<set $mara to { metShop: false, metHouse: false, shopHelp: 0, houseHelp: 0, restBreaks: 0, cafeChats: 0, privateCollectionSeen: false, handlerProposalSeen: false, handlerRelationship: false, romanceUnlocked: false, petRulesEstablished: false, petHouseDressed: false, petNeckWasNaked: false, petTrainingSessions: 0, nightCageCaughtUntil: 0, petWaitActive: false, petWaitExpected: 0, petWaitActual: 0, petWaitReturnAt: 0, petWaitReturnHour: 0, petWaitPunishTool: 0, petWaitPunishActive: false, petWaitPunishPain1: false, petWaitPunishPain2: false, petWaitPunishPain3: false }>>
+ 	<<else>>
+ 		<<if $mara.metShop is undefined>><<set $mara.metShop to false>><</if>>
+ 		<<if $mara.metHouse is undefined>><<set $mara.metHouse to false>><</if>>
+@@ -19,6 +19,16 @@
+ 		<<if $mara.petNeckWasNaked is undefined>><<set $mara.petNeckWasNaked to false>><</if>>
+ 		<<if $mara.petTrainingSessions is undefined>><<set $mara.petTrainingSessions to 0>><</if>>
+ 		<<if $mara.nightCageCaughtUntil is undefined>><<set $mara.nightCageCaughtUntil to 0>><</if>>
++		<<if $mara.petWaitActive is undefined>><<set $mara.petWaitActive to false>><</if>>
++		<<if $mara.petWaitExpected is undefined>><<set $mara.petWaitExpected to 0>><</if>>
++		<<if $mara.petWaitActual is undefined>><<set $mara.petWaitActual to 0>><</if>>
++		<<if $mara.petWaitReturnAt is undefined>><<set $mara.petWaitReturnAt to 0>><</if>>
++		<<if $mara.petWaitReturnHour is undefined>><<set $mara.petWaitReturnHour to 0>><</if>>
++		<<if $mara.petWaitPunishTool is undefined>><<set $mara.petWaitPunishTool to 0>><</if>>
++		<<if $mara.petWaitPunishActive is undefined>><<set $mara.petWaitPunishActive to false>><</if>>
++		<<if $mara.petWaitPunishPain1 is undefined>><<set $mara.petWaitPunishPain1 to false>><</if>>
++		<<if $mara.petWaitPunishPain2 is undefined>><<set $mara.petWaitPunishPain2 to false>><</if>>
++		<<if $mara.petWaitPunishPain3 is undefined>><<set $mara.petWaitPunishPain3 to false>><</if>>
+ 	<</if>>
+ 	/* Initialise Mara as a named NPC once the player has met her. Preserve relationship and appearance data from earlier alpha saves. */
+ 	<<if ($mara.metShop or $mara.metHouse) and C.npc.Mara.init isnot 1>>
+@@ -26,7 +36,7 @@
+ 		<<initnpc "Mara">>
+ 		<<run ["love", "lust", "trust", "dom", "rage", "trauma", "purity", "corruption", "state", "name_known", "title", "description", "type", "claws", "pronoun", "pronouns", "gender", "penis", "vagina", "penissize", "penisdesc", "bottomsize", "ballssize", "breastsize", "breastdesc", "breastsdesc", "hairColour", "eyeColour", "skincolour", "virginity", "chastity", "clothes", "outfits", "strapons"].forEach(key => { if (_maraPrevious[key] !== undefined) C.npc.Mara[key] = clone(_maraPrevious[key]); })>>
+ 	<</if>>
+-	<<set $objectVersion.mara to 10>>
++	<<set $objectVersion.mara to 11>>
+ <</widget>>
+ 
+ :: Mara Housework Break Check [widget]
+@@ -73,6 +83,7 @@
+ 
+ :: Mara Pet House Leave [widget]
+ <<widget "maraPetHouseLeave">>
++	<<if $mara.petWaitActive>><<set $mara.petWaitActual to 0>><</if>>
+ 	<<if $mara.petHouseDressed>>
+ 		<<storeon "maraHouse">>
+ 		/* If the player entered without neckwear, remove the temporary Mara collar as well. */
+@@ -137,10 +148,16 @@
+ 
+ :: Mara Danube Pet House
+ <<set $outside to 0>><<set $location to "town">><<effects>><<set $bus to "danube">>
+-<<maraInit>><<maraPetHousewear>>
++<<maraInit>><<maraPetHousewear>><<run statusCheck("Mara")>>
+ <<if $daily.mara is undefined>><<set $daily.mara to {}>><</if>>
+-<<if Time.hour gte 22 or Time.hour lt 7>>
++<<if $mara.petWaitActive and Time.date.timeStamp gte $mara.petWaitReturnAt>>
++	<<include "Mara Pet Stay Return Check">>
++<<elseif Time.hour gte 22 or Time.hour lt 7>>
+ 	<<include "Mara Pet Cage Night">>
++<<elseif $mara.petWaitActive>>
++	<<include "Mara Pet Stay Position Menu">>
++<<elseif T.mara_location is "shop" or T.mara_location is "cafe">>
++	<<include "Mara Pet Stay Away Setup">>
+ <<else>>
+ Mara's pet room is arranged around a broad cushion, a low food bowl, and a sturdy indoor cage with a soft cushion inside. Mara gives you a flat look. "There you are. Try not to be useless all day. Your cushion is there, your bowl is there, and your cage is there. I shouldn't have to explain the room every time you enter it."
+ <br><br>
+@@ -164,9 +181,159 @@
+ <br>
+ <<link [[Help Mara with the housework|Mara Danube Work Intro]]>><</link>>
+ <br>
++<<if Time.hour gte 7 and Time.hour lt 9>>
++	<<link [[Stay inside while Mara goes to the pet shop|Mara Pet Stay Shop Setup]]>><</link>>
++	<br>
++<<elseif Time.hour gte 14 and Time.hour lt 17 and !$daily.mara.cafeDeparted>>
++	<<link [[Stay inside while Mara considers a cafe visit|Mara Pet Stay Cafe Check]]>><</link>>
++	<br>
++<</if>>
+ <<link [[Leave Mara's house|Mara Danube House Leave]]>><</link>>
+ <</if>>
+ 
++:: Mara Pet Stay Begin [widget]
++<<widget "maraPetStayBegin">>
++	<<if !$mara.petWaitActive>>
++		<<set $mara.petWaitActive to true>>
++		<<set $mara.petWaitExpected to random(1, 3)>>
++		<<set $mara.petWaitActual to 0>>
++		<<set $mara.petWaitReturnHour to _args[0]>>
++		<<set $mara.petWaitReturnAt to Time.date.timeStamp + (((_args[0] * 60) - (Time.hour * 60 + Time.minute)) * 60)>>
++	<</if>>
++<</widget>>
++
++:: Mara Pet Stay Shop Setup
++<<maraInit>><<maraPetStayBegin 14>>
++Mara checks the time and points at you. "I'm leaving for the shop. When I get back at two, I expect you to be waiting exactly where I told you. Don't make me search the whole house for you."
++<br><br>
++<<include "Mara Pet Stay Position Menu">>
++
++:: Mara Pet Stay Cafe Check
++<<if $daily.mara is undefined>><<set $daily.mara to {}>><</if>>
++<<if $daily.mara.cafePresent is undefined>><<set $daily.mara.cafePresent to (random(1, 100) lte 40)>><</if>>
++<<if $daily.mara.cafePresent and !$daily.mara.cafeDeparted>>
++	<<maraPetStayBegin 19>>
++	Mara checks her phone. "I may stop at the Ocean Breeze Cafe. If I go, I'll be back by seven. You will be in the place I assign. Don't embarrass me by wandering around while I'm out."
++	<br><br>
++	<<include "Mara Pet Stay Position Menu">>
++<<else>>
++	Mara puts her things away. "Not going out today. Stay out of my way and don't invent errands for yourself."
++	<br><br>
++	<<link [[Return to the pet room|Mara Danube Pet House]]>><</link>>
++<</if>>
++
++:: Mara Pet Stay Away Setup
++<<maraPetHousewear>>
++<<if !$mara.petWaitActive>>
++	<<if T.mara_location is "shop">>
++		<<maraPetStayBegin 14>>
++	<<else>>
++		<<maraPetStayBegin 19>>
++	<</if>>
++<</if>>
++A short note is waiting near the front door. Mara is away and unavailable. The note gives one of her usual instructions: wait at the place she selected, and be there when she returns. No pet-room lessons or Mara activities are available while she is out.
++<br><br>
++<<include "Mara Pet Stay Position Menu">>
++
++:: Mara Pet Stay Position Menu
++Mara's order is to greet her <<switch $mara.petWaitExpected>><<case 1>>near the front door<<case 2>>inside the cushioned cage<<case 3>>in the discipline room<</switch>> when she returns.
++<br><br>
++Choose where you will actually wait:
++<br><br>
++<<link [[Wait near the front door|Mara Pet Stay Front Door]]>><</link>>
++<br>
++<<link [[Wait inside the cushioned cage|Mara Pet Stay Cage]]>><</link>>
++<br>
++<<link [[Wait in the discipline room|Mara Pet Stay Dungeon]]>><</link>>
++<br>
++<<link [[Leave Mara's house instead|Mara Danube House Leave]]>><</link>>
++
++:: Mara Pet Stay Front Door
++<<set $mara.petWaitActual to 1>>
++You take your place near the front door, keeping an eye on the entrance. Mara will be back at approximately <<print ampm($mara.petWaitReturnHour, 0)>>.
++<br><br>
++<<set $mara.petWaitMinutes to Math.max(0, Math.ceil(($mara.petWaitReturnAt - Time.date.timeStamp) / 60))>>
++<<link [[Wait here until Mara returns|Mara Pet Stay Return Check]]>><<pass $mara.petWaitMinutes>><</link>>
++
++:: Mara Pet Stay Cage
++<<set $mara.petWaitActual to 2>>
++You climb into the cushioned cage and settle on the blanket. The door remains open; this is the daytime waiting order, not the night lock. Mara will return at the scheduled time.
++<br><br>
++<<set $mara.petWaitMinutes to Math.max(0, Math.ceil(($mara.petWaitReturnAt - Time.date.timeStamp) / 60))>>
++<<link [[Wait inside the cage until Mara returns|Mara Pet Stay Return Check]]>><<pass $mara.petWaitMinutes>><</link>>
++
++:: Mara Pet Stay Dungeon
++<<set $mara.petWaitActual to 3>>
++You go to the discipline room and wait beside the padded frame. The equipment stays untouched. Mara will return at the scheduled time.
++<br><br>
++<<set $mara.petWaitMinutes to Math.max(0, Math.ceil(($mara.petWaitReturnAt - Time.date.timeStamp) / 60))>>
++<<link [[Wait in the discipline room until Mara returns|Mara Pet Stay Return Check]]>><<pass $mara.petWaitMinutes>><</link>>
++
++:: Mara Pet Stay Return Check
++<<if $mara.petWaitActual is $mara.petWaitExpected and $mara.petWaitActual isnot 0>>
++	<<switch $mara.petWaitExpected>>
++		<<case 1>>Mara opens the front door and finds you waiting in the exact spot she ordered. She gives a brief, satisfied nod. "At least you managed to stand in the right place. Don't expect a medal for it."
++		<<case 2>>Mara opens the cage and finds you waiting on its cushion as ordered. "Good. You can follow one simple instruction after all. Get out and return to the pet room."
++		<<case 3>>Mara enters the discipline room and finds you waiting where she ordered. "You remembered the place. Don't look so pleased with yourself. It was the bare minimum."
++	<</switch>>
++	<<set $mara.petWaitActive to false>><<set $mara.petWaitExpected to 0>><<set $mara.petWaitActual to 0>><<set $mara.petWaitReturnAt to 0>><<set $mara.petWaitReturnHour to 0>>
++	<br><br>
++	<<link [[Return to the pet room|Mara Danube Pet House]]>><</link>>
++<<else>>
++	Mara returns and finds you in the wrong place. Her expression hardens. "I gave you one simple position to wait in. You couldn't even manage that. Get up. We're going to the discipline room, and this time you will pay attention."
++	<br><br>
++	<<link [[Follow Mara to the discipline room (0:05)|Mara Pet Stay Punishment Start]]>><<pass 5>><</link>>
++<</if>>
++
++:: Mara Pet Stay Punishment Start
++<<if !$mara.petWaitPunishActive>>
++	<<set $mara.petWaitPunishActive to true>><<set $mara.petWaitPunishTool to random(1, 2)>>
++	<<set $mara.petWaitPunishPain1 to false>><<set $mara.petWaitPunishPain2 to false>><<set $mara.petWaitPunishPain3 to false>>
++<</if>>
++<<if $mara.petWaitPunishTool is 1>>Mara takes the whip from its hook. "The whip. Perhaps the sound will finally hold your attention."<<else>>Mara takes the cane from the rack. "The cane. Try to remember this next time I give you an order."<</if>>
++<br><br>
++She secures you to the padded X-frame with the broad-lined cuffs and checks the quick releases. The agreed stop signal remains available. The reprimand is controlled and non-graphic.
++<br><br>
++<<link [[Begin the first round (0:15)|Mara Pet Stay Punishment Stage 1]]>><<pass 15>><</link>>
++<br>
++<<link [[Stop and be released|Mara Pet Stay Punishment Stop]]>><</link>>
++
++:: Mara Pet Stay Punishment Stage 1
++<<if $mara.petWaitPunishActive and !$mara.petWaitPunishPain1>><<set $mara.petWaitPunishPain1 to true>><<masopain 10>><</if>>
++Mara delivers a first measured set with the <<if $mara.petWaitPunishTool is 1>>whip<<else>>cane<</if>>, pausing to check that you are responsive. "You were told where to wait. It wasn't a difficult instruction."
++<br><br>
++<<link [[Continue to the second round (0:15)|Mara Pet Stay Punishment Stage 2]]>><<pass 15>><</link>>
++<br>
++<<link [[Stop and be released|Mara Pet Stay Punishment Stop]]>><</link>>
++
++:: Mara Pet Stay Punishment Stage 2
++<<if $mara.petWaitPunishActive and !$mara.petWaitPunishPain2>><<set $mara.petWaitPunishPain2 to true>><<masopain 10>><</if>>
++Mara continues with a second measured set, allowing a pause before the final round. "You will listen the first time I give an instruction. I will not keep repeating myself."
++<br><br>
++<<link [[Continue to the final round (0:15)|Mara Pet Stay Punishment Stage 3]]>><<pass 15>><</link>>
++<br>
++<<link [[Stop and be released|Mara Pet Stay Punishment Stop]]>><</link>>
++
++:: Mara Pet Stay Punishment Stage 3
++<<if $mara.petWaitPunishActive and !$mara.petWaitPunishPain3>><<set $mara.petWaitPunishPain3 to true>><<masopain 10>><</if>>
++Mara delivers the final measured set, then puts the <<if $mara.petWaitPunishTool is 1>>whip<<else>>cane<</if>> aside and releases the cuffs. "That's enough. I expect you to remember your waiting place next time."
++<br><br>
++<<link [[Finish the reprimand and return to the pet room (0:10)|Mara Pet Stay Punishment Return]]>><<pass 10>><</link>>
++<br>
++<<link [[Stop and be released now|Mara Pet Stay Punishment Stop]]>><</link>>
++
++:: Mara Pet Stay Punishment Stop
++Mara immediately sets the implement aside, releases the restraints, and ends the session. "Enough. You're released. The order still stands next time, so don't pretend you misunderstood it."
++<br><br>
++<<link [[Return to the pet room (0:10)|Mara Pet Stay Punishment Return]]>><<pass 10>><</link>>
++
++:: Mara Pet Stay Punishment Return
++<<set $mara.petWaitActive to false>><<set $mara.petWaitExpected to 0>><<set $mara.petWaitActual to 0>><<set $mara.petWaitReturnAt to 0>><<set $mara.petWaitReturnHour to 0>>
++<<set $mara.petWaitPunishActive to false>><<set $mara.petWaitPunishTool to 0>><<set $mara.petWaitPunishPain1 to false>><<set $mara.petWaitPunishPain2 to false>><<set $mara.petWaitPunishPain3 to false>>
++Mara escorts you back to the pet room and points towards the cushion. "Back to your place. Next time, be where I tell you when I get home."
++<br><br>
++<<link [[Return to the pet room|Mara Danube Pet House]]>><</link>>
++
+ :: Mara Pet Cushion Wait
+ <<set _maraCushionRoll to random(1, 100)>>
+@@ -164,9 +181,159 @@
+ <br>
+ <<link [[Help Mara with the housework|Mara Danube Work Intro]]>><</link>>
+ <br>
++<<if Time.hour gte 7 and Time.hour lt 9>>
++	<<link [[Stay inside while Mara goes to the pet shop|Mara Pet Stay Shop Setup]]>><</link>>
++	<br>
++<<elseif Time.hour gte 14 and Time.hour lt 17 and !$daily.mara.cafeDeparted>>
++	<<link [[Stay inside while Mara considers a cafe visit|Mara Pet Stay Cafe Check]]>><</link>>
++	<br>
++<</if>>
+ <<link [[Leave Mara's house|Mara Danube House Leave]]>><</link>>
+ <</if>>
+ 
++:: Mara Pet Stay Begin [widget]
++<<widget "maraPetStayBegin">>
++	<<if !$mara.petWaitActive>>
++		<<set $mara.petWaitActive to true>>
++		<<set $mara.petWaitExpected to random(1, 3)>>
++		<<set $mara.petWaitActual to 0>>
++		<<set $mara.petWaitReturnHour to _args[0]>>
++		<<set $mara.petWaitReturnAt to Time.date.timeStamp + (((_args[0] * 60) - (Time.hour * 60 + Time.minute)) * 60)>>
++	<</if>>
++<</widget>>
++
++:: Mara Pet Stay Shop Setup
++<<maraInit>><<maraPetStayBegin 14>>
++Mara checks the time and points at you. "I'm leaving for the shop. When I get back at two, I expect you to be waiting exactly where I told you. Don't make me search the whole house for you."
++<br><br>
++<<include "Mara Pet Stay Position Menu">>
++
++:: Mara Pet Stay Cafe Check
++<<if $daily.mara is undefined>><<set $daily.mara to {}>><</if>>
++<<if $daily.mara.cafePresent is undefined>><<set $daily.mara.cafePresent to (random(1, 100) lte 40)>><</if>>
++<<if $daily.mara.cafePresent and !$daily.mara.cafeDeparted>>
++	<<maraPetStayBegin 19>>
++	Mara checks her phone. "I may stop at the Ocean Breeze Cafe. If I go, I'll be back by seven. You will be in the place I assign. Don't embarrass me by wandering around while I'm out."
++	<br><br>
++	<<include "Mara Pet Stay Position Menu">>
++<<else>>
++	Mara puts her things away. "Not going out today. Stay out of my way and don't invent errands for yourself."
++	<br><br>
++	<<link [[Return to the pet room|Mara Danube Pet House]]>><</link>>
++<</if>>
++
++:: Mara Pet Stay Away Setup
++<<maraPetHousewear>>
++<<if !$mara.petWaitActive>>
++	<<if T.mara_location is "shop">>
++		<<maraPetStayBegin 14>>
++	<<else>>
++		<<maraPetStayBegin 19>>
++	<</if>>
++<</if>>
++A short note is waiting near the front door. Mara is away and unavailable. The note gives one of her usual instructions: wait at the place she selected, and be there when she returns. No pet-room lessons or Mara activities are available while she is out.
++<br><br>
++<<include "Mara Pet Stay Position Menu">>
++
++:: Mara Pet Stay Position Menu
++Mara's order is to greet her <<switch $mara.petWaitExpected>><<case 1>>near the front door<<case 2>>inside the cushioned cage<<case 3>>in the discipline room<</switch>> when she returns.
++<br><br>
++Choose where you will actually wait:
++<br><br>
++<<link [[Wait near the front door|Mara Pet Stay Front Door]]>><</link>>
++<br>
++<<link [[Wait inside the cushioned cage|Mara Pet Stay Cage]]>><</link>>
++<br>
++<<link [[Wait in the discipline room|Mara Pet Stay Dungeon]]>><</link>>
++<br>
++<<link [[Leave Mara's house instead|Mara Danube House Leave]]>><</link>>
++
++:: Mara Pet Stay Front Door
++<<set $mara.petWaitActual to 1>>
++You take your place near the front door, keeping an eye on the entrance. Mara will be back at approximately <<print ampm($mara.petWaitReturnHour, 0)>>.
++<br><br>
++<<set $mara.petWaitMinutes to Math.max(0, Math.ceil(($mara.petWaitReturnAt - Time.date.timeStamp) / 60))>>
++<<link [[Wait here until Mara returns|Mara Pet Stay Return Check]]>><<pass $mara.petWaitMinutes>><</link>>
++
++:: Mara Pet Stay Cage
++<<set $mara.petWaitActual to 2>>
++You climb into the cushioned cage and settle on the blanket. The door remains open; this is the daytime waiting order, not the night lock. Mara will return at the scheduled time.
++<br><br>
++<<set $mara.petWaitMinutes to Math.max(0, Math.ceil(($mara.petWaitReturnAt - Time.date.timeStamp) / 60))>>
++<<link [[Wait inside the cage until Mara returns|Mara Pet Stay Return Check]]>><<pass $mara.petWaitMinutes>><</link>>
++
++:: Mara Pet Stay Dungeon
++<<set $mara.petWaitActual to 3>>
++You go to the discipline room and wait beside the padded frame. The equipment stays untouched. Mara will return at the scheduled time.
++<br><br>
++<<set $mara.petWaitMinutes to Math.max(0, Math.ceil(($mara.petWaitReturnAt - Time.date.timeStamp) / 60))>>
++<<link [[Wait in the discipline room until Mara returns|Mara Pet Stay Return Check]]>><<pass $mara.petWaitMinutes>><</link>>
++
++:: Mara Pet Stay Return Check
++<<if $mara.petWaitActual is $mara.petWaitExpected and $mara.petWaitActual isnot 0>>
++	<<switch $mara.petWaitExpected>>
++		<<case 1>>Mara opens the front door and finds you waiting in the exact spot she ordered. She gives a brief, satisfied nod. "At least you managed to stand in the right place. Don't expect a medal for it."
++		<<case 2>>Mara opens the cage and finds you waiting on its cushion as ordered. "Good. You can follow one simple instruction after all. Get out and return to the pet room."
++		<<case 3>>Mara enters the discipline room and finds you waiting where she ordered. "You remembered the place. Don't look so pleased with yourself. It was the bare minimum."
++	<</switch>>
++	<<set $mara.petWaitActive to false>><<set $mara.petWaitExpected to 0>><<set $mara.petWaitActual to 0>><<set $mara.petWaitReturnAt to 0>><<set $mara.petWaitReturnHour to 0>>
++	<br><br>
++	<<link [[Return to the pet room|Mara Danube Pet House]]>><</link>>
++<<else>>
++	Mara returns and finds you in the wrong place. Her expression hardens. "I gave you one simple position to wait in. You couldn't even manage that. Get up. We're going to the discipline room, and this time you will pay attention."
++	<br><br>
++	<<link [[Follow Mara to the discipline room (0:05)|Mara Pet Stay Punishment Start]]>><<pass 5>><</link>>
++<</if>>
++
++:: Mara Pet Stay Punishment Start
++<<if !$mara.petWaitPunishActive>>
++	<<set $mara.petWaitPunishActive to true>><<set $mara.petWaitPunishTool to random(1, 2)>>
++	<<set $mara.petWaitPunishPain1 to false>><<set $mara.petWaitPunishPain2 to false>><<set $mara.petWaitPunishPain3 to false>>
++<</if>>
++<<if $mara.petWaitPunishTool is 1>>Mara takes the whip from its hook. "The whip. Perhaps the sound will finally hold your attention."<<else>>Mara takes the cane from the rack. "The cane. Try to remember this next time I give you an order."<</if>>
++<br><br>
++She secures you to the padded X-frame with the broad-lined cuffs and checks the quick releases. The agreed stop signal remains available. The reprimand is controlled and non-graphic.
++<br><br>
++<<link [[Begin the first round (0:15)|Mara Pet Stay Punishment Stage 1]]>><<pass 15>><</link>>
++<br>
++<<link [[Stop and be released|Mara Pet Stay Punishment Stop]]>><</link>>
++
++:: Mara Pet Stay Punishment Stage 1
++<<if $mara.petWaitPunishActive and !$mara.petWaitPunishPain1>><<set $mara.petWaitPunishPain1 to true>><<masopain 10>><</if>>
++Mara delivers a first measured set with the <<if $mara.petWaitPunishTool is 1>>whip<<else>>cane<</if>>, pausing to check that you are responsive. "You were told where to wait. It wasn't a difficult instruction."
++<br><br>
++<<link [[Continue to the second round (0:15)|Mara Pet Stay Punishment Stage 2]]>><<pass 15>><</link>>
++<br>
++<<link [[Stop and be released|Mara Pet Stay Punishment Stop]]>><</link>>
++
++:: Mara Pet Stay Punishment Stage 2
++<<if $mara.petWaitPunishActive and !$mara.petWaitPunishPain2>><<set $mara.petWaitPunishPain2 to true>><<masopain 10>><</if>>
++Mara continues with a second measured set, allowing a pause before the final round. "You will listen the first time I give an instruction. I will not keep repeating myself."
++<br><br>
++<<link [[Continue to the final round (0:15)|Mara Pet Stay Punishment Stage 3]]>><<pass 15>><</link>>
++<br>
++<<link [[Stop and be released|Mara Pet Stay Punishment Stop]]>><</link>>
++
++:: Mara Pet Stay Punishment Stage 3
++<<if $mara.petWaitPunishActive and !$mara.petWaitPunishPain3>><<set $mara.petWaitPunishPain3 to true>><<masopain 10>><</if>>
++Mara delivers the final measured set, then puts the <<if $mara.petWaitPunishTool is 1>>whip<<else>>cane<</if>> aside and releases the cuffs. "That's enough. I expect you to remember your waiting place next time."
++<br><br>
++<<link [[Finish the reprimand and return to the pet room (0:10)|Mara Pet Stay Punishment Return]]>><<pass 10>><</link>>
++<br>
++<<link [[Stop and be released now|Mara Pet Stay Punishment Stop]]>><</link>>
++
++:: Mara Pet Stay Punishment Stop
++Mara immediately sets the implement aside, releases the restraints, and ends the session. "Enough. You're released. The order still stands next time, so don't pretend you misunderstood it."
++<br><br>
++<<link [[Return to the pet room (0:10)|Mara Pet Stay Punishment Return]]>><<pass 10>><</link>>
++
++:: Mara Pet Stay Punishment Return
++<<set $mara.petWaitActive to false>><<set $mara.petWaitExpected to 0>><<set $mara.petWaitActual to 0>><<set $mara.petWaitReturnAt to 0>><<set $mara.petWaitReturnHour to 0>>
++<<set $mara.petWaitPunishActive to false>><<set $mara.petWaitPunishTool to 0>><<set $mara.petWaitPunishPain1 to false>><<set $mara.petWaitPunishPain2 to false>><<set $mara.petWaitPunishPain3 to false>>
++Mara escorts you back to the pet room and points towards the cushion. "Back to your place. Next time, be where I tell you when I get home."
++<br><br>
++<<link [[Return to the pet room|Mara Danube Pet House]]>><</link>>
+--- a/game/overworld-town/loc-danube-homes/work.twee
++++ b/game/overworld-town/loc-danube-homes/work.twee
+@@ -2958,12 +2958,24 @@
+ :: Mara Danube House Visit
+ <<set $outside to 0>><<set $location to "town">><<effects>><<set $bus to "danube">>
+ <<maraInit>><<run statusCheck("Mara")>>
+-<<if T.mara_location is "shop">>
+-	No one is home. Mara is at the shop.
++<<if $daily.mara is undefined>><<set $daily.mara to {}>><</if>>
++<<if $mara.petRulesEstablished and $mara.petWaitActive and Time.date.timeStamp gte $mara.petWaitReturnAt>>
++	<<maraPetHousewear>>
++	<<include "Mara Pet Stay Return Check">>
++<<elseif T.mara_location is "shop">>
++	No one is home. Mara is at the pet shop and is not available for house activities.
++	<<if $mara.petRulesEstablished>>
++		<br><br>
++		<<link [[Enter Mara's empty house and wait for her return|Mara Pet Stay Away Setup]]>><</link>>
++	<</if>>
+ 	<br><br>
+ 	<<link [[Return to Danube Street|Danube Street]]>><<pass 2>><</link>>
+ <<elseif T.mara_location is "cafe">>
+-	No one is home. Mara is at the Ocean Breeze Cafe.
++	No one is home. Mara is at the Ocean Breeze Cafe and is not available for house activities.
++	<<if $mara.petRulesEstablished>>
++		<br><br>
++		<<link [[Enter Mara's empty house and wait for her return|Mara Pet Stay Away Setup]]>><</link>>
++	<</if>>
+ 	<br><br>
+ 	<<link [[Visit Mara at the cafe|Ocean Breeze]]>><<pass 2>><</link>>
+ <<else>>
+@@ -2974,6 +2986,13 @@
+ 		<br><br>
+ 		<<link [[Enter Mara's pet room|Mara Danube Pet House]]>><</link>>
+ 		<br>
++		<<if Time.hour gte 7 and Time.hour lt 9>>
++			<<link [[Stay inside while Mara goes to the pet shop|Mara Pet Stay Shop Setup]]>><</link>>
++			<br>
++		<<elseif Time.hour gte 14 and Time.hour lt 17 and !$daily.mara.cafeDeparted>>
++			<<link [[Stay inside while Mara considers a cafe visit|Mara Pet Stay Cafe Check]]>><</link>>
++			<br>
++		<</if>>
+ 		<<link [[Leave Mara's house|Mara Danube House Leave]]>><</link>>
+ <<else>>
+ 		Mara opens the door, and her expression brightens when she recognizes you. "It's good to see you again. I was just about to get a few things done around the house. Would you like to give me a hand."
