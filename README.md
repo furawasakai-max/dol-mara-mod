@@ -1,44 +1,46 @@
-# DoL Mara Mod
+# DoL Mara Mod v0.1.17
 
-A Yareth-style source modification that adds Mara as a named NPC and Love Interest to **vanilla Degrees of Lewdity 0.5.13.8**.
+A Yareth-style direct source modification for vanilla **Degrees of Lewdity 0.5.13.8**.
 
-## Project status
+## v0.1.17: Endurance Training
 
-**Alpha source patch.** Tweego compilation succeeded. Browser runtime testing has not yet been completed. Back up saves and test using copies.
+Adds a 30-minute endurance challenge to Mara's pet-room hub while retaining the v0.1.16 night-cage timing fix.
 
-## Current features
-
-- Mara registered in the named NPC and Love Interest systems.
-- New-save initialization and existing-save migration hook.
-- Love, Trust, and Dominance relationship support.
-- Cheat Menu controls for Mara's relationship stats.
-- Danube house introduction event.
-- Pet shop passage linked from Shopping Centre (9:00-14:00).
-- House and shop tasks with vanilla money rewards.
-- Initial romance, private collection, and Handler/Pet proposal scenes.
+- Six five-minute intervals.
+- Each interval increases player arousal by 500.
+- Each interval ends with an escalating Willpower check, using a random threshold from 1-500 through 1-1000.
+- Passing all six intervals grants +2 Mara Dominance and +1 Trust.
+- Failing a check reduces Willpower by one and opens a route to Mara's discipline room.
+- The player can stop at any time without a failure penalty.
 
 ## Source layout
 
 The patch modifies vanilla source files directly. It is **not** a ModLoader package.
 
 - `game/04-Variables/variables-maraUpdate.twee`: Mara state and scene passages.
-- `game/04-Variables/variables-static.twee`, `npcNamed.twee`, `variables-start2.twee`, `variables-versionUpdate.twee`: registration and initialization/migration.
-- `game/base-system/named-npcs.twee`, `widgets.twee`, `overlays/cheats.twee`: relationship integration and Cheat Menu.
-- `game/overworld-town/loc-danube-homes/work.twee`, `loc-shop/main.twee`: house and pet shop content.
-- `Mara.md`: detailed patch notes and limitations.
 
-## Build
+## Installation
 
-Apply the patch files to the matching vanilla DoL 0.5.13.8 source tree, then compile with the project's Tweego-based `compile.sh` script. Do not apply to another game version without reviewing the source differences.
+### Clean vanilla 0.5.13.8
 
-## Known limitations
+Apply the v0.1.16 cumulative patch, then the v0.1.17 incremental patch:
 
-- Pet shop is a passage link, not a separately registered map node.
-- Work activities are simple choice passages, not a fully balanced shift/event system.
-- House and shop first-meeting flags are separate.
-- No custom art is included.
-- Runtime testing is still required for new saves, migrated saves, event selection, Cheat Menu controls, and reward handling.
+    patch --dry-run -p1 -i patches/Mara_v0.1.16-Full.patch
+    patch -p1 -i patches/Mara_v0.1.16-Full.patch
+    patch --dry-run -p1 -i patches/Mara_v0.1.17-EnduranceTraining.patch
+    patch -p1 -i patches/Mara_v0.1.17-EnduranceTraining.patch
+    FORCE_VERSION=0.5.13.8-Mara-Alpha-0.1.17 bash compile.sh
+
+### Existing v0.1.16 source tree
+
+Apply only the v0.1.17 incremental patch:
+
+    patch --dry-run -p1 -i patches/Mara_v0.1.17-EnduranceTraining.patch
+    patch -p1 -i patches/Mara_v0.1.17-EnduranceTraining.patch
+    FORCE_VERSION=0.5.13.8-Mara-Alpha-0.1.17 bash compile.sh
+
+Back up your save and test using a copy. Browser runtime testing remains outstanding.
 
 ## License and upstream assets
 
-This repository contains a source patch intended to be applied to a separately obtained copy of DoL 0.5.13.8. It does not include the vanilla game source or compiled game HTML. Respect the game's upstream license and asset permissions when distributing derivatives.
+This repository contains source patches intended to be applied to a separately obtained copy of DoL 0.5.13.8. It does not include vanilla game source or compiled HTML. Respect the game's upstream license and asset permissions when distributing derivatives.
