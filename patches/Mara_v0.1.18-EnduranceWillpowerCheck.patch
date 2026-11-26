@@ -1,0 +1,87 @@
+--- a/game/04-Variables/variables-maraUpdate.twee
++++ b/game/04-Variables/variables-maraUpdate.twee
+@@ -160,6 +160,8 @@
+ 	<<exerciseicon>>You've had your lesson today. Don't expect me to repeat myself.
+ <</if>>
+ <br>
++<<link [[Try the 30-minute endurance challenge|Mara Pet Endurance Intro]]>><</link>>
++<br>
+ <<link [[Visit Mara's discipline room|Mara Pet Dungeon Room]]>><</link>>
+ <br>
+ <<link [[Help Mara with the housework|Mara Danube Work Intro]]>><</link>>
+@@ -493,6 +495,75 @@
+ <br><br>
+ <<link [[Return to the pet room|Mara Danube Pet House]]>><</link>>
+ 
++:: Mara Pet Endurance Intro
++Mara sets a small training timer on the table and gestures towards the padded mat. "A different lesson today. Thirty minutes of controlled focus. The task gets harder every five minutes, and your Willpower will decide whether you can keep your composure. You can stop whenever you need to."
++<br><br>
++"There are six intervals. Each one lasts five minutes. Keep your attention on the exercise, and don't pretend that I won't notice when you lose focus."
++<br><br>
++<<link [[Begin endurance training|Mara Pet Endurance Start]]>><</link>>
++<br>
++<<link [[Not today|Mara Danube Pet House]]>><</link>>
++
++:: Mara Pet Endurance Start
++<<if $daily.mara is undefined>><<set $daily.mara to {}>><</if>>
++<<set $daily.mara.enduranceActive to true>><<set $daily.mara.enduranceStage to 1>><<set $daily.mara.enduranceArousal to 0>>
++Mara starts the timer. A steady, distracting pulse fills the room as she begins the first interval. She watches your expression rather than the clock. "Five minutes. Stay focused."
++<br><br>
++<<link [[Continue (5 minutes)|Mara Pet Endurance Stage]]>><<pass 5>><</link>>
++<br>
++<<link [[Stop the training|Mara Pet Endurance Stop]]>><</link>>
++
++:: Mara Pet Endurance Stage
++<<if !$daily.mara.enduranceActive or $daily.mara.enduranceStage is undefined>>
++	<<goto "Mara Danube Pet House">>
++<<else>>
++	<<set $daily.mara.enduranceArousal += 500>><<arousal 500>><<garousal>>
++	<<set _maraEnduranceStage to $daily.mara.enduranceStage>>
++	<<set _maraEnduranceDifficulty to 400 + (_maraEnduranceStage * 100)>>
++	Mara adjusts the exercise for interval <<= _maraEnduranceStage>> of six. The distraction grows more demanding, and you have to concentrate harder to keep your breathing steady. "Don't drift."
++	<br><br>
++	<<willpowerdifficulty 1 _maraEnduranceDifficulty>>
++	<br><br>
++	<<if $willpowerSuccess>>
++		Mara studies you for a moment, then gives a small, reluctant nod. "You held your focus. Don't get smug; the next interval will be harder."
++		<<if _maraEnduranceStage gte 6>>
++			<<goto "Mara Pet Endurance Complete">>
++		<<else>>
++			<<set $daily.mara.enduranceStage += 1>>
++			<br><br>
++			<<link [[Continue to the next interval (5 minutes)|Mara Pet Endurance Stage]]>><<pass 5>><</link>>
++		<</if>>
++	<<else>>
++		<<set $daily.mara.enduranceActive to false>><<willpower 1>><<gwillpower>>
++		<<set $daily.mara.disciplineRoll to 1>><<set $daily.mara.disciplineHandled to false>>
++		Mara stops the timer. "That's enough. You lost your focus before the end. The lesson is over, and we're going to the discipline room to discuss your performance."
++		<br><br>
++		<<link [[Go with Mara to the discipline room|Mara Pet Endurance Failure]]>><</link>>
++	<</if>>
++	<br>
++	<<link [[Stop the training|Mara Pet Endurance Stop]]>><</link>>
++<</if>>
++
++:: Mara Pet Endurance Complete
++<<set $daily.mara.enduranceActive to false>><<set $mara.petEnduranceSessions to ($mara.petEnduranceSessions or 0) + 1>><<npcincr Mara dom 2>><<npcincr Mara trust 1>>
++Mara stops the timer at exactly thirty minutes and steps back. "You managed all six intervals. Better than I expected. Drink some water and take a few minutes to recover."
++<br><br>
++Reward:<<gdom>><<gtrust>>
++<br><br>
++<<link [[Return to the pet room|Mara Danube Pet House]]>><</link>>
++
++:: Mara Pet Endurance Failure
++<<set $daily.mara.enduranceActive to false>>
++Mara leads you to the doorway of the discipline room. "You failed the endurance challenge. We'll deal with that here. You can still tell me to stop at any point."
++<br><br>
++<<link [[Enter the discipline room|Mara Pet Dungeon Room]]>><</link>>
++
++:: Mara Pet Endurance Stop
++<<set $daily.mara.enduranceActive to false>>
++Mara stops the timer immediately and moves the training equipment aside. "Fine. The session is over. Take a moment, have some water, and don't try to push past your limits just to impress me."
++<br><br>
++<<link [[Return to the pet room|Mara Danube Pet House]]>><</link>>
++
+ :: Mara Pet Dungeon Room
+ <<set $outside to 0>><<set $location to "town">><<effects>><<set $bus to "danube">>
+ <<maraInit>><<maraPetHousewear>>
